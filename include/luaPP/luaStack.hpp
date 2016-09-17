@@ -3,6 +3,8 @@
 #ifndef LUASTACK_HPP
 #define LUASTACK_HPP
 
+#include <string>
+//
 #include <luaPP/nonCopyable.hpp>
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/table.hpp>
@@ -38,6 +40,7 @@ public:
 	const StackElement* get( const Index& index = -1 ) const;		///return new StackElement
 
 	void loadGlobals(); 											///loads luaPP table from top of the stack
+	void loadGlobal( const std::string& name );						///load single global from top of the stack
 
 	Index getIndex() const noexcept; 								///returns stack length
 

@@ -167,6 +167,16 @@ void LuaStack::loadGlobals()
 	mStack = new Table( *this, -1 );
 }
 
+void LuaStack::loadGlobal( const std::string& name )
+{
+	if( !isFree() )
+	{
+		throw std::runtime_error( "LuaStack::loadGlobal: not enough space on stack" );
+		return;
+	}
+	lua_getglobal( mL, name.c_str());
+}
+
 Index LuaStack::getIndex() const noexcept
 {
 	return ( Index )lua_gettop( mL );
