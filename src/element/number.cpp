@@ -22,3 +22,8 @@ Number::operator const NumberValue&() const noexcept
 {
 	return mValue;
 }
+
+const NumberValue& Number::get() const noexcept
+{
+	return mValue;
+}

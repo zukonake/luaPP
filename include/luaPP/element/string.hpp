@@ -21,6 +21,8 @@ public:
 	virtual ~String() = default;
 
 	operator const StringValue&() const noexcept;
+
+	const StringValue& get() const noexcept;
 private:
 	StringValue mValue;
 };

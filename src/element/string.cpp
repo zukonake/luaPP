@@ -22,3 +22,8 @@ String::operator const StringValue&() const noexcept
 {
 	return mValue;
 }
+
+const StringValue& String::get() const noexcept
+{
+	return mValue;
+}

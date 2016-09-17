@@ -23,6 +23,8 @@ public:
 	virtual ~Number() = default;
 
 	operator const NumberValue&() const noexcept;
+
+	const NumberValue& get() const noexcept;
 private:
 	NumberValue mValue;
 };
