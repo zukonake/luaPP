@@ -11,7 +11,7 @@
 #include <luaPP/element/table.hpp>
 #include <luaPP/element/function.hpp>
 
-using namespace LW;
+using namespace LPP;
 
 LuaStack::LuaStack()
 {

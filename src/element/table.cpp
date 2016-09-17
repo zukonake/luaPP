@@ -6,7 +6,7 @@
 //
 #include <luaPP/luaStack.hpp>
 
-using namespace LW;
+using namespace LPP;
 
 Table::Table( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )

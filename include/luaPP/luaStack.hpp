@@ -11,7 +11,7 @@
 
 class lua_State;
 
-namespace LW
+namespace LPP
 {
 
 class StackElement;

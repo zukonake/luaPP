@@ -6,7 +6,7 @@
 //
 #include <luaPP/luaStack.hpp>
 
-using namespace LW;
+using namespace LPP;
 
 Nil::Nil( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )

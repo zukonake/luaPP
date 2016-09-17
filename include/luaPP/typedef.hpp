@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <string>
 
-namespace LW
+namespace LPP
 {
 	typedef int16_t Index;
 	typedef double NumberValue;

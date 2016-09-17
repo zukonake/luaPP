@@ -3,7 +3,7 @@
 #ifndef NONCOPYABLE_HPP
 #define NONCOPYABLE_HPP
 
-namespace LW
+namespace LPP
 {
 
 class NonCopyable

@@ -6,7 +6,7 @@
 //
 #include <luaPP/luaStack.hpp>
 
-using namespace LW;
+using namespace LPP;
 
 Function::Function( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )

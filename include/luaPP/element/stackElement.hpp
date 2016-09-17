@@ -6,7 +6,7 @@
 #include <luaPP/nonCopyable.hpp>
 #include <luaPP/typedef.hpp>
 
-namespace LW
+namespace LPP
 {
 
 class LuaStack;

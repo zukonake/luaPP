@@ -1,0 +1,5 @@
+#!/bin/sh
+cp -f libluapp*.so* /lib/.
+chmod 755 /lib/libluapp*.so*
+ln -sf /lib/libluapp*.so* /lib/libluapp.so
+chmod 755 /lib/libluapp.so

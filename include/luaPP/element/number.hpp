@@ -7,7 +7,7 @@
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/stackElement.hpp>
 
-namespace LW
+namespace LPP
 {
 
 class LuaStack;
