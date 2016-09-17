@@ -2,7 +2,7 @@
 
 #include <luaPP/element/stackElement.hpp>
 //
-#include <cassert>
+#include <stdexcept>
 //
 #include <luaPP/luaStack.hpp>
 
@@ -21,14 +21,14 @@ StackElement::StackElement( const LuaStack& luaStack, const Index& index ) :
 	}
 	else
 	{
-		assert( false );
+		throw std::logic_error( "LuaStack::insert: index 0 given" );
 	}
 }
 
 StackElement::~StackElement()
 {
 	mLuaStack.pushNil();
-	mLuaStack.copy( -1, mIndex );
+	mLuaStack.replace( mIndex );
 }
 
 const Index& StackElement::getIndex() const noexcept
