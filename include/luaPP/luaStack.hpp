@@ -40,8 +40,9 @@ public:
 	const T* get( const Index& index = -1 ) const;					//return new T StackElement
 	const StackElement* get( const Index& index = -1 ) const;		///return new StackElement
 
-	void loadGlobals(); 											///loads luaPP table from top of the stack
-	void loadGlobal( const std::string& name );						///load single global from top of the stack
+	void loadGlobals();												///loads luaPP table from top of the stack
+	void loadGlobal( const std::string& name ) const;				///load single global from top of the stack
+	const Table* getGlobals() const noexcept;						///returns mStack
 
 	Index getIndex() const noexcept; 								///returns stack length
 

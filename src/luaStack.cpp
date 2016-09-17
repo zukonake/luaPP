@@ -168,7 +168,7 @@ void LuaStack::loadGlobals()
 	mStack = new Table( *this, -1 );
 }
 
-void LuaStack::loadGlobal( const std::string& name )
+void LuaStack::loadGlobal( const std::string& name ) const
 {
 	if( !isFree() )
 	{
@@ -176,6 +176,11 @@ void LuaStack::loadGlobal( const std::string& name )
 		return;
 	}
 	lua_getglobal( mL, name.c_str());
+}
+
+const Table* LuaStack::getGlobals() const noexcept
+{
+	return mStack;
 }
 
 Index LuaStack::getIndex() const noexcept
