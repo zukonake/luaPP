@@ -3,19 +3,19 @@
 
 #include <string>
 //
-#include <typedef.hpp>
-#include <element/stackElement.hpp>
+#include <luaPP/typedef.hpp>
+#include <luaPP/element/stackElement.hpp>
 
 namespace LW
 {
 
-class LuaState;
+class LuaStack;
 
 class String : public StackElement
 {
 public:
 	String() = delete;
-	String( LuaState& luaState, const Index& index = -1 );
+	String( LuaStack& luaStack, const Index& index = -1 );
 
 	virtual ~String() = default;
 

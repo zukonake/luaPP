@@ -1,7 +1,7 @@
-LuaWrapper
-LuaWrapper-D
+*.so
 build
 bin
 callgrind*
 vgcore*
-test
+test*
+main.*

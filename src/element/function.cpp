@@ -1,23 +1,29 @@
-#include <element/function.hpp>
+#include <luaPP/element/function.hpp>
 //
 #include <stdexcept>
 //
 #include <lua5.2/lua.hpp>
 //
-#include <luaState.hpp>
+#include <luaPP/luaStack.hpp>
+#include <luaPP/element/table.hpp>
 
 using namespace LW;
 
-Function::Function( LuaState& luaState, const Index& index ) :
-	StackElement( luaState, index )
+Function::Function( LuaStack& luaStack, const Index& index ) :
+	StackElement( luaStack, index )
 {
-	if( luaState.getType( index ) != LuaType::FUNCTION )
+	if( luaStack.getType( index ) != LuaType::FUNCTION )
 	{
-		throw std::runtime_error( "LW::Function::Function: tried to call non-function lua type" );
+		throw std::runtime_error( "LW::Function::Function: tried to call a non-function lua type" );
 	}
 }
 
 Index Function::call()
 {
-	return StackElement::mLuaState.call();
+	return StackElement::mLuaStack.call();
+}
+
+void Function::loadGlobals()
+{
+	return StackElement::mLuaStack.loadGlobals();
 }

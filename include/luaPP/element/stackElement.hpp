@@ -1,22 +1,22 @@
 #ifndef STACKELEMENT_HPP
 #define STACKELEMENT_HPP
 
-#include <typedef.hpp>
+#include <luaPP/typedef.hpp>
 
 namespace LW
 {
 
-class LuaState;
+class LuaStack;
 
 class StackElement
 {
 protected:
 	StackElement() = delete;
-	StackElement( LuaState& luaState, const Index& index = -1 );
+	StackElement( LuaStack& luaStack, const Index& index = -1 );
 public:
 	virtual ~StackElement();
 protected:
-	LuaState& mLuaState;
+	LuaStack& mLuaStack;
 	Index mIndex;
 };
 

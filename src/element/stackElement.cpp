@@ -1,19 +1,19 @@
-#include <element/stackElement.hpp>
+#include <luaPP/element/stackElement.hpp>
 //
 #include <cassert>
 //
 #include <lua5.2/lua.hpp>
 //
-#include <luaState.hpp>
+#include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-StackElement::StackElement( LuaState& luaState, const Index& index ) :
-	mLuaState( luaState )
+StackElement::StackElement( LuaStack& luaStack, const Index& index ) :
+	mLuaStack( luaStack )
 {
 	if( index < 0 )
 	{
-		mIndex = mLuaState.getIndex() + ( index + 1 );
+		mIndex = mLuaStack.getIndex() + ( index + 1 );
 	}
 	else if( index > 0 )
 	{
@@ -27,6 +27,6 @@ StackElement::StackElement( LuaState& luaState, const Index& index ) :
 
 StackElement::~StackElement()
 {
-	mLuaState.pushNil();
-	mLuaState.copy( -1, mIndex );
+	mLuaStack.pushNil();
+	mLuaStack.copy( -1, mIndex );
 }

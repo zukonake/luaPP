@@ -1,21 +1,21 @@
-#include <element/string.hpp>
+#include <luaPP/element/string.hpp>
 //
 #include <stdexcept>
 //
 #include <lua5.2/lua.hpp>
 //
-#include <luaState.hpp>
+#include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-String::String( LuaState& luaState, const Index& index ) :
-	StackElement( luaState, index )
+String::String( LuaStack& luaStack, const Index& index ) :
+	StackElement( luaStack, index )
 {
-	if( luaState.getType( index ) != LuaType::STRING )
+	if( luaStack.getType( index ) != LuaType::STRING )
 	{
-		throw std::runtime_error( "LW::String::String: tried to convert non-string lua type to string" );
+		throw std::runtime_error( "LW::String::String: tried to convert a non-string lua type to string" );
 	}
-	mValue = luaState.getString( index );
+	mValue = luaStack.getString( index );
 }
 
 String::operator const StringValue&() const noexcept

@@ -1,13 +1,13 @@
 #ifndef NUMBER_HPP
 #define NUMBER_HPP
 
-#include <typedef.hpp>
-#include <element/stackElement.hpp>
+#include <luaPP/typedef.hpp>
+#include <luaPP/element/stackElement.hpp>
 
 namespace LW
 {
 
-class LuaState;
+class LuaStack;
 
 class Number : public StackElement
 {
@@ -15,7 +15,7 @@ public:
 	typedef double NumberValue;
 
 	Number() = delete;
-	Number( LuaState& luaState, const Index& index = -1 );
+	Number( LuaStack& luaStack, const Index& index = -1 );
 
 	virtual ~Number() = default;
 

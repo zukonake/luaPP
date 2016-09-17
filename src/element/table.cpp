@@ -1,31 +1,31 @@
-#include <element/table.hpp>
+#include <luaPP/element/table.hpp>
 //
 #include <stdexcept>
 #include <utility>
 //
 #include <lua5.2/lua.hpp>
 //
-#include <luaState.hpp>
+#include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-Table::Table( LuaState& luaState, const Index& index ) :
-	StackElement( luaState, index )
+Table::Table( LuaStack& luaStack, const Index& index ) :
+	StackElement( luaStack, index )
 {
-	if( luaState.getType( index ) != LuaType::TABLE )
+	if( luaStack.getType( index ) != LuaType::TABLE )
 	{
-		throw std::runtime_error( "LW::Table::Table: tried to convert non-table lua type to table" );
+		throw std::runtime_error( "LW::Table::Table: tried to convert a non-table lua type to table" );
 	}
-	luaState.push( index );
-	luaState.pushNil();
-	while( luaState.iterate( -2 ))
+	luaStack.push( index );
+	luaStack.pushNil();
+	while( luaStack.iterate())
 	{
-		std::string key = luaState.getString( -2 );
-		luaState.insert(( index + 1 ) + -3 );
-		StackElement* value = luaState.evaluateType(( index + 1 ) + -3 );
+		std::string key = luaStack.getString( -2 );
+		luaStack.insert(( index + 1 ) + -3 );
+		StackElement* value = luaStack.get(( index + 1 ) + -3 );
 		mValue[ key ] = value;
 	}
-	luaState.pop( 1 );
+	luaStack.pop();
 }
 
 Table::~Table()
@@ -34,9 +34,4 @@ Table::~Table()
 	{
 		delete iElement.second;
 	}
-}
-
-StackElement* Table::operator[]( const std::string& key )
-{
-	return mValue.at( key );
 }
