@@ -18,7 +18,7 @@ class LuaStack;
 class Table : public StackElement, virtual NonCopyable
 {
 public:
-	typedef std::unordered_map< std::string, StackElement* > Value;
+	typedef std::unordered_map< std::string, const StackElement* > Value;
 
 	Table() = delete;
 	Table( const LuaStack& luaStack, const Index& index = -1 );

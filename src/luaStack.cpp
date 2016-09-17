@@ -30,7 +30,7 @@ LuaStack::~LuaStack()
 	lua_close( mL );
 }
 
-Function* LuaStack::loadFile( const std::string& path ) const
+const Function* LuaStack::loadFile( const std::string& path ) const
 {
 	if( !isFree() )
 	{
@@ -44,7 +44,7 @@ Function* LuaStack::loadFile( const std::string& path ) const
 	return new Function( *this, -1 );
 }
 
-Function* LuaStack::loadString( const std::string& value ) const
+const Function* LuaStack::loadString( const std::string& value ) const
 {
 	if( !isFree() )
 	{
@@ -130,7 +130,7 @@ StringValue LuaStack::getString( const Index& index ) const
 	return ( StringValue )lua_tostring( mL, index );
 }
 
-StackElement* LuaStack::get( const Index& index ) const
+const StackElement* LuaStack::get( const Index& index ) const
 {
 	switch( getType( index ) )
 	{

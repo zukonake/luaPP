@@ -22,8 +22,8 @@ public:
 
 	virtual ~LuaStack();											///stack gets cleared
 
-	Function* loadFile( const std::string& path ) const;			///load a file as a lua function
-	Function* loadString( const std::string& value ) const;			///load a string as a lua function
+	const Function* loadFile( const std::string& path ) const;		///load a file as a lua function
+	const Function* loadString( const std::string& value ) const;	///load a string as a lua function
 
 	LuaType getType( const Index& index = -1) const noexcept;		///non-number,string,table,function is recognized as nil
 	std::string getTypeName( const LuaType& type ) const noexcept;	///
@@ -35,7 +35,7 @@ public:
 	const T* at( const std::string& name ) const;					///get T StackElement from mStack
 	template< typename T >
 	const T* get( const Index& index = -1 ) const;					//return new T StackElement
-	StackElement* get( const Index& index = -1 ) const;				///return new StackElement
+	const StackElement* get( const Index& index = -1 ) const;		///return new StackElement
 
 	void loadGlobals(); 											///loads luaPP table from top of the stack
 
@@ -58,11 +58,11 @@ public:
 	Index call() const; 											///call the element on the top of the stack
 
 	constexpr static float luaVersion = 5.2;
-	constexpr static float luaPPVersion = 0.8;
+	constexpr static float luaPPVersion = 0.85;
 private:
 	void clear() const noexcept;
 
-	Table* mStack = nullptr;
+	const Table* mStack = nullptr;
 	lua_State* mL;
 };
 

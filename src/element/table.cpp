@@ -21,7 +21,7 @@ Table::Table( const LuaStack& luaStack, const Index& index ) :
 	{
 		std::string key = luaStack.getString( -2 );
 		luaStack.insert(( index + 1 ) + -3 );
-		StackElement* value = luaStack.get(( index + 1 ) + -3 );
+		const StackElement* value = luaStack.get(( index + 1 ) + -3 );
 		mValue[ key ] = value;
 	}
 	luaStack.pop();
