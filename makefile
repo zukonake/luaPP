@@ -1,17 +1,15 @@
 SOURCE_PATH := src/
 BUILD_PATH := build/
 OBJ_PATH := $(BUILD_PATH)obj/
-DEBUG_PATH := libluapp.so
-RELEASE_PATH := libluapp.so
-TARGET_PATH := $(DEBUG_PATH)
+TARGET_PATH := libluapp.so
 SOURCES := $(shell find $(SOURCE_PATH) -type f -name "*.cpp" -printf '%p ')
 HEADERS := $(shell find $(SOURCE_PATH) -type f -name "*.hpp" -printf '%p ')
 OBJS := $(addprefix $(OBJ_PATH),$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -type f -name "*.cpp" -exec basename {} \;)))
 DEBUG := -g -O0
 STD := -std=c++14
 LDLIBS := -llua5.2
-INCFLAGS := -I include -I src
-LIBFLAGS := -L lib -L /usr/lib
+INCFLAGS := -I include
+LIBFLAGS := -L /usr/lib
 CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
 LDFLAGS := $(STD) -fPIC -shared -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
 COMPILER := g++
