@@ -1,11 +1,12 @@
 //2016-luaPP zukonake
 
-#ifndef LUASTACK_HPP
-#define LUASTACK_HPP
+#ifndef LPP_LUASTACK_HPP
+#define LPP_LUASTACK_HPP
 
 #include <string>
 //
-#include <luaPP/nonCopyable.hpp>
+#include <nonCopyable.hpp>
+//
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/table.hpp>
 

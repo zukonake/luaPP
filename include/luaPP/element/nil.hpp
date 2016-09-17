@@ -1,9 +1,10 @@
 //2016-luaPP zukonake
 
-#ifndef NIL_HPP
-#define NIL_HPP
+#ifndef LPP_NIL_HPP
+#define LPP_NIL_HPP
 
-#include <luaPP/nonCopyable.hpp>
+#include <nonCopyable.hpp>
+//
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/stackElement.hpp>
 

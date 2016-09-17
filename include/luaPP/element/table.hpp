@@ -1,12 +1,13 @@
 //2016-luaPP zukonake
 
-#ifndef TABLE_HPP
-#define TABLE_HPP
+#ifndef LPP_TABLE_HPP
+#define LPP_TABLE_HPP
 
 #include <unordered_map>
 #include <string>
 //
-#include <luaPP/nonCopyable.hpp>
+#include <nonCopyable.hpp>
+//
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/stackElement.hpp>
 

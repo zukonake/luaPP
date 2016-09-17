@@ -1,10 +1,7 @@
-//2016-luaPP zukonake
+//2016-nonCopyable zukonake
 
 #ifndef NONCOPYABLE_HPP
 #define NONCOPYABLE_HPP
-
-namespace LPP
-{
 
 class NonCopyable
 {
@@ -16,7 +13,5 @@ protected:
 	NonCopyable( const NonCopyable& that ) = delete;
 	NonCopyable& operator=( const NonCopyable& that ) = delete;
 };
-
-}
 
 #endif

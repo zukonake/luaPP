@@ -1,9 +1,10 @@
 //2016-luaPP zukonake
 
-#ifndef STACKELEMENT_HPP
-#define STACKELEMENT_HPP
+#ifndef LPP_STACKELEMENT_HPP
+#define LPP_STACKELEMENT_HPP
 
-#include <luaPP/nonCopyable.hpp>
+#include <nonCopyable.hpp>
+//
 #include <luaPP/typedef.hpp>
 
 namespace LPP

@@ -1,9 +1,10 @@
 //2016-luaPP zukonake
 
-#ifndef FUNCTION_HPP
-#define FUNCTION_HPP
+#ifndef LPP_FUNCTION_HPP
+#define LPP_FUNCTION_HPP
 
-#include <luaPP/nonCopyable.hpp>
+#include <nonCopyable.hpp>
+//
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/stackElement.hpp>
 

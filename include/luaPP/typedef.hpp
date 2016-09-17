@@ -1,7 +1,7 @@
 //2016-luaPP zukonake
 
-#ifndef TYPEDEF_HPP
-#define TYPEDEF_HPP
+#ifndef LPP_TYPEDEF_HPP
+#define LPP_TYPEDEF_HPP
 
 #include <cstdint>
 #include <string>
