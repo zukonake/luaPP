@@ -2,7 +2,7 @@
 #define NUMBER_HPP
 
 #include <typedef.hpp>
-#include <value/stackElement.hpp>
+#include <element/stackElement.hpp>
 
 namespace LW
 {

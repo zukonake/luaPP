@@ -1,13 +1,13 @@
-#include "luaState.hpp"
+#include <luaState.hpp>
 //
 #include <cassert>
 //
-#include <value/stackElement.hpp>
-#include <value/nil.hpp>
-#include <value/number.hpp>
-#include <value/string.hpp>
-#include <value/table.hpp>
-#include <value/function.hpp>
+#include <element/stackElement.hpp>
+#include <element/nil.hpp>
+#include <element/number.hpp>
+#include <element/string.hpp>
+#include <element/table.hpp>
+#include <element/function.hpp>
 
 using namespace LW;
 
