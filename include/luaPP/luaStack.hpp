@@ -79,7 +79,7 @@ const T* LuaStack::at( const std::string& name ) const
 template< typename T >
 const T* LuaStack::get( const Index& index ) const
 {
-	return dynamic_cast< T* >( get( index ));
+	return dynamic_cast< const T* >( get( index ));
 }
 
 }
