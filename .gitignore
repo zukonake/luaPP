@@ -1,0 +1,7 @@
+LuaWrapper
+LuaWrapper-D
+build
+bin
+callgrind*
+vgcore*
+test
