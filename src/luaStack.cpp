@@ -163,6 +163,7 @@ void LuaStack::loadGlobals()
 		throw std::runtime_error( "LuaStack::loadGlobals: not enough space on stack" );
 		return;
 	}
+	clear();
 	lua_getglobal( mL, "luaPP" );
 	mStack = new Table( *this, -1 );
 }
@@ -215,14 +216,6 @@ void LuaStack::pushString( const StringValue& value ) const
 		return;
 	}
 	lua_pushstring( mL, value.c_str() );
-}
-
-void LuaStack::clear() const noexcept
-{
-	if( mStack != nullptr )
-	{
-		delete mStack;
-	}
 }
 
 void LuaStack::insert( const Index& index ) const
@@ -330,4 +323,13 @@ Index LuaStack::call() const
 	}
 	Index after = getIndex();
 	return after - before;
+}
+
+void LuaStack::clear() noexcept
+{
+	if( mStack != nullptr )
+	{
+		delete mStack;
+		mStack = nullptr;
+	}
 }

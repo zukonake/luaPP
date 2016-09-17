@@ -64,7 +64,7 @@ public:
 	constexpr static float luaVersion = 5.2;
 	constexpr static float luaPPVersion = 0.85;
 private:
-	void clear() const noexcept;
+	void clear() noexcept;
 
 	const Table* mStack = nullptr;
 	lua_State* mL;
