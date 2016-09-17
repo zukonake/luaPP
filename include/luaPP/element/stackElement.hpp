@@ -1,6 +1,9 @@
+//2016-luaPP zukonake
+
 #ifndef STACKELEMENT_HPP
 #define STACKELEMENT_HPP
 
+#include <luaPP/nonCopyable.hpp>
 #include <luaPP/typedef.hpp>
 
 namespace LW
@@ -8,15 +11,17 @@ namespace LW
 
 class LuaStack;
 
-class StackElement
+class StackElement : virtual NonCopyable
 {
 protected:
 	StackElement() = delete;
-	StackElement( LuaStack& luaStack, const Index& index = -1 );
+	StackElement( const LuaStack& luaStack, const Index& index = -1 );
 public:
 	virtual ~StackElement();
+
+	const Index& getIndex() const noexcept;
 protected:
-	LuaStack& mLuaStack;
+	const LuaStack& mLuaStack;
 	Index mIndex;
 };
 

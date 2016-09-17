@@ -1,14 +1,14 @@
+//2016-luaPP zukonake
+
 #include <luaPP/element/nil.hpp>
 //
 #include <stdexcept>
-//
-#include <lua5.2/lua.hpp>
 //
 #include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-Nil::Nil( LuaStack& luaStack, const Index& index ) :
+Nil::Nil( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )
 {
 	if( luaStack.getType( index ) != LuaType::NIL )

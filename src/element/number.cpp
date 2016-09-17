@@ -1,14 +1,14 @@
+//2016-luaPP zukonake
+
 #include <luaPP/element/number.hpp>
 //
 #include <stdexcept>
-//
-#include <lua5.2/lua.hpp>
 //
 #include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-Number::Number( LuaStack& luaStack, const Index& index ) :
+Number::Number( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )
 {
 	if( luaStack.getType( index ) != LuaType::NUMBER )

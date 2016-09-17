@@ -1,3 +1,5 @@
+//2016-luaPP zukonake
+
 #ifndef LUAPP_HPP
 #define LUAPP_HPP
 

@@ -1,14 +1,14 @@
+//2016-luaPP zukonake
+
 #include <luaPP/element/stackElement.hpp>
 //
 #include <cassert>
-//
-#include <lua5.2/lua.hpp>
 //
 #include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-StackElement::StackElement( LuaStack& luaStack, const Index& index ) :
+StackElement::StackElement( const LuaStack& luaStack, const Index& index ) :
 	mLuaStack( luaStack )
 {
 	if( index < 0 )
@@ -29,4 +29,9 @@ StackElement::~StackElement()
 {
 	mLuaStack.pushNil();
 	mLuaStack.copy( -1, mIndex );
+}
+
+const Index& StackElement::getIndex() const noexcept
+{
+	return mIndex;
 }

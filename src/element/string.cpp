@@ -1,14 +1,14 @@
+//2016-luaPP zukonake
+
 #include <luaPP/element/string.hpp>
 //
 #include <stdexcept>
-//
-#include <lua5.2/lua.hpp>
 //
 #include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-String::String( LuaStack& luaStack, const Index& index ) :
+String::String( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )
 {
 	if( luaStack.getType( index ) != LuaType::STRING )

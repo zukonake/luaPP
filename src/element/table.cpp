@@ -1,15 +1,14 @@
+//2016-luaPP zukonake
+
 #include <luaPP/element/table.hpp>
 //
 #include <stdexcept>
-#include <utility>
-//
-#include <lua5.2/lua.hpp>
 //
 #include <luaPP/luaStack.hpp>
 
 using namespace LW;
 
-Table::Table( LuaStack& luaStack, const Index& index ) :
+Table::Table( const LuaStack& luaStack, const Index& index ) :
 	StackElement( luaStack, index )
 {
 	if( luaStack.getType( index ) != LuaType::TABLE )

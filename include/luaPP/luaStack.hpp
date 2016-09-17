@@ -1,13 +1,13 @@
+//2016-luaPP zukonake
+
 #ifndef LUASTACK_HPP
 #define LUASTACK_HPP
 
+#include <luaPP/nonCopyable.hpp>
 #include <luaPP/typedef.hpp>
-#include <luaPP/element/stackElement.hpp>
-#include <luaPP/element/nil.hpp>
-#include <luaPP/element/number.hpp>
-#include <luaPP/element/string.hpp>
 #include <luaPP/element/table.hpp>
-#include <luaPP/element/function.hpp>
+
+class lua_State;
 
 namespace LW
 {
@@ -15,80 +15,67 @@ namespace LW
 class StackElement;
 class Function;
 
-class LuaStack												///naming: right=to the top of the stack, left= to the bottom of the stack
+class LuaStack : virtual NonCopyable								///naming: right=to the top of the stack, left= to the bottom of the stack
 {
 public:
-	LuaStack();												///libs get loaded
+	LuaStack();														///libs get loaded
 
-	virtual ~LuaStack();									///stack gets cleared
+	virtual ~LuaStack();											///stack gets cleared
 
-	Function* loadFile( const std::string& path );
+	Function* loadFile( const std::string& path ) const;			///load a file as a lua function
+	Function* loadString( const std::string& value ) const;			///load a string as a lua function
 
-	LuaType getType( const Index& index = -1);				///non-number,string,table,function is recognized as nil
-	std::string getTypeName( const LuaType& type );			///
+	LuaType getType( const Index& index = -1) const noexcept;		///non-number,string,table,function is recognized as nil
+	std::string getTypeName( const LuaType& type ) const noexcept;	///
 
-	NumberValue getNumber( const Index& index = -1 );		///get raw number from stack
-	StringValue getString( const Index& index = -1 );		///get raw string from stack
+	NumberValue getNumber( const Index& index = -1 ) const;			///get raw number from stack
+	StringValue getString( const Index& index = -1 ) const;			///get raw string from stack
 
 	template< typename T = StackElement >
-	T* at( const std::string& name );						///get T StackElement from mStack
-	template< typename T = StackElement >
-	T* get( const Index& index = -1 );						///return new T StackElement
+	const T* at( const std::string& name ) const;					///get T StackElement from mStack
+	template< typename T >
+	const T* get( const Index& index = -1 ) const;					//return new T StackElement
+	StackElement* get( const Index& index = -1 ) const;				///return new StackElement
 
-	void loadGlobals(); 									///loads luaPP table
+	void loadGlobals(); 											///loads luaPP table from top of the stack
 
-	Index getIndex(); 										///returns stack length
+	Index getIndex() const noexcept; 								///returns stack length
 
-	void pushNil();
+	bool isValid( const Index& index = -1 ) const noexcept;			///checks whether element is valid
+	Index isFree( const Index& space = 1 ) const noexcept;
 
-	void insert( const Index& index ); 						///insert element into index and shift elements to right
-	void push( const Index& index ); 						///copies element to top of the stack
-	void copy( const Index& from, const Index& to ); 		///copy element into index, replacing previous value
-	void remove( const Index& index ); 						///remove element and shift elements to left
-	void pop( const Index& amount = 1 );					///pop amount elements from the top of the stack
-	bool iterate( const Index& index = -2 );				///iterate a table, a key is needed right to the table to keep track of the position
-	Index call(); 											///call the element on the top of the stack
+	void pushNil() const noexcept;
+	void pushNumber( const NumberValue& value ) const;
+	void pushString( const StringValue& value ) const;
+
+	void insert( const Index& index ) const; 						///insert element into index and shift elements to right
+	void push( const Index& index ) const; 							///copies element to top of the stack
+	void copy( const Index& from, const Index& to ) const; 			///copy element into index, replacing previous value
+	void replace( const Index& to ) const;							///moves element from top of the stack into index, replacing previous value
+	void remove( const Index& index ) const; 						///remove element and shift elements to left
+	void pop( const Index& amount = 1 ) const;						///pop amount elements from the top of the stack
+	bool iterate( const Index& index = -2 ) const;					///iterate a table, a key is needed right to the table to keep track of the position
+	Index call() const; 											///call the element on the top of the stack
 
 	constexpr static float luaVersion = 5.2;
-	constexpr static float luaPPVersion = 0.2;
+	constexpr static float luaPPVersion = 0.8;
 private:
-	void clear();
+	void clear() const noexcept;
 
 	Table* mStack = nullptr;
 	lua_State* mL;
 };
 
 template< typename T >
-T* LuaStack::at( const std::string& name )
+const T* LuaStack::at( const std::string& name ) const
 {
-	return dynamic_cast< T* >(( *mStack )[ name ]);
+	return mStack->at< T >( name );
 }
 
 template< typename T >
-T* LuaStack::get( const Index& index )
+const T* LuaStack::get( const Index& index ) const
 {
-	switch( getType( index ) )
-	{
-		case LuaType::NUMBER:
-		return new Number( *this, index );
-		break;
-
-		case LuaType::STRING:
-		return new String( *this, index );
-		break;
-
-		case LuaType::TABLE:
-		return new Table( *this, index );
-		break;
-
-		case LuaType::FUNCTION:
-		return new Function( *this, index );
-		break;
-
-		default:
-		return new Nil( *this, index );
-		break;
-	}
+	return dynamic_cast< T* >( get( index ));
 }
 
 }

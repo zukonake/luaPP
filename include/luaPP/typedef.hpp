@@ -1,10 +1,10 @@
+//2016-luaPP zukonake
+
 #ifndef TYPEDEF_HPP
 #define TYPEDEF_HPP
 
 #include <cstdint>
 #include <string>
-//
-#include <lua5.2/lua.hpp>
 
 namespace LW
 {

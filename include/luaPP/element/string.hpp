@@ -1,8 +1,9 @@
+//2016-luaPP zukonake
+
 #ifndef STRING_HPP
 #define STRING_HPP
 
-#include <string>
-//
+#include <luaPP/nonCopyable.hpp>
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/stackElement.hpp>
 
@@ -11,11 +12,11 @@ namespace LW
 
 class LuaStack;
 
-class String : public StackElement
+class String : public StackElement, virtual NonCopyable
 {
 public:
 	String() = delete;
-	String( LuaStack& luaStack, const Index& index = -1 );
+	String( const LuaStack& luaStack, const Index& index = -1 );
 
 	virtual ~String() = default;
 

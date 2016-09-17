@@ -1,9 +1,12 @@
+//2016-luaPP zukonake
+
 #ifndef TABLE_HPP
 #define TABLE_HPP
 
 #include <unordered_map>
 #include <string>
 //
+#include <luaPP/nonCopyable.hpp>
 #include <luaPP/typedef.hpp>
 #include <luaPP/element/stackElement.hpp>
 
@@ -12,35 +15,35 @@ namespace LW
 
 class LuaStack;
 
-class Table : public StackElement
+class Table : public StackElement, virtual NonCopyable
 {
 public:
 	typedef std::unordered_map< std::string, StackElement* > Value;
 
 	Table() = delete;
-	Table( LuaStack& luaStack, const Index& index = -1 );
+	Table( const LuaStack& luaStack, const Index& index = -1 );
 
 	virtual ~Table();
 
 	template< typename T = StackElement >
-	T* at( const std::string& key );
+	const T* at( const std::string& key ) const;
 
 	template< typename T = StackElement >
-	T* operator[]( const std::string& key );
+	const T* operator[]( const std::string& key ) const;
 private:
 	Value mValue;
 };
 
 template< typename T = StackElement >
-T* Table::at( const std::string& key )
+const T* Table::at( const std::string& key ) const
 {
-	return dynamic_cast< T* >( mValue.at( key ));
+	return dynamic_cast< const T* >( mValue.at( key ));
 }
 
 template< typename T = StackElement >
-T* Table::operator[]( const std::string& key )
+const T* Table::operator[]( const std::string& key ) const
 {
-	return dynamic_cast< T* >( mValue.at( key ));
+	return dynamic_cast< const T* >( mValue.at( key ));
 }
 
 }
