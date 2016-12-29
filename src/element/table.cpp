@@ -34,3 +34,8 @@ Table::~Table()
 		delete iElement.second;
 	}
 }
+
+const Table::Value& Table::get() const noexcept
+{
+	return mValue;
+}

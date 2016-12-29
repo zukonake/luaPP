@@ -31,6 +31,8 @@ public:
 
 	template< typename T = StackElement >
 	const T* operator[]( const std::string& key ) const;
+
+	const Value& get() const noexcept;
 private:
 	Value mValue;
 };
