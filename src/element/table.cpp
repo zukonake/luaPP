@@ -35,6 +35,11 @@ Table::~Table()
 	}
 }
 
+Table::operator const Table::Value&() const noexcept
+{
+	return mValue;
+}
+
 const Table::Value& Table::get() const noexcept
 {
 	return mValue;
