@@ -3,6 +3,7 @@
 #ifndef LPP_TABLE_HPP
 #define LPP_TABLE_HPP
 
+#include <cstddef>
 #include <unordered_map>
 #include <string>
 //
@@ -19,7 +20,7 @@ class LuaStack;
 class Table : public StackElement, virtual NonCopyable
 {
 public:
-	typedef std::unordered_map< std::string, const StackElement* > Value;
+	typedef std::pair< std::unordered_map< std::size_t, const StackElement* >, std::unordered_map< std::string, const StackElement* > > Value;
 
 	Table() = delete;
 	Table( const LuaStack& luaStack, const Index& index = -1 );
@@ -30,7 +31,13 @@ public:
 	const T* at( const std::string& key ) const;
 
 	template< typename T = StackElement >
+	const T* at( const std::size_t& key ) const;
+
+	template< typename T = StackElement >
 	const T* operator[]( const std::string& key ) const;
+
+	template< typename T = StackElement >
+	const T* operator[]( const std::size_t& key ) const;
 
 	operator const Value&() const noexcept;
 
@@ -42,13 +49,25 @@ private:
 template< typename T = StackElement >
 const T* Table::at( const std::string& key ) const
 {
-	return dynamic_cast< const T* >( mValue.at( key ));
+	return dynamic_cast< const T* >( mValue.second.at( key ));
+}
+
+template< typename T = StackElement >
+const T* Table::at( const std::size_t& key ) const
+{
+	return dynamic_cast< const T* >( mValue.first.at( key ));
 }
 
 template< typename T = StackElement >
 const T* Table::operator[]( const std::string& key ) const
 {
-	return dynamic_cast< const T* >( mValue.at( key ));
+	return dynamic_cast< const T* >( mValue.second.at( key ));
+}
+
+template< typename T = StackElement >
+const T* Table::operator[]( const std::size_t& key ) const
+{
+	return dynamic_cast< const T* >( mValue.first.at( key ));
 }
 
 }

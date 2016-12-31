@@ -19,17 +19,31 @@ Table::Table( const LuaStack& luaStack, const Index& index ) :
 	luaStack.pushNil();
 	while( luaStack.iterate())
 	{
-		std::string key = luaStack.getString( -2 );
-		luaStack.insert(( index + 1 ) + -3 );
-		const StackElement* value = luaStack.get(( index + 1 ) + -3 );
-		mValue[ key ] = value;
+		if( luaStack.getType( -2 ) == LuaType::NUMBER )
+		{
+			std::size_t key = luaStack.getNumber( -2 );
+			luaStack.insert(( index + 1 ) + -3 );
+			const StackElement* value = luaStack.get(( index + 1 ) + -3 );
+			mValue.first[ key ] = value;
+		}
+		else if( luaStack.getType( -2 ) == LuaType::STRING )
+		{
+			std::string key = luaStack.getString( -2 );
+			luaStack.insert(( index + 1 ) + -3 );
+			const StackElement* value = luaStack.get(( index + 1 ) + -3 );
+			mValue.second[ key ] = value;
+		}
 	}
 	luaStack.pop();
 }
 
 Table::~Table()
 {
-	for( auto& iElement : mValue )
+	for( auto& iElement : mValue.first )
+	{
+		delete iElement.second;
+	}
+	for( auto& iElement : mValue.second )
 	{
 		delete iElement.second;
 	}

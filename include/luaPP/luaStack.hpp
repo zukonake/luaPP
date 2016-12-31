@@ -3,6 +3,7 @@
 #ifndef LPP_LUASTACK_HPP
 #define LPP_LUASTACK_HPP
 
+#include <cstddef>
 #include <string>
 //
 #include <nonCopyable.hpp>
@@ -35,7 +36,9 @@ public:
 	StringValue getString( const Index& index = -1 ) const;			///get raw string from stack
 
 	template< typename T = StackElement >
-	const T* at( const std::string& name ) const;					///get T StackElement from mStack
+	const T* at( const std::string& key ) const;					///get T StackElement from mStack
+	template< typename T = StackElement >
+	const T* at( const std::size_t& key ) const;					///get T StackElement from mStack
 	template< typename T >
 	const T* get( const Index& index = -1 ) const;					//return new T StackElement
 	const StackElement* get( const Index& index = -1 ) const;		///return new StackElement
@@ -63,7 +66,7 @@ public:
 	Index call() const; 											///call the element on the top of the stack
 
 	constexpr static float luaVersion = 5.2;
-	constexpr static float luaPPVersion = 0.809;
+	constexpr static float luaPPVersion = 0.910;
 private:
 	void clear() noexcept;
 
@@ -72,9 +75,15 @@ private:
 };
 
 template< typename T >
-const T* LuaStack::at( const std::string& name ) const
+const T* LuaStack::at( const std::string& key ) const
 {
-	return mStack->at< T >( name );
+	return mStack->at< T >( key );
+}
+
+template< typename T >
+const T* LuaStack::at( const std::size_t& key ) const
+{
+	return mStack->at< T >( key );
 }
 
 template< typename T >
