@@ -8,7 +8,7 @@ arch=('any')
 url="https://github.com/zukonake/$pkgname"
 license=(GPL)
 depends=('lua>=5.2')
-source=("$url/releases/download/$pkgver/$pkgname-$pkgver.tar.xz")
+source=("$url/archive/v$pkgver-alpha.tar.gz")
 
 build() {
   cd "$srcdir/$pkgname-$pkgver/"
