@@ -39,6 +39,13 @@ public:
 	const T* at( const std::string& key ) const;					///get T StackElement from mStack
 	template< typename T = StackElement >
 	const T* at( const std::size_t& key ) const;					///get T StackElement from mStack
+
+	template< typename T = StackElement >
+	const T* operator[]( const std::string& key ) const; 				///get T StackElement from mStack
+
+	template< typename T = StackElement >
+	const T* operator[]( const std::size_t& key ) const;				///get T StackElement from mStack
+
 	template< typename T >
 	const T* get( const Index& index = -1 ) const;					//return new T StackElement
 	const StackElement* get( const Index& index = -1 ) const;		///return new StackElement
@@ -88,6 +95,17 @@ const T* LuaStack::at( const std::size_t& key ) const
 	return mStack->at< T >( key );
 }
 
+template< typename T >
+const T* LuaStack::operator[]( const std::string& key ) const
+{
+	return mStack->operator[]< T >( key );
+}
+
+template< typename T >
+const T* LuaStack::operator[]( const std::size_t& key ) const
+{
+	return mStack->operator[]< T >( key );
+}
 template< typename T >
 const T* LuaStack::get( const Index& index ) const
 {
