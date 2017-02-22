@@ -2,7 +2,7 @@
 
 #include <luaPP/luaStack.hpp>
 //
-#include <lua5.2/lua.hpp>
+#include <lua.hpp>
 //
 #include <luaPP/element/stackElement.hpp>
 #include <luaPP/element/nil.hpp>
