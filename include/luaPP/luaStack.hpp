@@ -66,7 +66,9 @@ public:
 	Index call() const; 											///call the element on the top of the stack
 
 	constexpr static float luaVersion = 5.2;
-	constexpr static float luaPPVersion = 1.0;
+	constexpr static short luaPPVersionMajor = 0;
+	constexpr static short luaPPVersionMinor = 10;
+	constexpr static short luaPPVersionPatch = 0;
 private:
 	void clear() noexcept;
 

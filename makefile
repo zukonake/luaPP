@@ -1,7 +1,7 @@
 SOURCE_PATH := src/
 BUILD_PATH := build/
 OBJ_PATH := $(BUILD_PATH)obj/
-VERSION := 1.0
+VERSION := 0.10.0
 TARGET_PATH := libluapp.so
 SOURCES := $(shell find $(SOURCE_PATH) -type f -name "*.cpp" -printf '%p ')
 HEADERS := $(shell find $(SOURCE_PATH) -type f -name "*.hpp" -printf '%p ')
