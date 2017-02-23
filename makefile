@@ -1,8 +1,8 @@
 SOURCE_PATH := src/
 BUILD_PATH := build/
 OBJ_PATH := $(BUILD_PATH)obj/
-VERSION := 0.10.0
-TARGET_PATH := libluapp.so
+VERSION := 0.10.0-alpha-win64
+TARGET_PATH := libluapp.a
 SOURCES := $(shell find $(SOURCE_PATH) -type f -name "*.cpp" -printf '%p ')
 HEADERS := $(shell find $(SOURCE_PATH) -type f -name "*.hpp" -printf '%p ')
 OBJS := $(addprefix $(OBJ_PATH),$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -type f -name "*.cpp" -exec basename {} \;)))
@@ -10,17 +10,16 @@ DEBUG := -g -O0
 STD := -std=c++14
 LDLIBS := -llua
 INCFLAGS := -I include
-LIBFLAGS := -L /usr/lib
+LIBFLAGS := -L lib -L /usr/x86_64-w64-mingw32/lib
 CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
-LDFLAGS := $(STD) -fPIC -shared -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
-COMPILER := g++
-PREFIX := /usr/lib
+COMPILER := x86_64-w64-mingw32-g++
+PREFIX := /usr/x86_64-w64-mingw32/lib
 
 .PHONY : clean install uninstall
 
 $(TARGET_PATH) : $(OBJS)
-	$(COMPILER) $(LDFLAGS) $(OBJS) -o $@
-
+	x86_64-w64-mingw32-ar rvs $@ $(OBJS)
+	
 .SECONDEXPANSION:
 $(OBJ_PATH)%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
 	@mkdir -p $(BUILD_PATH)
@@ -30,12 +29,10 @@ $(OBJ_PATH)%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
 	@sed -i '1s/^/build\/obj\//' $(BUILD_PATH)$*.d
 
 install: $(TARGET_PATH)
-	cp $< $(DESTDIR)$(PREFIX)/$<.$(VERSION)
-	chmod 755 $(DESTDIR)$(PREFIX)/$<.$(VERSION)
-	ln -sf $(DESTDIR)$(PREFIX)/$<.$(VERSION) $(DESTDIR)$(PREFIX)/$<
+	cp $< $(DESTDIR)$(PREFIX)/$<
+	chmod 644 $(DESTDIR)$(PREFIX)/$<
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/$(TARGET_PATH).$(VERSION)
 	rm -f $(DESTDIR)$(PREFIX)/$(TARGET_PATH)
 
 clean :

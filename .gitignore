@@ -1,7 +1,13 @@
 *.so
+*.swp
+*.dll
+*.a
+*.exe
+~*
 build
 bin
 callgrind*
 vgcore*
 test*
+debug*
 main.*
