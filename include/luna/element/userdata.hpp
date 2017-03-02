@@ -19,7 +19,7 @@ public:
 
 	virtual ~Userdata() = default;
 
-	Userdata &operator( Userdata &&that );
+	Userdata &operator=( Userdata &&that );
 
 	virtual Type getType() const noexcept override;
 };

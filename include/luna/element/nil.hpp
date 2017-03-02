@@ -19,7 +19,7 @@ public:
 
 	virtual ~Nil() = default;
 
-	Nil &operator( Nil &&that );
+	Nil &operator=( Nil &&that );
 
 	virtual Type getType() const noexcept override;
 };

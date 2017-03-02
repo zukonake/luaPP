@@ -34,16 +34,16 @@ public:
 	 */
 	void loadGlobal( const std::string &name ) const;
 
-	/* loads all the global variables on to the
-	 * stack inserting them into the given index
+	/* loads all the global variables
+	 * on to the stack
 	 */
-	void loadGlobals( const Index &index = -1 ) const;
+	void loadGlobals() const;
 
 	/* returns the value of an element at given
 	 * index as a number or string
 	 */
 	Number::Value toNumber( const Index &index = -1 ) const;
-	String::value toString( const Index &index = -1 ) const;
+	String::Value toString( const Index &index = -1 ) const;
 
 	/* loads code, pushes it onto stack
 	 * and calls call()
@@ -55,7 +55,7 @@ public:
 	 * and returns number of returned
 	 * elements
 	 */
-	Size call( const Index &index ) const;
+	Size call( const Index &index = -1 ) const;
 
 	void pushNil() const;
 	void pushNumber( const Number::Value &value ) const;
@@ -65,6 +65,11 @@ public:
 	 * to another
 	 */
 	void copy( const Index &from, const Index &to ) const;
+
+	/* moves value from one index
+	 * to another
+	 */
+	void move( const Index &from, const Index &to ) const;
 
 	/* swaps position of two elements
 	 */
@@ -104,14 +109,14 @@ public:
 	 */
 	bool isValid( const Index &index = -1 ) const noexcept;
 
+	Type getType( const Index &index = -1 ) const; 
 	Size getSize() const noexcept;
-
 	const State &getState() const noexcept;
-
 	Index getRelativeIndex( const AbsoluteIndex &index ) const;
 	AbsoluteIndex getAbsoluteIndex( const Index &index ) const;
 private:
 	void allocate( const Size &space = 1 ) const;
+	void guaranteeValidity( const Index &index = -1 ) const;
 
 	State mState;
 };

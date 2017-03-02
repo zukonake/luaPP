@@ -19,7 +19,7 @@ public:
 
 	virtual ~LightUserdata() = default;
 
-	LightUserdata &operator( LightUserdata &&that );
+	LightUserdata &operator=( LightUserdata &&that );
 
 	virtual Type getType() const noexcept override;
 };

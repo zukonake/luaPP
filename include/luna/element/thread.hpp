@@ -19,7 +19,7 @@ public:
 
 	virtual ~Thread() = default;
 
-	Thread &operator( Thread &&that );
+	Thread &operator=( Thread &&that );
 
 	virtual Type getType() const noexcept override;
 };

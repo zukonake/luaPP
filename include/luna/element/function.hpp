@@ -19,7 +19,7 @@ public:
 
 	virtual ~Function() = default;
 
-	Function &operator( Function &&that );
+	Function &operator=( Function &&that );
 
 	virtual Type getType() const noexcept override;
 };

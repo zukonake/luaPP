@@ -23,7 +23,7 @@ public:
 
 	virtual ~Table() = default;
 
-	Table &operator( Table &&that );
+	Table &operator=( Table &&that );
 
 	template< typename T = Element >
 	std::shared_ptr< const T > at( const std::size_t &index = -1 ) const;
