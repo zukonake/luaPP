@@ -1,44 +1,44 @@
-SOURCE_PATH := src/
-BUILD_PATH := build/
-OBJ_PATH := $(BUILD_PATH)obj/
-VERSION := 0.10.0
-TARGET_PATH := libluapp.so
-SOURCES := $(shell find $(SOURCE_PATH) -type f -name "*.cpp" -printf '%p ')
-HEADERS := $(shell find $(SOURCE_PATH) -type f -name "*.hpp" -printf '%p ')
-OBJS := $(addprefix $(OBJ_PATH),$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -type f -name "*.cpp" -exec basename {} \;)))
-DEBUG := -g -O0
-STD := -std=c++14
-LDLIBS := -llua
+SOURCE_PATH := src
+OBJ_PATH := bin
+DEPEND_PATH := depend
+TEST_PATH := $(SOURCE_PATH)/test
+TARGET_PATH := libluna.so
+VERSION := 1.0.0
+SOURCES := $(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -printf '%p ')
+OBJS := $(addprefix $(OBJ_PATH)/,$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -exec basename {} \;)))
+TEST_SOURCES := $(shell find $(TEST_PATH) -type f -name "*.cpp" -printf '%p ')
+TEST_OBJS := $(addprefix $(OBJ_PATH)/,$(patsubst %.cpp,%.o,$(shell find $(TEST_PATH) -type f -name "*.cpp" -exec basename {} \;)))
+DEBUG := -g -O0 -DDEBUG
+STD := -std=c++17
+LDLIBS := -llua -lboost_unit_test_framework
 INCFLAGS := -I include
 LIBFLAGS := -L /usr/lib
 CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
-LDFLAGS := $(STD) -fPIC -shared -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
+LDFLAGS := $(STD) -fPIC -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
 COMPILER := g++
 PREFIX := /usr/lib
 
-.PHONY : clean install uninstall
+.PHONY : clean install uninstall test
 
 $(TARGET_PATH) : $(OBJS)
-	$(COMPILER) $(LDFLAGS) $(OBJS) -o $@
+	$(COMPILER) -shared $(LDFLAGS) $(OBJS) -o $@
+
+test: $(TEST_OBJS) $(OBJS)
+	$(COMPILER) $(LDFLAGS) $(TEST_OBJS) $(OBJS) -DTEST -o $@
 
 .SECONDEXPANSION:
-$(OBJ_PATH)%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
-	@mkdir -p $(BUILD_PATH)
+$(OBJ_PATH)/%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
 	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(DEPEND_PATH)
 	$(COMPILER) $(CXXFLAGS) -c $< -o $@
-	$(COMPILER) -MM $(CXXFLAGS) $< > $(BUILD_PATH)$*.d
-	@sed -i '1s/^/build\/obj\//' $(BUILD_PATH)$*.d
+	$(COMPILER) -MM $(CXXFLAGS) $< > $(DEPEND_PATH)/$*.d
+	@sed -i '1s/^/bin\//' $(DEPEND_PATH)/$*.d
 
 install: $(TARGET_PATH)
-	cp $< $(DESTDIR)$(PREFIX)/$<.$(VERSION)
-	chmod 755 $(DESTDIR)$(PREFIX)/$<.$(VERSION)
-	ln -sf $(DESTDIR)$(PREFIX)/$<.$(VERSION) $(DESTDIR)$(PREFIX)/$<
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/$(TARGET_PATH).$(VERSION)
-	rm -f $(DESTDIR)$(PREFIX)/$(TARGET_PATH)
 
 clean :
-	$(RM) -r $(BUILD_PATH) *~ bin $(TARGET_PATH) vgcore* callgrind* *.so
+	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH)
 
--include $(shell find $(BUILD_PATH) -type f -name "*.d" -printf '%p ')
+-include $(shell find $(DEPEND_PATH) -type f -name "*.d" -printf '%p ')

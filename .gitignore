@@ -3,11 +3,11 @@
 *.dll
 *.a
 *.exe
-~*
+*.out
+*~
 build
 bin
+depend
 callgrind*
 vgcore*
-test*
 debug*
-main.*
