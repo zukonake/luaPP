@@ -21,7 +21,7 @@ public:
 	RawStack();
 	RawStack( RawStack &&that );
 
-	virtual ~RawStack();
+	virtual ~RawStack() = default;
 
 	RawStack &operator=( RawStack &&that );
 
@@ -61,19 +61,25 @@ public:
 	void pushNumber( const Number::Value &value ) const;
 	void pushString( const String::Value &value ) const;
 
-	/* copies value from one index
-	 * to another
+	/* replaces value from one index
+	 * with another
 	 */
-	void copy( const Index &from, const Index &to ) const;
+	void replace( const Index &from, const Index &to ) const;
 
-	/* moves value from one index
-	 * to another
+	/* replace value from one index
+	 * with another and removes
+	 * the original value
 	 */
 	void move( const Index &from, const Index &to ) const;
 
 	/* swaps position of two elements
 	 */
 	void swap( const Index &one, const Index &two ) const;
+
+	/* pushes the element from the
+	 * given index
+	 */
+	void copy( const Index &from  = -1 ) const;
 
 	/* moves top element to given index
 	 * shifting up elements above
@@ -92,31 +98,37 @@ public:
 
 	/* pops key and pushes key-value
 	 * pair from a table at given index
+	 * returns true if the table has not
+	 * been fully iterated yet a nil
+	 * should be pushed before calling it
 	 */
-	void iterate( const Index &index = -1 ) const;
+	bool iterate( const Index &index = -2 ) const;
 
 	/* pops given amount of elements
 	 */
-	void pop( const Size &space = -1 ) const;
+	void pop( const Size &space = 1 ) const;
 
-	/* clears the stack and resizes it
-	 * to given size
-	 */
-	void clear( const Size &newSize = 0 ) const noexcept;
+	void clear() const noexcept;
 
 	/* returns whether element at
 	 * given index exists
 	 */
 	bool isValid( const Index &index = -1 ) const noexcept;
 
+	/* returns the type of element
+	 * at given index, returns INVALID
+	 * if the element is invalid or
+	 * does not exist
+	 */
 	Type getType( const Index &index = -1 ) const; 
 	Size getSize() const noexcept;
 	const State &getState() const noexcept;
 	Index getRelativeIndex( const AbsoluteIndex &index ) const;
 	AbsoluteIndex getAbsoluteIndex( const Index &index ) const;
 private:
-	void allocate( const Size &space = 1 ) const;
-	void guaranteeValidity( const Index &index = -1 ) const;
+	void allocate( const Size &size = 1 ) const;
+	void validate( const Index &index ) const;
+	void validateType( const Index &index, const Type &type ) const;
 
 	State mState;
 };

@@ -19,7 +19,8 @@ void LuaStateDeleter::operator()( LuaState *ptr ) const
 State::State() :
 	mL( lua_newstate( Auxiliary::allocate, nullptr ))
 {
-	lua_atpanic( mL.get(), Auxiliary::panic );	
+	lua_atpanic( mL.get(), Auxiliary::panic );
+	luaL_openlibs( mL.get());
 }
 
 State::State( State &&that )
@@ -33,12 +34,17 @@ State &State::operator=( State &&that ) noexcept
 	return *this;
 }
 
-State::operator lua_State *() noexcept
+State::operator LuaState *() noexcept
 {
 	return mL.get();
 }
 
-State::operator const lua_State *() const noexcept
+State::operator LuaState *() const noexcept
+{
+	return const_cast< LuaState *>( mL.get());
+}
+
+State::operator const LuaState *() const noexcept
 {
 	return mL.get();
 }

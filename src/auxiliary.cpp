@@ -39,7 +39,7 @@ std::string getTypeName( const Type &type ) noexcept
 			return "userdata";
 			break;
 
-		case LIGHTUSERDATA:
+		case LIGHT_USERDATA:
 			return "light userdata";
 			break;
 
