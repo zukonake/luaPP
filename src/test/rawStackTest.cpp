@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( rawMethodTest )
 	BOOST_REQUIRE_NO_THROW( tRawStack01.pushNumber( 64 ));
 	BOOST_REQUIRE_NO_THROW( tRawStack01.pushString( "test" ));
 	BOOST_CHECK_NO_THROW( tRawStack01.replace( -1, -2 ));
-	BOOST_CHECK_NO_THROW( tRawStack01.replace( 0, 0 ));
+	BOOST_CHECK_THROW( tRawStack01.replace( 0, 0 ), std::out_of_range );
 	BOOST_CHECK_THROW( tRawStack01.replace( 100, 0 ), std::out_of_range );
 	BOOST_CHECK_THROW( tRawStack01.replace( -100, 0 ), std::out_of_range );
 	BOOST_CHECK_THROW( tRawStack01.replace( 0, 100 ), std::out_of_range );
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE( rawMethodTest )
 	BOOST_CHECK_THROW( tRawStack11.move( -100, 0 ), std::out_of_range );
 	BOOST_CHECK_THROW( tRawStack11.move( 0, 100 ), std::out_of_range );
 	BOOST_CHECK_THROW( tRawStack11.move( 0, -100 ), std::out_of_range );
-	BOOST_CHECK_NO_THROW( tRawStack11.move( 0, 0 ));
+	BOOST_CHECK_THROW( tRawStack11.move( 0, 0 ), std::out_of_range );
 	BOOST_CHECK_EQUAL( tRawStack11.getSize(), 1 );
 	BOOST_CHECK_EQUAL( tRawStack11.toString( -1 ), "test" );
 }
