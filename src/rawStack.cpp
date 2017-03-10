@@ -228,13 +228,15 @@ void RawStack::pushString( const String::Value &value ) const
 void RawStack::replace( const Index &from, const Index &to ) const
 {
 	AbsoluteIndex realTo;
-	if( from == to )
-	{
-		return;
-	}
+	AbsoluteIndex realFrom;
 	try
 	{
 		realTo = getAbsoluteIndex( to );
+		realFrom = getAbsoluteIndex( from );
+		if( realFrom ==realTo )
+		{
+			return;
+		}
 		copy( from );
 	}
 	catch( std::exception &e )
@@ -247,20 +249,31 @@ void RawStack::replace( const Index &from, const Index &to ) const
 
 void RawStack::move( const Index &from, const Index &to ) const
 {
-	if( from == to )
-	{
-		return;
-	}
+	AbsoluteIndex realFrom;
+	AbsoluteIndex realTo;
 	try
 	{
-		validate( to );
+		realFrom = getAbsoluteIndex( from );
+		realTo = getAbsoluteIndex( to );
+		if( realFrom == realTo )
+		{
+			return;
+		}
+		if( from != -1 )
+		{
+			copy( realFrom );
+		}
+		lua_replace( mState, realTo );
+		if( from != -1 )
+		{
+			remove( realFrom );
+		}
 	}
 	catch( std::exception &e )
 	{
 		throw;
 		return;
 	}
-	lua_replace( mState, to );	
 }
 
 void RawStack::swap( const Index &one, const Index &two ) const
