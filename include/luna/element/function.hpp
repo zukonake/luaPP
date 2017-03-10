@@ -14,7 +14,7 @@ namespace Luna
 class Function : public Element
 {
 public:
-	explicit Function( const Stack &stack, const Index &index = -1 );
+	explicit Function( const RawStack &stack, const Index &index = -1 );
 	Function( Function &&that );
 
 	virtual ~Function() = default;

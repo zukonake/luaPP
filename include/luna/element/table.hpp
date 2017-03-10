@@ -18,7 +18,7 @@ public:
 		std::unordered_map< Index, std::shared_ptr< const Element > >,
 		std::unordered_map< std::string, std::shared_ptr< const Element > > > Value;
 
-	explicit Table( const Stack &stack, const Index &index = -1 );
+	explicit Table( const RawStack &stack, const Index &index = -1 );
 	Table( Table &&that );
 
 	virtual ~Table() = default;

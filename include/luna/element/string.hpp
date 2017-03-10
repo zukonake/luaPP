@@ -16,7 +16,7 @@ class String : public Element
 public:
 	typedef std::string Value;
 
-	explicit String( const Stack &stack, const Index &index = -1 );
+	explicit String( const RawStack &stack, const Index &index = -1 );
 	String( String &&that );
 
 	virtual ~String() = default;

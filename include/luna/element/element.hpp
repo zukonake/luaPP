@@ -10,21 +10,19 @@
 namespace Luna
 {
 
-class Stack;
+class RawStack;
 
 class Element
 {
 public:
-	explicit Element( const Stack &stack, const Index &index = -1 );
-	Element( Element &&that );
+	explicit Element( const RawStack &stack, const Index &index = -1 );
 
 	virtual ~Element();
 
-	Element &operator=( Element &&that );
-
 	virtual Type getType() const noexcept = 0;
+	virtual const Index &getIndex() const noexcept final;
 private:
-	const Stack &mStack;
+	const RawStack &mRawStack;
 	Index mIndex;
 };
 

@@ -16,7 +16,7 @@ class Number : public Element
 public:
 	typedef float Value;
 
-	explicit Number( const Stack &stack, const Index &index = -1 );
+	explicit Number( const RawStack &stack, const Index &index = -1 );
 	Number( Number &&that );
 
 	virtual ~Number() = default;

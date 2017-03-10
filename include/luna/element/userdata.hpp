@@ -14,7 +14,7 @@ namespace Luna
 class Userdata : public Element
 {
 public:
-	explicit Userdata( const Stack &stack, const Index &index = -1 );
+	explicit Userdata( const RawStack &stack, const Index &index = -1 );
 	Userdata( Userdata &&that );
 
 	virtual ~Userdata() = default;

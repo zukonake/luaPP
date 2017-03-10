@@ -14,7 +14,7 @@ namespace Luna
 class Thread : public Element
 {
 public:
-	explicit Thread( const Stack &stack, const Index &index = -1 );
+	explicit Thread( const RawStack &stack, const Index &index = -1 );
 	Thread( Thread &&that );
 
 	virtual ~Thread() = default;
