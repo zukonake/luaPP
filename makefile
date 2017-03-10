@@ -24,7 +24,7 @@ $(TARGET_PATH) : $(OBJS)
 	$(COMPILER) -shared $(LDFLAGS) $(OBJS) -o $@
 
 test: $(TEST_OBJS) $(OBJS)
-	$(COMPILER) $(LDFLAGS) $(TEST_OBJS) $(OBJS) -DTEST -o $@
+	$(COMPILER) $(LDFLAGS) $(TEST_OBJS) $(OBJS) -DTEST -o test.out
 
 .SECONDEXPANSION:
 $(OBJ_PATH)/%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
