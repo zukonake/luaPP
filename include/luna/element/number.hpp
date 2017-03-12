@@ -10,22 +10,22 @@
 
 namespace Luna
 {
-	
+
+class RawStack;
+
 class Number : public Element
 {
 public:
 	typedef float Value;
 
-	explicit Number( const RawStack &stack, const Index &index = -1 );
-	Number( Number &&that );
+	explicit Number( const RawStack &rawStack, const Index &index = -1 );
 
 	virtual ~Number() = default;
 
-	Number &operator=( Number &&that );
+	virtual const Value &operator*() const noexcept;
 
 	virtual Type getType() const noexcept override;
-
-	Value get() const noexcept;
+	const Value &get() const noexcept;
 private:
 	Value mValue;
 };
