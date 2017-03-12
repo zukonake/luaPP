@@ -5,27 +5,29 @@
 
 #pragma once
 
+#include <string>
+//
 #include <luna/typedef.hpp>
 #include <luna/element/element.hpp>
 
 namespace Luna
 {
 	
+class RawStack;
+
 class String : public Element
 {
 public:
 	typedef std::string Value;
 
-	explicit String( const RawStack &stack, const Index &index = -1 );
-	String( String &&that );
+	explicit String( const RawStack &rawStack, const Index &index = -1 );
 
 	virtual ~String() = default;
 
-	String &operator=( String &&that );
+	virtual const Value &operator*() const noexcept;
 
 	virtual Type getType() const noexcept override;
-
-	Value get() const noexcept;
+	const Value &get() const noexcept;
 private:
 	Value mValue;
 };
