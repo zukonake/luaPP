@@ -11,9 +11,9 @@ BOOST_AUTO_TEST_SUITE( rawStackTest );
 
 BOOST_AUTO_TEST_CASE( constructorDestructorTest )
 {
-	RawStack *tRawStack01 = nullptr;
-	BOOST_REQUIRE_NO_THROW( tRawStack01 = new RawStack());
-	BOOST_REQUIRE_NO_THROW( delete tRawStack01 );
+	//RawStack *tRawStack01 = nullptr;
+	//BOOST_REQUIRE_NO_THROW( tRawStack01 = new RawStack());
+	//BOOST_REQUIRE_NO_THROW( delete tRawStack01 );
 }
 
 BOOST_AUTO_TEST_CASE( moveTest )
