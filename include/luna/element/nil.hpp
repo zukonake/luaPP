@@ -14,7 +14,7 @@ namespace Luna
 class Nil : public Element
 {
 public:
-	explicit Nil( const RawStack &stack, const Index &index = -1 );
+	explicit Nil( const RawStack &rawStack, const Index &index = -1 );
 	Nil( Nil &&that );
 
 	virtual ~Nil() = default;
