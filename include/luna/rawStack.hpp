@@ -8,9 +8,8 @@
 #include <string>
 //
 #include <luna/typedef.hpp>
+#include <luna/value.hpp>
 #include <luna/state.hpp>
-#include <luna/element/number.hpp>
-#include <luna/element/string.hpp>
 
 namespace Luna
 {
@@ -42,8 +41,8 @@ public:
 	/* returns the value of an element at given
 	 * index as a number or string
 	 */
-	Number::Value toNumber( const Index &index = -1 ) const;
-	String::Value toString( const Index &index = -1 ) const;
+	NumberValue toNumber( const Index &index = -1 ) const;
+	StringValue toString( const Index &index = -1 ) const;
 
 	/* loads code, pushes it onto stack
 	 * and calls call()
@@ -58,8 +57,8 @@ public:
 	Size call( const Index &index = -1 ) const;
 
 	void pushNil() const;
-	void pushNumber( const Number::Value &value ) const;
-	void pushString( const String::Value &value ) const;
+	void pushNumber( const NumberValue &value ) const;
+	void pushString( const StringValue &value ) const;
 
 	/* replaces value from one index
 	 * with another

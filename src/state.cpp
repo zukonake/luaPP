@@ -19,6 +19,11 @@ void LuaStateDeleter::operator()( LuaState *ptr ) const
 State::State() :
 	mL( lua_newstate( Auxiliary::allocate, nullptr ))
 {
+	if( mL = nullptr )
+	{
+		throw std::runtime_error( "Luna::State::State: couldn't create LuaState" );
+		return;
+	}
 	lua_atpanic( mL.get(), Auxiliary::panic );
 	luaL_openlibs( mL.get());
 }

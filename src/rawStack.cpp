@@ -107,7 +107,7 @@ void RawStack::loadGlobal( const std::string &name ) const
 	}
 }
 
-Number::Value RawStack::toNumber( const Index &index ) const
+NumberValue RawStack::toNumber( const Index &index ) const
 {
 	try
 	{
@@ -122,7 +122,7 @@ Number::Value RawStack::toNumber( const Index &index ) const
 	return lua_tonumber( mState, index );
 }
 
-String::Value RawStack::toString( const Index &index ) const
+StringValue RawStack::toString( const Index &index ) const
 {
 	try
 	{
@@ -199,7 +199,7 @@ void RawStack::pushNil() const
 	lua_pushnil( mState );
 }
 
-void RawStack::pushNumber( const Number::Value &value ) const
+void RawStack::pushNumber( const NumberValue &value ) const
 {
 	try
 	{
@@ -212,7 +212,7 @@ void RawStack::pushNumber( const Number::Value &value ) const
 	lua_pushnumber( mState, value );
 }
 
-void RawStack::pushString( const String::Value &value ) const
+void RawStack::pushString( const StringValue &value ) const
 {
 	try
 	{
