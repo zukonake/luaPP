@@ -7,8 +7,6 @@
 
 #include <memory>
 //
-#include <lua.hpp>
-//
 #include <luna/typedef.hpp>
 
 namespace Luna
@@ -29,9 +27,7 @@ public:
 
 	State &operator=( State &&that ) noexcept;
 
-	operator LuaState *() noexcept;
 	operator LuaState *() const noexcept;
-	operator const LuaState *() const noexcept;
 private:
 	std::unique_ptr< LuaState, LuaStateDeleter > mL;
 };

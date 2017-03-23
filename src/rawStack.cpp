@@ -1,8 +1,10 @@
+#include <stdexcept>
 #include <utility>
 #include <string>
 //
 #include <lua.hpp>
 //
+#include <luna/typedef.hpp>
 #include <luna/exception.hpp>
 #include <luna/auxiliary.hpp>
 #include <luna/rawStack.hpp>
@@ -103,7 +105,7 @@ void RawStack::loadGlobal( const std::string &name ) const
 	lua_getglobal( mState, name.c_str());
 	if( getType() == NIL )
 	{
-		throw std::runtime_error( "Luna::RawStack::loadGlobal: loaded a global nil value" );
+		throw Exception::InvalidType( "Luna::RawStack::loadGlobal: type nil loaded" );
 	}
 }
 

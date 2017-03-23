@@ -1,5 +1,8 @@
 #include <cstdlib>
 #include <stdexcept>
+#include <string>
+//
+#include <lua.hpp>
 //
 #include <luna/typedef.hpp>
 #include <luna/auxiliary.hpp>

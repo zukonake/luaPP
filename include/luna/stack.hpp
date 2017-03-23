@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <stdexcept>
 #include <memory>
 #include <string>
 //
@@ -43,7 +44,7 @@ public:
 	 * its bound element
 	 */
 	template< typename T = Element >
-    std::shared_ptr< const T > loadGlobal( const std::string &name ) const;
+    std::shared_ptr< const T > bindGlobal( const std::string &name ) const;
 
 	/* load the luna table into the stack
 	 * and return it
@@ -96,7 +97,7 @@ std::shared_ptr< const T > Stack::bind( const Index &index ) const
 }
 
 template< typename T >
-std::shared_ptr< const T > Stack::loadGlobal( const std::string &name ) const
+std::shared_ptr< const T > Stack::bindGlobal( const std::string &name ) const
 {
 	RawStack::loadGlobal( name );
 	return bind< T >();

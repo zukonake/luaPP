@@ -1,7 +1,10 @@
+#include <stdexcept>
 #include <utility>
+#include <memory>
 //
 #include <lua.hpp>
 //
+#include <luna/typedef.hpp>
 #include <luna/auxiliary.hpp>
 #include <luna/state.hpp>
 
@@ -19,7 +22,7 @@ void LuaStateDeleter::operator()( LuaState *ptr ) const
 State::State() :
 	mL( lua_newstate( Auxiliary::allocate, nullptr ))
 {
-	if( mL = nullptr )
+	if( mL == nullptr )
 	{
 		throw std::runtime_error( "Luna::State::State: couldn't create LuaState" );
 		return;
@@ -39,19 +42,9 @@ State &State::operator=( State &&that ) noexcept
 	return *this;
 }
 
-State::operator LuaState *() noexcept
-{
-	return mL.get();
-}
-
 State::operator LuaState *() const noexcept
 {
-	return const_cast< LuaState *>( mL.get());
-}
-
-State::operator const LuaState *() const noexcept
-{
-	return mL.get();
+	return const_cast< LuaState * >( mL.get());
 }
 
 }
