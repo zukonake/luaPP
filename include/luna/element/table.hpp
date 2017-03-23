@@ -18,16 +18,17 @@ class Table : public Element, public TableValue
 {
 public:
 	explicit Table( const Stack &stack, const Index &index = -1 );
+	Table( Table &&that );
 
 	virtual ~Table() = default;
 
 	using TableValue::operator[];
 
-	const TableValue &operator*() const noexcept;
+	Table &operator=( Table &&that );
+
+	using TableValue::at;
 
 	virtual Type getType() const noexcept override;
-
-	const TableValue &get() const noexcept;
 };
 
 }

@@ -18,9 +18,11 @@ class Number : public Element
 {
 public:
 	explicit Number( const RawStack &rawStack, const Index &index = -1 );
+	Number( Number &&that );
 
 	virtual ~Number() = default;
 
+	Number &operator=( Number &&that );
 	virtual const NumberValue &operator*() const noexcept;
 
 	virtual Type getType() const noexcept override;

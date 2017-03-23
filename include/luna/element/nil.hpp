@@ -14,12 +14,11 @@ namespace Luna
 class Nil : public Element
 {
 public:
-	explicit Nil( const RawStack &rawStack, const Index &index = -1 );
-	Nil( Nil &&that );
+	using Element::Element;
 
 	virtual ~Nil() = default;
 
-	Nil &operator=( Nil &&that );
+	using Element::operator=;
 
 	virtual Type getType() const noexcept override;
 };

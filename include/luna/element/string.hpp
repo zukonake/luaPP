@@ -18,9 +18,11 @@ class String : public Element
 {
 public:
 	explicit String( const RawStack &rawStack, const Index &index = -1 );
+	String( String &&that );
 
 	virtual ~String() = default;
 
+	String &operator=( String &&that );
 	virtual const StringValue &operator*() const noexcept;
 
 	virtual Type getType() const noexcept override;

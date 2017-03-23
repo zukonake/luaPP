@@ -14,12 +14,11 @@ namespace Luna
 class Thread : public Element
 {
 public:
-	explicit Thread( const RawStack &stack, const Index &index = -1 );
-	Thread( Thread &&that );
+	using Element::Element;
 
 	virtual ~Thread() = default;
 
-	Thread &operator=( Thread &&that );
+	using Element::operator=;
 
 	virtual Type getType() const noexcept override;
 };

@@ -14,12 +14,11 @@ namespace Luna
 class Function : public Element
 {
 public:
-	explicit Function( const RawStack &stack, const Index &index = -1 );
-	Function( Function &&that );
+	using Element::Element;
 
 	virtual ~Function() = default;
 
-	Function &operator=( Function &&that );
+	using Element::operator=;
 
 	virtual Type getType() const noexcept override;
 };

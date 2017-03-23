@@ -1,4 +1,5 @@
 #include <luna/typedef.hpp>
+#include <luna/value.hpp>
 #include <luna/element/table.hpp>
 #include <luna/stack.hpp>
 
@@ -24,19 +25,23 @@ Table::Table( const Stack &stack, const Index &index ) :
 	}
 }
 
-const TableValue &Table::operator*() const noexcept
+Table::Table( Table &&that ) :
+	Element( dynamic_cast< Element && >( that )),
+	TableValue( dynamic_cast< TableValue && >( that ))
 {
-	return dynamic_cast< const TableValue & >( *this );
+	
+}
+
+Table &Table::operator=( Table &&that )
+{
+	dynamic_cast< Element && >( *this ) = dynamic_cast< Element && >( that );
+	dynamic_cast< TableValue && >( *this ) = dynamic_cast< TableValue && >( that );
+	return *this;
 }
 
 Type Table::getType() const noexcept
 {
 	return TABLE;
-}
-
-const TableValue &Table::get() const noexcept
-{
-	return dynamic_cast< const TableValue & >( *this );
 }
 
 }

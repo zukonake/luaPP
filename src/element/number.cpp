@@ -1,4 +1,6 @@
 #include <luna/typedef.hpp>
+#include <luna/value.hpp>
+#include <luna/element/element.hpp>
 #include <luna/element/number.hpp>
 #include <luna/rawStack.hpp>
 
@@ -10,6 +12,20 @@ Number::Number( const RawStack &rawStack, const Index &index ) :
 	mValue( rawStack.toNumber( index ))
 {
 	
+}
+
+Number::Number( Number &&that ) :
+	Element( dynamic_cast< Element && >( that )),
+	mValue( that.mValue )
+{
+
+}
+
+Number &Number::operator=( Number &&that )
+{
+	static_cast< Element & >( *this ) = static_cast< Element && >( that );
+	mValue = that.mValue;
+	return *this;
 }
 
 const NumberValue &Number::operator*() const noexcept

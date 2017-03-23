@@ -14,12 +14,11 @@ namespace Luna
 class Userdata : public Element
 {
 public:
-	explicit Userdata( const RawStack &stack, const Index &index = -1 );
-	Userdata( Userdata &&that );
+	using Element::Element;
 
 	virtual ~Userdata() = default;
 
-	Userdata &operator=( Userdata &&that );
+	using Element::operator=;
 
 	virtual Type getType() const noexcept override;
 };
