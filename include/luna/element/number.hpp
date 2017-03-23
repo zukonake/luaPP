@@ -6,6 +6,7 @@
 #pragma once
 
 #include <luna/typedef.hpp>
+#include <luna/value.hpp>
 #include <luna/element/element.hpp>
 
 namespace Luna
@@ -16,18 +17,16 @@ class RawStack;
 class Number : public Element
 {
 public:
-	typedef float Value;
-
 	explicit Number( const RawStack &rawStack, const Index &index = -1 );
 
 	virtual ~Number() = default;
 
-	virtual const Value &operator*() const noexcept;
+	virtual const NumberValue &operator*() const noexcept;
 
 	virtual Type getType() const noexcept override;
-	const Value &get() const noexcept;
+	const NumberValue &get() const noexcept;
 private:
-	Value mValue;
+	NumberValue mValue;
 };
 
 }

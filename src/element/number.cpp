@@ -12,7 +12,7 @@ Number::Number( const RawStack &rawStack, const Index &index ) :
 	
 }
 
-const Number::Value &Number::operator*() const noexcept
+const NumberValue &Number::operator*() const noexcept
 {
 	return mValue;
 }
@@ -22,7 +22,7 @@ Type Number::getType() const noexcept
 	return NUMBER;
 }
 
-const Number::Value &Number::get() const noexcept
+const NumberValue &Number::get() const noexcept
 {
 	return mValue;
 }

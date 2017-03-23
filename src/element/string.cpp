@@ -12,7 +12,7 @@ String::String( const RawStack &rawStack, const Index &index ) :
 	
 }
 
-const String::Value &String::operator*() const noexcept
+const StringValue &String::operator*() const noexcept
 {
 	return mValue;
 }
@@ -22,7 +22,7 @@ Type String::getType() const noexcept
 	return STRING;
 }
 
-const String::Value &String::get() const noexcept
+const StringValue &String::get() const noexcept
 {
 	return mValue;
 }

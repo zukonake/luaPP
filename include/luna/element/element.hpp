@@ -16,8 +16,11 @@ class Element
 {
 public:
 	explicit Element( const RawStack &stack, const Index &index = -1 );
+	Element( Element &&that ); //TODO
 
 	virtual ~Element();
+
+	Element &operator=( Element &&that ); //TODO
 
 	virtual Type getType() const noexcept = 0;
 	virtual const Index &getIndex() const noexcept final;
