@@ -9,8 +9,8 @@
 #include <memory>
 #include <string>
 //
+#include <luna/tableValue.hpp>
 #include <luna/typedef.hpp>
-#include <luna/value.hpp>
 #include <luna/rawStack.hpp>
 #include <luna/element/element.hpp>
 #include <luna/element/nil.hpp>

@@ -1,5 +1,4 @@
 #include <luna/typedef.hpp>
-#include <luna/value.hpp>
 #include <luna/element/element.hpp>
 #include <luna/element/string.hpp>
 #include <luna/rawStack.hpp>

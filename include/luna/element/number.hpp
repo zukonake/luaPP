@@ -6,7 +6,6 @@
 #pragma once
 
 #include <luna/typedef.hpp>
-#include <luna/value.hpp>
 #include <luna/element/element.hpp>
 
 namespace Luna

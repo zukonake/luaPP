@@ -8,7 +8,6 @@
 #include <string>
 //
 #include <luna/typedef.hpp>
-#include <luna/value.hpp>
 #include <luna/state.hpp>
 
 namespace Luna

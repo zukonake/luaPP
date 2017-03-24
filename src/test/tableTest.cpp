@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE( test )
 	tStack01.doFile( "tableTest.lua" );
 	tStack01.loadGlobal( "test" );
 	std::shared_ptr< const Table > tTable01;
-	BOOST_REQUIRE_NO_THROW( tTable01 = std::make_shared< const Table >( tStack01, -1 ));
+	BOOST_REQUIRE( tTable01 = std::make_shared< const Table >( tStack01, -1 ));
 	BOOST_CHECK( tTable01->getType() == TABLE );
 	BOOST_CHECK_EQUAL( **tTable01->at< Number >( "var" ), 12 );
 	BOOST_CHECK_EQUAL( **tTable01->at< String >( "var1" ), "test" );
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( test )
 
 	Stack tStack02;
 	std::shared_ptr< const Table > tTable03;
-	BOOST_CHECK_THROW( tTable03 = std::make_shared< const Table >( tStack02, -1 ), std::runtime_error );
+	BOOST_CHECK_THROW( tTable03 = std::make_shared< const Table >( tStack02, -1 ), std::out_of_range );
 }
 
 BOOST_AUTO_TEST_SUITE_END();
