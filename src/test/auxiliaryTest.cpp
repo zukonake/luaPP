@@ -39,11 +39,6 @@ BOOST_AUTO_TEST_CASE( allocateTest )
 	BOOST_REQUIRE( ptr03 = allocate( nullptr, ptr03, sizeof( char ), sizeof( long int )));
 	BOOST_CHECK( ptr03 != nullptr );
 	BOOST_CHECK_NO_THROW( ptr03 = allocate( nullptr, ptr03, sizeof( long int ), 0 ));
-
-	void *ptr04 = new std::string;
-	BOOST_CHECK_NO_THROW( ptr04 = allocate( nullptr, ptr04, sizeof( std::string ), sizeof( char )));
-	BOOST_CHECK( ptr04 != nullptr );
-	BOOST_CHECK_NO_THROW( ptr04 = allocate( nullptr, ptr04, sizeof( char ), 0 ));
 }
 
 BOOST_AUTO_TEST_SUITE_END();
