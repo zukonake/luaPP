@@ -40,13 +40,10 @@ void RawStack::loadFile( const std::string &path ) const
 		throw;
 		return;
 	}
-	if( luaL_loadfile( mState, path.c_str()) != LUA_OK )
-	{
-		throw std::runtime_error( "Luna::RawStack::loadFile: " + toString());
-	}
+	checkForError( luaL_loadfile( mState, path.c_str()), path );
 }
 
-void RawStack::loadString( const std::string &path ) const
+void RawStack::loadString( const std::string &value ) const
 {
 	try
 	{
@@ -57,10 +54,7 @@ void RawStack::loadString( const std::string &path ) const
 		throw;
 		return;
 	}
-	if( luaL_loadstring( mState, path.c_str()) != LUA_OK )
-	{
-		throw std::runtime_error( "Luna::RawStack::loadString: " + toString());
-	}
+	checkForError( luaL_loadstring( mState, value.c_str()), value );
 }
 
 void RawStack::loadGlobals() const
@@ -105,7 +99,7 @@ void RawStack::loadGlobal( const std::string &name ) const
 	lua_getglobal( mState, name.c_str());
 	if( getType() == NIL )
 	{
-		throw Exception::InvalidType( "Luna::RawStack::loadGlobal: type nil loaded" );
+		throw Exception::StackError( "Luna::RawStack::loadGlobal: type nil loaded" );
 	}
 }
 
@@ -180,10 +174,7 @@ Size RawStack::call( const Index &index ) const
 		return 0;
 	}
 	Size before = getSize();
-	if( lua_pcall( mState, 0, LUA_MULTRET, 0 ) != LUA_OK )
-	{
-		throw std::runtime_error( "Luna::RawStack::call: pcall error: " + toString());
-	}
+	checkForError( lua_pcall( mState, 0, LUA_MULTRET, 0 ) != LUA_OK, std::to_string( index ));
 	Size after = getSize();
 	return after - before;
 }
@@ -370,7 +361,7 @@ void RawStack::pop( const Size &space ) const
 {
 	if( getSize() < space )
 	{
-		throw std::runtime_error( "Luna::RawStack::pop: tried to pop " + std::to_string( space ) + " elements while the stack has only " + std::to_string( getSize()));
+		throw Exception::StackError( "Luna::RawStack::pop: tried to pop " + std::to_string( space ) + " elements while the stack has only " + std::to_string( getSize()));
 		return;
 	}
 	lua_pop( mState, space );
@@ -481,11 +472,48 @@ AbsoluteIndex RawStack::getAbsoluteIndex( const Index &index ) const
 	return returnValue;
 }
 
+void RawStack::checkForError( const int &code, const std::string &message ) const
+{
+	switch( code )
+	{
+		case LUA_OK:
+			break;
+
+		case LUA_ERRRUN:
+			throw Exception::LuaError( "Luna::Auxiliary::checkForError: runtime error: " + message );
+			break;
+
+		case LUA_ERRMEM:
+			throw Exception::AllocationError( "Luna::Auxiliary::checkForError: couldn't allocate memory: " + message );
+			break;
+
+		case LUA_ERRERR:
+			throw Exception::LuaError( "Luna::Auxiliary::checkForError: message handler error: " + message );
+			break;
+
+		case LUA_ERRGCMM:
+			throw Exception::LuaError( "Luna::Auxiliary::checkForError: garbage collector error: " + message );
+			break;
+
+		case LUA_ERRFILE:
+			throw Exception::FileError( "Luna::Auxiliary::checkForError: couldn't open file: " + message );
+			break;
+
+		case LUA_ERRSYNTAX:
+			throw Exception::SyntaxError( "Luna::Auxiliary::checkForError: syntax error: " + toString());
+			break;
+
+		default:
+			throw Exception::LuaError( "Luna::Auxiliary::checkForError: unknown rror: " + message );
+			break;
+	}
+}
+
 void RawStack::allocate( const Size &space ) const
 {
 	if( !lua_checkstack( mState, space ))
 	{
-		throw std::bad_alloc();
+		throw Exception::AllocationError( "Luna::RawStack::allocate: couldn't allocate: " + std::to_string( space ) + " space" );
 	}
 }
 
@@ -493,7 +521,7 @@ void RawStack::validate( const Index &index ) const
 {
 	if( !isValid( index ))
 	{
-		throw std::out_of_range( "Luna::RawStack::validate: couldn't validate index: " + std::to_string( index ));
+		throw Exception::IndexError( "Luna::RawStack::validate: couldn't validate index: " + std::to_string( index ));
 	}
 }
 
@@ -502,7 +530,7 @@ void RawStack::validateType( const Index &index, const Type &type ) const
 	Type check = getType( index );
 	if( check != type )
 	{
-		throw Exception::InvalidType( "Luna::RawStack::validateType: type " + Auxiliary::getTypeName( check ) + " instead of " + Auxiliary::getTypeName( type ) + " type" );
+		throw Exception::TypeError( "Luna::RawStack::validateType: type " + Auxiliary::getTypeName( check ) + " instead of " + Auxiliary::getTypeName( type ) + " type" );
 	}
 }
 

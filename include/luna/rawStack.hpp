@@ -28,14 +28,14 @@ public:
 	void loadFile( const std::string &path ) const;
 	void loadString( const std::string &value ) const;
 
-	/* loads a global variable on to the stack
-	 */
-	void loadGlobal( const std::string &name ) const;
-
 	/* loads all the global variables
 	 * on to the stack
 	 */
 	void loadGlobals() const;
+
+	/* loads a global variable on to the stack
+	 */
+	void loadGlobal( const std::string &name ) const;
 
 	/* returns the value of an element at given
 	 * index as a number or string
@@ -124,6 +124,7 @@ public:
 	Index getRelativeIndex( const AbsoluteIndex &index ) const;
 	AbsoluteIndex getAbsoluteIndex( const Index &index ) const;
 private:
+	void checkForError( const int &code, const std::string &message = "" ) const;
 	void allocate( const Size &size = 1 ) const;
 	void validate( const Index &index ) const;
 	void validateType( const Index &index, const Type &type ) const;

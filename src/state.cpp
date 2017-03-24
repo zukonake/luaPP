@@ -4,6 +4,7 @@
 //
 #include <lua.hpp>
 //
+#include <luna/exception.hpp>
 #include <luna/typedef.hpp>
 #include <luna/auxiliary.hpp>
 #include <luna/state.hpp>
@@ -24,7 +25,7 @@ State::State() :
 {
 	if( mL == nullptr )
 	{
-		throw std::runtime_error( "Luna::State::State: couldn't create LuaState" );
+		throw Exception::StateError( "Luna::State::State: couldn't create LuaState" );
 		return;
 	}
 	lua_atpanic( mL.get(), Auxiliary::panic );

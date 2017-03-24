@@ -55,23 +55,33 @@ std::string getTypeName( const Type &type ) noexcept
 void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize )
 {
 	( void )ud;
-	( void )osize;
 	if( nsize == 0 )
 	{
-		if( osize != 0 )
+		if( osize > 0 )
 		{
-			std::free( ptr );
+			::operator delete( ptr, osize );
 		}
 		return nullptr;
 	}
 	else
 	{
-		if( nsize != osize )
+		if( osize > 0 )
 		{
-			ptr = std::realloc( ptr, nsize );
-			if( ptr == nullptr )
+			if( osize != nsize )
 			{
-				throw std::bad_alloc();
+				ptr = std::realloc( ptr, nsize );
+			}
+		}
+		else
+		{
+			try
+			{
+				ptr = ::operator new( nsize );
+			}
+			catch( std::bad_alloc &e )
+			{
+				throw;
+				return allocate( nullptr, ptr, nsize, 0 );
 			}
 		}
 		return ptr;

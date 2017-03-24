@@ -3,6 +3,7 @@
 //
 #include <boost/test/unit_test.hpp>
 //
+#include <luna/exception.hpp>
 #include <luna/typedef.hpp>
 #include <luna/element/number.hpp>
 #include <luna/element/string.hpp>
@@ -40,7 +41,7 @@ BOOST_AUTO_TEST_CASE( test )
 
 	Stack tStack02;
 	std::shared_ptr< const Table > tTable03;
-	BOOST_CHECK_THROW( tTable03 = std::make_shared< const Table >( tStack02, -1 ), std::out_of_range );
+	BOOST_CHECK_THROW( tTable03 = std::make_shared< const Table >( tStack02, -1 ), Exception::IndexError );
 }
 
 BOOST_AUTO_TEST_SUITE_END();
