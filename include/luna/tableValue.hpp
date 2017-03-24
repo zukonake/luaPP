@@ -32,13 +32,10 @@ public:
 
 	TableValue &operator=( const TableValue &that ) = default;
 	TableValue &operator=( TableValue &&that );
-
-	/* operator[] is write-only
-	 */
 	std::shared_ptr< const Element > &operator[]( const std::size_t &index );
 	std::shared_ptr< const Element > &operator[]( const std::string &index );
 
-	/* at is read-only
+	/* read-only, casts target to U
 	 */
 	template< typename U = Element >
 	const std::shared_ptr< const U > at( const std::size_t &index ) const;

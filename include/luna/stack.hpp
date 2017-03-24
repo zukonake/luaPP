@@ -9,8 +9,8 @@
 #include <memory>
 #include <string>
 //
-#include <luna/tableValue.hpp>
 #include <luna/typedef.hpp>
+#include <luna/tableValue.hpp>
 #include <luna/rawStack.hpp>
 #include <luna/element/element.hpp>
 #include <luna/element/nil.hpp>
@@ -39,12 +39,6 @@ public:
 	 */
 	template< typename T = Element >
 	std::shared_ptr< const T > bind( const Index &index = -1 ) const;
-
-	/* Loads a global variable and returns
-	 * its bound element
-	 */
-	template< typename T = Element >
-    std::shared_ptr< const T > bindGlobal( const std::string &name ) const;
 
 	/* load the luna table into the stack
 	 * and return it
@@ -94,13 +88,6 @@ std::shared_ptr< const T > Stack::bind( const Index &index ) const
 			throw std::runtime_error( "Luna::Stack::bind: invalid type given" );
 			return nullptr;
 	}
-}
-
-template< typename T >
-std::shared_ptr< const T > Stack::bindGlobal( const std::string &name ) const
-{
-	RawStack::loadGlobal( name );
-	return bind< T >();
 }
 
 }

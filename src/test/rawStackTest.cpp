@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE( writingTest )
 BOOST_AUTO_TEST_CASE( readingTest )
 {
 	RawStack tRawStack01;
-	BOOST_REQUIRE_NO_THROW( tRawStack01.loadFile( "src/test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( tRawStack01.loadFile( "src/test/rawStackTest.lua" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack01.call());
 	BOOST_REQUIRE_NO_THROW( tRawStack01.loadGlobal( "luna" ));
 	BOOST_CHECK( tRawStack01.getType() == TABLE );
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( readingTest )
 	BOOST_CHECK_EQUAL( tRawStack02.toString(), "test" );
 
 	RawStack tRawStack03;
-	BOOST_REQUIRE_NO_THROW( tRawStack03.doFile( "src/test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( tRawStack03.doFile( "src/test/rawStackTest.lua" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack03.loadGlobal( "luna" ));
 	BOOST_CHECK( tRawStack01.getType() == TABLE );
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE( readingTest )
 	BOOST_CHECK_EQUAL( tRawStack04.toString(), "test" );
 
 	RawStack tRawStack05;
-	BOOST_REQUIRE_NO_THROW( tRawStack05.doFile( "src/test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( tRawStack05.doFile( "src/test/rawStackTest.lua" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack05.loadGlobal( "luna" ));
 	BOOST_CHECK_THROW( tRawStack05.toString(), std::runtime_error );
 	BOOST_CHECK_THROW( tRawStack05.toNumber( -5 ), Exception::IndexError );
