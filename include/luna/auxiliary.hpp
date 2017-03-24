@@ -16,7 +16,7 @@
 namespace Luna::Auxiliary
 {
 
-constexpr uint8_t lunaVersionMajor = 1;
+constexpr uint8_t lunaVersionMajor = 0;
 constexpr uint8_t lunaVersionMinor = 0;
 constexpr uint8_t lunaVersionPatch = 0;
 
