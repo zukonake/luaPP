@@ -1,6 +1,12 @@
 #include <boost/test/unit_test.hpp>
 //
+#include <utility>
+#include <memory>
+//
+#include <luna/exception.hpp>
 #include <luna/typedef.hpp>
+#include <luna/element/number.hpp>
+#include <luna/element/string.hpp>
 #include <luna/stack.hpp>
 
 namespace Luna
