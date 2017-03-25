@@ -18,8 +18,8 @@ BOOST_AUTO_TEST_SUITE( tableTest );
 BOOST_AUTO_TEST_CASE( test )
 {
 	Stack tStack01;
-	tStack01.doFile( "src/test/tableTest.lua" );
-	tStack01.loadGlobal( "test" );
+	BOOST_REQUIRE_NO_THROW( tStack01.doFile( "src/test/tableTest.lua" ));
+	BOOST_REQUIRE_NO_THROW( tStack01.loadGlobal( "test" ));
 	std::shared_ptr< const Table > tTable01;
 	BOOST_REQUIRE( tTable01 = std::make_shared< const Table >( tStack01, -1 ));
 	BOOST_CHECK( tTable01->getType() == TABLE );

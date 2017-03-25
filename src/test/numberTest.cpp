@@ -14,8 +14,8 @@ BOOST_AUTO_TEST_SUITE( numberTest );
 BOOST_AUTO_TEST_CASE( test )
 {
 	RawStack tRawStack01;
-	tRawStack01.pushNumber( 32 );
-	tRawStack01.pushNumber( 24 );
+	BOOST_REQUIRE_NO_THROW( tRawStack01.pushNumber( 32 ));
+	BOOST_REQUIRE_NO_THROW( tRawStack01.pushNumber( 24 ));
 	std::shared_ptr< const Number > tNumber01;
 	BOOST_REQUIRE_NO_THROW( tNumber01 = std::make_shared< const Number >( tRawStack01, -2 ));
 	BOOST_CHECK( tNumber01->getType() == NUMBER );
