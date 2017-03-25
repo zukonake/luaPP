@@ -5,11 +5,11 @@ Simple library that wraps the Lua C API into C++, ensuring proper exception syst
 `sudo make install` to install the library in /lib/
 # Example usage
 ```cpp
-Stack stack;
+Luna::Stack stack;
 stack.doFile( "example.lua" );
-stack.loadGlobal( "luna" );
-std::cout << **stack.at< Number >( "var" ) << std::endl;
-std::cout << **stack.at< String >( 2 ) << std::endl;
+Luna::Table luna = stack.loadGlobal( "luna" );
+std::cout << luna.at< Luna::Number >( "var" ) << std::endl;
+std::cout << luna.at< Luna::String >( 2 ) << std::endl;
 stack.pushNil();
 ```
 # License
