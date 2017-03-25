@@ -18,14 +18,14 @@ public:
 	explicit Element( const RawStack &stack, const Index &index = -1 );
 	Element( Element &&that );
 
-	virtual ~Element();
+	virtual ~Element() = default;
 
 	Element &operator=( Element &&that );
 
-	virtual Type getType() const noexcept = 0;
 	virtual const Index &getIndex() const noexcept final;
-private:
+protected:
 	const RawStack &mRawStack;
+private:
 	Index mIndex;
 };
 

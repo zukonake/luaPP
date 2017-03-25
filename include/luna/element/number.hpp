@@ -22,10 +22,7 @@ public:
 	virtual ~Number() = default;
 
 	Number &operator=( Number &&that );
-	virtual const NumberValue &operator*() const noexcept;
-
-	virtual Type getType() const noexcept override;
-	const NumberValue &get() const noexcept;
+	operator const NumberValue &() const noexcept;
 private:
 	NumberValue mValue;
 };

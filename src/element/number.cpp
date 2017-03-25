@@ -27,17 +27,7 @@ Number &Number::operator=( Number &&that )
 	return *this;
 }
 
-const NumberValue &Number::operator*() const noexcept
-{
-	return mValue;
-}
-
-Type Number::getType() const noexcept
-{
-	return NUMBER;
-}
-
-const NumberValue &Number::get() const noexcept
+Number::operator const NumberValue &() const noexcept
 {
 	return mValue;
 }

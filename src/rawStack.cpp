@@ -18,9 +18,10 @@ RawStack::RawStack() :
 	
 }
 
-RawStack::RawStack( RawStack &&that )
-{	
-	mState = std::move( that.mState );
+RawStack::RawStack( RawStack &&that ) :
+	mState( std::move( that.mState ))
+{
+
 }
 
 RawStack &RawStack::operator=( RawStack &&that )
@@ -167,6 +168,7 @@ Size RawStack::call( const Index &index ) const
 	{
 		validateType( index, FUNCTION );
 		validate( index );
+		copy();
 	}
 	catch( std::exception &e )
 	{

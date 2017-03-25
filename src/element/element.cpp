@@ -21,18 +21,6 @@ Element::Element( Element &&that ) :
 	that.mIndex = 0;
 }
 
-Element::~Element()
-{
-	if( mIndex != 0 )
-	{
-		try
-		{
-			mRawStack.erase( mIndex );
-		}
-		catch( ... ) { }
-	}
-}
-
 Element &Element::operator=( Element &&that )
 {
 	if( &mRawStack != &that.mRawStack )
@@ -49,6 +37,5 @@ const Index &Element::getIndex() const noexcept
 {
 	return mIndex;
 }
-
 
 }

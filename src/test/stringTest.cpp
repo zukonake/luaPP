@@ -16,11 +16,8 @@ BOOST_AUTO_TEST_CASE( test )
 	RawStack tRawStack01;
 	BOOST_REQUIRE_NO_THROW( tRawStack01.pushString( "test" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack01.pushString( "xd" ));
-	std::shared_ptr< const String > tString01;
-	BOOST_REQUIRE_NO_THROW( tString01 = std::make_shared< const String >( tRawStack01, -1 ));
-	BOOST_CHECK( tString01->getType() == STRING );
-	BOOST_CHECK( tString01->get() == "xd" );
-	BOOST_CHECK( **tString01 == "xd" );
+	String tString01( tRawStack01, -1 );
+	BOOST_CHECK_EQUAL( tString01, "xd" );
 	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
 }
 

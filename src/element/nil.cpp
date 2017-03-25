@@ -4,9 +4,5 @@
 namespace Luna
 {
 
-Type Nil::getType() const noexcept
-{
-	return NIL;
-}
 
 }

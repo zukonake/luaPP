@@ -1,27 +1,28 @@
+#include <utility>
+//
 #include <luna/typedef.hpp>
-#include <luna/tableValue.hpp>
+#include <luna/rawStack.hpp>
 #include <luna/element/table.hpp>
-#include <luna/stack.hpp>
 
 namespace Luna
 {
 
-Table::Table( const Stack &stack, const Index &index ) :
-	Element( dynamic_cast< const RawStack & >( stack ), index )
+Table::Table( const RawStack &rawStack, const Index &index ) :
+	Element( rawStack , index )
 {
-	AbsoluteIndex realIndex = stack.getAbsoluteIndex( index );
-	stack.pushNil();
-	while( stack.iterate( realIndex ))
+	AbsoluteIndex realIndex = rawStack.getAbsoluteIndex( index );
+	rawStack.pushNil();
+	while( rawStack.iterate( realIndex ))
 	{
-		if( stack.getType( -2 ) == NUMBER )
+		rawStack.insert( -2 );
+		if( rawStack.getType( -1 ) == NUMBER )
 		{
-			TableValue::operator[]( stack.toNumber( -2 )) = stack.bind( -1 );
+			this->operator[]( rawStack.toNumber( -1 )) = rawStack.getAbsoluteIndex( -2 );
 		}	
-		else if( stack.getType( -2 ) == STRING )
+		else if( rawStack.getType( -1 ) == STRING )
 		{
-			TableValue::operator[]( stack.toString( -2 )) = stack.bind( -1 );
+			this->operator[]( rawStack.toString( -1 )) = rawStack.getAbsoluteIndex( -2 );
 		}
-		stack.pop();
 	}
 }
 
@@ -39,9 +40,14 @@ Table &Table::operator=( Table &&that )
 	return *this;
 }
 
-Type Table::getType() const noexcept
+Index &Table::operator[]( const std::size_t &index )
+{	
+	return TableValue::first[ index ];
+}
+
+Index &Table::operator[]( const std::string &key )
 {
-	return TABLE;
+	return TableValue::second[ key ];
 }
 
 }

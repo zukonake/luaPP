@@ -19,8 +19,6 @@ public:
 	virtual ~Userdata() = default;
 
 	using Element::operator=;
-
-	virtual Type getType() const noexcept override;
 };
 
 }

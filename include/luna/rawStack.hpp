@@ -17,10 +17,12 @@ class RawStack
 {
 public:
 	RawStack();
+	RawStack( const RawStack &that ); //TODO
 	RawStack( RawStack &&that );
 
 	virtual ~RawStack() = default;
 
+	RawStack &operator=( const RawStack &that ); //TODO
 	RawStack &operator=( RawStack &&that );
 
 	/* loads code and pushes it onto stack

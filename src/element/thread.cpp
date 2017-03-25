@@ -4,9 +4,4 @@
 namespace Luna
 {
 
-Type Thread::getType() const noexcept
-{
-	return THREAD;
-}
-
 }

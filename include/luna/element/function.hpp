@@ -20,7 +20,7 @@ public:
 
 	using Element::operator=;
 
-	virtual Type getType() const noexcept override;
+	Size call() const;
 };
 
 }

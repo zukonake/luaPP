@@ -13,7 +13,7 @@ namespace Luna
 	
 class RawStack;
 
-class String : public Element
+class String : public Element, public StringValue
 {
 public:
 	explicit String( const RawStack &rawStack, const Index &index = -1 );
@@ -22,12 +22,6 @@ public:
 	virtual ~String() = default;
 
 	String &operator=( String &&that );
-	virtual const StringValue &operator*() const noexcept;
-
-	virtual Type getType() const noexcept override;
-	const StringValue &get() const noexcept;
-private:
-	StringValue mValue;
 };
 
 }

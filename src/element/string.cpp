@@ -8,14 +8,14 @@ namespace Luna
 
 String::String( const RawStack &rawStack, const Index &index ) :
 	Element( rawStack, index ),
-	mValue( rawStack.toString( index ))
+	StringValue( rawStack.toString( index ))
 {
 	
 }
 
 String::String( String &&that ) :
 	Element( dynamic_cast< Element && >( that )),
-	mValue( that.mValue )
+	StringValue( dynamic_cast< StringValue && >( that ))
 {
 
 }
@@ -23,23 +23,8 @@ String::String( String &&that ) :
 String &String::operator=( String &&that )
 {
 	static_cast< Element & >( *this ) = static_cast< Element && >( that );
-	mValue = that.mValue;
+	static_cast< StringValue & >( *this ) = static_cast< StringValue && >( that );
 	return *this;
-}
-
-const StringValue &String::operator*() const noexcept
-{
-	return mValue;
-}
-
-Type String::getType() const noexcept
-{
-	return STRING;
-}
-
-const StringValue &String::get() const noexcept
-{
-	return mValue;
 }
 
 }

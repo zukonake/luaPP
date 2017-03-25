@@ -5,30 +5,47 @@
 
 #pragma once
 
+#include <cstddef>
+#include <string>
+//
 #include <luna/typedef.hpp>
-#include <luna/tableValue.hpp>
 #include <luna/element/element.hpp>
 
 namespace Luna
 {
 
-class Stack;
+class RawStack;
 
-class Table : public Element, public TableValue
+class Table : public Element, TableValue
 {
 public:
-	explicit Table( const Stack &stack, const Index &index = -1 );
+	explicit Table( const RawStack &rawStack, const Index &index = -1 );
+	Table( const Table &that ) = default;
 	Table( Table &&that );
 
 	virtual ~Table() = default;
 
-	using TableValue::operator[];
-
+	Table &operator=( const Table &that ) = default;
 	Table &operator=( Table &&that );
+	Index &operator[]( const std::size_t &index );
+	Index &operator[]( const std::string &key );
 
-	using TableValue::at;
-
-	virtual Type getType() const noexcept override;
+	template< typename T >
+	T at( const std::size_t &index ) const;
+	template< typename T >
+	T at( const std::string &key ) const;
 };
+
+template< typename T >
+T Table::at( const std::size_t &index ) const
+{
+	return T( Element::mRawStack, TableValue::first.at( index ));
+}
+
+template< typename T >
+T Table::at( const std::string &key ) const
+{
+	return T( Element::mRawStack, TableValue::second.at( key ));
+}
 
 }

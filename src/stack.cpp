@@ -15,16 +15,8 @@ Stack::Stack( Stack &&that ) :
 
 Stack &Stack::operator=( Stack &&that )
 {
-	static_cast< RawStack & >( *this ) = static_cast< RawStack && >( that );
+	RawStack::operator=( static_cast< RawStack && >( that ));
 	return *this;
-}
-
-const TableValue &Stack::loadGlobals()
-{
-	RawStack::loadGlobal( "luna" );
-	std::shared_ptr< const Table > globalTable = bind< Table >();
-	static_cast< TableValue & >( *this ) = static_cast< const TableValue & >( *globalTable );
-	return dynamic_cast< const TableValue & >( *this );
 }
 
 }

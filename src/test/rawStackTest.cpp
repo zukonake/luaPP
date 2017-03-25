@@ -4,6 +4,7 @@
 //
 #include <luna/exception.hpp>
 #include <luna/typedef.hpp>
+#include <luna/auxiliary.hpp> //TODO
 #include <luna/rawStack.hpp>
 
 namespace Luna
@@ -55,22 +56,26 @@ BOOST_AUTO_TEST_CASE( readingTest )
 	BOOST_REQUIRE_NO_THROW( tRawStack01.call());
 	BOOST_REQUIRE_NO_THROW( tRawStack01.loadGlobal( "luna" ));
 	BOOST_CHECK( tRawStack01.getType() == TABLE );
+	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
 
 	RawStack tRawStack02;
 	BOOST_REQUIRE_NO_THROW( tRawStack02.loadString( "var = 'test'" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack02.call());
 	BOOST_REQUIRE_NO_THROW( tRawStack02.loadGlobal( "var" ));
 	BOOST_CHECK_EQUAL( tRawStack02.toString(), "test" );
+	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
 
 	RawStack tRawStack03;
 	BOOST_REQUIRE_NO_THROW( tRawStack03.doFile( "src/test/rawStackTest.lua" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack03.loadGlobal( "luna" ));
 	BOOST_CHECK( tRawStack01.getType() == TABLE );
+	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
 
 	RawStack tRawStack04;
 	BOOST_REQUIRE_NO_THROW( tRawStack04.doString( "var = 'test'" ));
 	BOOST_REQUIRE_NO_THROW( tRawStack04.loadGlobal( "var" ));
 	BOOST_CHECK_EQUAL( tRawStack04.toString(), "test" );
+	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
 
 	RawStack tRawStack05;
 	BOOST_REQUIRE_NO_THROW( tRawStack05.doFile( "src/test/rawStackTest.lua" ));
@@ -194,7 +199,7 @@ BOOST_AUTO_TEST_CASE( rawMethodTest )
 	BOOST_CHECK_THROW( tRawStack08.iterate( 0 ), Exception::IndexError );
 	BOOST_CHECK_THROW( tRawStack08.iterate( 100 ), Exception::IndexError );
 	BOOST_CHECK_THROW( tRawStack08.iterate( -100 ), Exception::IndexError );
-	BOOST_CHECK_EQUAL( tRawStack08.getSize(), 2 );
+	BOOST_CHECK_EQUAL( tRawStack08.getSize(), 3 );
 	std::string key;
 	while( tRawStack08.iterate())
 	{

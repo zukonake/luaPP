@@ -4,9 +4,5 @@
 namespace Luna
 {
 
-Type LightUserdata::getType() const noexcept
-{
-	return LIGHT_USERDATA;
-}
 
 }

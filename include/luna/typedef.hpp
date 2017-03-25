@@ -6,7 +6,10 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
+#include <utility>
 #include <string>
+#include <unordered_map>
 //
 #include <lua.hpp>
 
@@ -22,6 +25,10 @@ typedef lua_State LuaState;
 
 typedef float NumberValue;
 typedef std::string StringValue;
+typedef std::pair<
+		std::unordered_map< std::size_t, Index >,
+		std::unordered_map< std::string, Index > >
+		TableValue;
 
 enum Type
 {

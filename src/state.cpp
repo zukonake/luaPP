@@ -32,9 +32,10 @@ State::State() :
 	luaL_openlibs( mL.get());
 }
 
-State::State( State &&that )
+State::State( State &&that ) :
+	mL( std::move( that.mL ))
 {
-	mL = std::move( that.mL );
+
 }
 
 State &State::operator=( State &&that ) noexcept
