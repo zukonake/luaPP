@@ -209,14 +209,13 @@ void RawStack::replace( const Index &from, const Index &to ) const
 		{
 			return;
 		}
-		copy( realFrom );
 	}
 	catch( const std::exception &e )
 	{
 		throw;
 		return;
 	}
-	lua_replace( mState, realTo );
+	lua_copy( mState, realFrom, realTo );
 }
 
 void RawStack::move( const Index &from, const Index &to ) const
