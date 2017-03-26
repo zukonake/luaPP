@@ -36,7 +36,7 @@ void RawStack::loadFile( const std::string &path ) const
 	{
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
@@ -50,41 +50,12 @@ void RawStack::loadString( const std::string &value ) const
 	{
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
 	}
 	checkForError( luaL_loadstring( mState, value.c_str()), value );
-}
-
-void RawStack::loadGlobals() const
-{
-	try
-	{
-		allocate( 2 );
-	}
-	catch( std::exception &e )
-	{
-		throw;
-		return;
-	}
-	loadGlobal( "luna" );
-	pushNil();
-	while( iterate())
-	{
-		try
-		{
-			insert( -3 );
-		}
-		catch( std::exception &e )
-		{
-			throw;
-			return;
-		}
-		pop();
-	}
-	pop();
 }
 
 void RawStack::loadGlobal( const std::string &name ) const
@@ -93,14 +64,13 @@ void RawStack::loadGlobal( const std::string &name ) const
 	{
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		return;
 	}
-	lua_getglobal( mState, name.c_str());
-	if( getType() == NIL )
+	if( lua_getglobal( mState, name.c_str()) == NIL )
 	{
-		throw Exception::StackError( "Luna::RawStack::loadGlobal: type nil loaded" );
+		throw Exception::StackError( "Luna::RawStack::loadGlobal: loaded type nil global" );
 	}
 }
 
@@ -108,10 +78,9 @@ NumberValue RawStack::toNumber( const Index &index ) const
 {
 	try
 	{
-		validate( index );
 		validateType( index, NUMBER );
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return 0;
@@ -119,14 +88,27 @@ NumberValue RawStack::toNumber( const Index &index ) const
 	return lua_tonumber( mState, index );
 }
 
+bool RawStack::toBoolean( const Index &index ) const
+{
+	try
+	{
+		validateType( index, BOOLEAN );
+	}
+	catch( const std::exception &e )
+	{
+		throw;
+		return 0;
+	}
+	return lua_toboolean( mState, index );
+}
+
 StringValue RawStack::toString( const Index &index ) const
 {
 	try
 	{
-		validate( index );
 		validateType( index, STRING );
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return "";
@@ -134,51 +116,33 @@ StringValue RawStack::toString( const Index &index ) const
 	return lua_tostring( mState, index );
 }
 
-Size RawStack::doFile( const std::string &path ) const
+Size RawStack::doFile( const std::string &path, const uint16_t &arguments ) const
 {
-	try
-	{
-		loadFile( path );
-	}
-	catch( std::exception &e )
-	{
-		throw;
-		return 0;
-	}
-	return call();
+	loadFile( path );
+	return call( -1, arguments );
 }
 
-Size RawStack::doString( const std::string &path ) const
+Size RawStack::doString( const std::string &path, const uint16_t &arguments ) const
 {
-	try
-	{
-		loadString( path );
-	}
-	catch( std::exception &e )
-	{
-		throw;
-		return 0;
-	}
-	return call();
+	loadString( path );
+	return call( -1, arguments );
 }
 
-Size RawStack::call( const Index &index ) const
+Size RawStack::call( const Index &index, const uint16_t &arguments ) const
 {
 	try
 	{
 		validateType( index, FUNCTION );
-		validate( index );
 		copy();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return 0;
 	}
 	Size before = getSize();
-	checkForError( lua_pcall( mState, 0, LUA_MULTRET, 0 ) != LUA_OK, std::to_string( index ));
-	Size after = getSize();
-	return after - before;
+	checkForError( lua_pcall( mState, arguments, LUA_MULTRET, 0 ) != LUA_OK, std::to_string( index ));
+	return getSize() - before;
 }
 
 void RawStack::pushNil() const
@@ -187,7 +151,7 @@ void RawStack::pushNil() const
 	{
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		return;
 	}
@@ -200,11 +164,24 @@ void RawStack::pushNumber( const NumberValue &value ) const
 	{
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		return;
 	}
 	lua_pushnumber( mState, value );
+}
+
+void RawStack::pushBoolean( const bool &value ) const
+{
+	try
+	{
+		allocate();
+	}
+	catch( const std::exception &e )
+	{
+		return;
+	}
+	lua_pushboolean( mState, value );
 }
 
 void RawStack::pushString( const StringValue &value ) const
@@ -213,7 +190,7 @@ void RawStack::pushString( const StringValue &value ) const
 	{
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		return;
 	}
@@ -228,13 +205,13 @@ void RawStack::replace( const Index &from, const Index &to ) const
 	{
 		realTo = getAbsoluteIndex( to );
 		realFrom = getAbsoluteIndex( from );
-		if( realFrom ==realTo )
+		if( realFrom == realTo )
 		{
 			return;
 		}
-		copy( from );
+		copy( realFrom );
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
@@ -264,7 +241,7 @@ void RawStack::move( const Index &from, const Index &to ) const
 			remove( realFrom );
 		}
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
@@ -273,12 +250,12 @@ void RawStack::move( const Index &from, const Index &to ) const
 
 void RawStack::swap( const Index &one, const Index &two ) const
 {
-	if( one == two )
+	AbsoluteIndex realOne = getAbsoluteIndex( one );
+	AbsoluteIndex realTwo = getAbsoluteIndex( two );
+	if( realOne == realTwo )
 	{
 		return;
 	}
-	AbsoluteIndex realOne = getAbsoluteIndex( one );
-	AbsoluteIndex realTwo = getAbsoluteIndex( two );
 	copy( realTwo );
 	replace( realOne, realTwo );
 	move( -1, realOne );
@@ -291,7 +268,7 @@ void RawStack::copy( const Index &from ) const
 		allocate();
 		validate( from );
 	}	
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
@@ -306,7 +283,7 @@ void RawStack::insert( const Index &index ) const
 		allocate();
 		validate( index );
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
@@ -320,7 +297,7 @@ void RawStack::remove( const Index &index ) const
 	{
 		validate( index );
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return;
@@ -330,16 +307,7 @@ void RawStack::remove( const Index &index ) const
 
 void RawStack::erase( const Index &index ) const
 {
-	AbsoluteIndex realIndex;
-	try
-	{
-		realIndex = getAbsoluteIndex( index );
-	}
-	catch( std::exception &e )
-	{
-		throw;
-		return;
-	}
+	AbsoluteIndex realIndex = getAbsoluteIndex( index );
 	pushNil();
 	move( -1, realIndex );
 }
@@ -351,7 +319,7 @@ bool RawStack::iterate( const Index &index ) const
 		validateType( index, TABLE );
 		allocate();
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return false;
@@ -376,7 +344,7 @@ void RawStack::clear() const noexcept
 
 bool RawStack::isValid( const Index & index ) const noexcept
 {
-	return index != 0 && index >= -getSize() && index <= getSize();
+	return index != 0 && index >= -(( Index )getSize()) && index <= ( Index )getSize();
 }
 
 Type RawStack::getType( const Index &index ) const
@@ -385,49 +353,12 @@ Type RawStack::getType( const Index &index ) const
 	{
 		validate( index );
 	}
-	catch( std::exception &e )
+	catch( const std::exception &e )
 	{
 		throw;
 		return INVALID;
 	}
-	switch( lua_type( mState, index ))
-	{
-		case LUA_TNIL:
-			return NIL;
-			break;
-
-		case LUA_TNUMBER:
-			return NUMBER;
-			break;
-
-		case LUA_TSTRING:
-			return STRING;
-			break;
-
-		case LUA_TTABLE:
-			return TABLE;
-			break;
-
-		case LUA_TFUNCTION:
-			return FUNCTION;
-			break;
-
-		case LUA_TUSERDATA:
-			return USERDATA;
-			break;
-
-		case LUA_TLIGHTUSERDATA:
-			return LIGHT_USERDATA;
-			break;
-
-		case LUA_TTHREAD:
-			return THREAD;
-			break;
-
-		default:
-			return INVALID;
-			break;
-	}
+	return static_cast< Type >( lua_type( mState, index ));
 }
 
 Size RawStack::getSize() const noexcept
@@ -442,35 +373,19 @@ const State &RawStack::getState() const noexcept
 
 Index RawStack::getRelativeIndex( const AbsoluteIndex &index ) const
 {
-	Index returnValue = index - ( getSize() + 1 );
-	try
-	{
-		validate( index );
-	}
-	catch( std::exception &e )
-	{
-		throw;
-		return 0;
-	}
+	validate( index );
+	Index returnValue = index - ((( Index )getSize()) + 1 );
 	return returnValue;
 }
 
 AbsoluteIndex RawStack::getAbsoluteIndex( const Index &index ) const
 {
-	AbsoluteIndex returnValue = getSize() + ( index + 1 );
-	try
-	{
-		validate( index );
-	}
-	catch( std::exception &e )
-	{
-		throw;
-		return 0;
-	}
+	validate( index );
 	if( index > 0 )
 	{
-		return index;
+		return ( AbsoluteIndex )index;
 	}
+	AbsoluteIndex returnValue = (( AbsoluteIndex )getSize()) + ((( AbsoluteIndex )index ) + 1u );
 	return returnValue;
 }
 

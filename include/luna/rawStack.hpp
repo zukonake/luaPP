@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 //
 #include <luna/typedef.hpp>
@@ -41,22 +42,24 @@ public:
 	 * index as a number or string
 	 */
 	NumberValue toNumber( const Index &index = -1 ) const;
+	bool toBoolean( const Index &index = -1 ) const;
 	StringValue toString( const Index &index = -1 ) const;
 
 	/* loads code, pushes it onto stack
 	 * and calls call()
 	 */
-	Size doFile( const std::string &path ) const;
-	Size doString( const std::string &value ) const;
+	Size doFile( const std::string &path, const uint16_t &arguments = 0 ) const;
+	Size doString( const std::string &value, const uint16_t &arguments = 0 ) const;
 
 	/* call function at given index
 	 * and returns number of returned
 	 * elements
 	 */
-	Size call( const Index &index = -1 ) const;
+	Size call( const Index &index = -1, const uint16_t &arguments = 0 ) const;
 
 	void pushNil() const;
 	void pushNumber( const NumberValue &value ) const;
+	void pushBoolean( const bool &value ) const;
 	void pushString( const StringValue &value ) const;
 
 	/* replaces value from one index

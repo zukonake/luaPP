@@ -18,12 +18,12 @@ namespace Luna
 
 class Element;
 
-typedef int16_t Index;
-typedef uint16_t AbsoluteIndex;
-typedef uint16_t Size;
+typedef int32_t Index;
+typedef uint32_t AbsoluteIndex;
+typedef uint32_t Size;
 typedef lua_State LuaState;
 
-typedef float NumberValue;
+typedef double NumberValue;
 typedef std::string StringValue;
 typedef std::pair<
 		std::unordered_map< std::size_t, Index >,
@@ -33,12 +33,13 @@ typedef std::pair<
 enum Type
 {
 	NIL,
+	BOOLEAN,
+	LIGHT_USERDATA,
 	NUMBER,
 	STRING,
 	TABLE,
 	FUNCTION,
 	USERDATA,
-	LIGHT_USERDATA,
 	THREAD,
 	INVALID
 };
