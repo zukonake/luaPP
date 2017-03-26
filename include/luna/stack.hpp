@@ -18,12 +18,10 @@ class Stack : public RawStack
 {
 public:
 	Stack() = default;
-	Stack( const Stack &that ); //TODO
 	Stack( Stack &&that );
 
 	virtual ~Stack() = default;
 
-	Stack &operator=( const Stack &that ); //TODO
 	Stack &operator=( Stack &&that );
 
 	/* load the luna table into the stack
