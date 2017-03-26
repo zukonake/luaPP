@@ -24,11 +24,16 @@ public:
 
 	Stack &operator=( Stack &&that );
 
-	/* load the luna table into the stack
-	 * and return it
+	/* load global into stack
+	 * and return bound element
 	 */
-	template< typename T = Element >
+	template< typename T >
 	T loadGlobal( const std::string &name );
+
+	/* same as loadGlobal
+	 */
+	template< typename T >
+	T at( const std::string &name );
 };
 
 template< typename T >
@@ -36,6 +41,12 @@ T Stack::loadGlobal( const std::string &name )
 {
 	RawStack::loadGlobal( name );
 	return T( *this );
+}
+
+template< typename T >
+T Stack::at( const std::string &name )
+{
+	return loadGlobal< T >( name );
 }
 
 }
