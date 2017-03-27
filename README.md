@@ -8,7 +8,7 @@ Simple library that wraps the Lua C API into C++, ensuring proper exception syst
 ```cpp
 Luna::Stack stack;
 stack.doFile( "example.lua" );
-Luna::Table luna = stack.loadGlobal( "luna" );
+Luna::Table luna = stack.loadGlobal< Luna::Table >( "luna" );
 std::cout << stack.loadGlobal< Luna::String >( "var" ) << std::endl;
 std::cout << luna.at< Luna::Number >( "var" ) << std::endl;
 std::cout << luna.at< Luna::String >( 2 ) << std::endl;
