@@ -1,41 +1,37 @@
 SOURCE_PATH := src/
-BUILD_PATH := build/
-OBJ_PATH := $(BUILD_PATH)obj/
-VERSION := 0.10.0-alpha-win64
-TARGET_PATH := libluapp.a
-SOURCES := $(shell find $(SOURCE_PATH) -type f -name "*.cpp" -printf '%p ')
-HEADERS := $(shell find $(SOURCE_PATH) -type f -name "*.hpp" -printf '%p ')
-OBJS := $(addprefix $(OBJ_PATH),$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -type f -name "*.cpp" -exec basename {} \;)))
-DEBUG := -g -O0
-STD := -std=c++14
-LDLIBS := -llua
+OBJ_PATH := bin
+DEPEND_PATH := depend
+TEST_PATH := $(SOURCE_PATH)/test
+TARGET_PATH := libluna.a
+VERSION := 1.0.0-alpha-win64
+SOURCES := $(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -printf '%p ')
+OBJS := $(addprefix $(OBJ_PATH)/,$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -exec basename {} \;)))
+DEBUG := -g -O0 -DDEBUG
+STD := -std=c++17
+LDLIBS := -llua -lboost_unit_test_framework
 INCFLAGS := -I include
 LIBFLAGS := -L lib -L /usr/x86_64-w64-mingw32/lib
-CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
+LDFLAGS := $(STD) -fPIC -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
 COMPILER := x86_64-w64-mingw32-g++
 PREFIX := /usr/x86_64-w64-mingw32/lib
 
-.PHONY : clean install uninstall
+.PHONY : clean  test
 
 $(TARGET_PATH) : $(OBJS)
 	x86_64-w64-mingw32-ar rvs $@ $(OBJS)
-	
+
+test: $(TEST_OBJS) $(OBJS)
+	$(COMPILER) $(LDFLAGS) $(TEST_OBJS) $(OBJS) -DTEST -o test.out
+
 .SECONDEXPANSION:
-$(OBJ_PATH)%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
-	@mkdir -p $(BUILD_PATH)
+$(OBJ_PATH)/%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
 	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(DEPEND_PATH)
 	$(COMPILER) $(CXXFLAGS) -c $< -o $@
-	$(COMPILER) -MM $(CXXFLAGS) $< > $(BUILD_PATH)$*.d
-	@sed -i '1s/^/build\/obj\//' $(BUILD_PATH)$*.d
-
-install: $(TARGET_PATH)
-	cp $< $(DESTDIR)$(PREFIX)/$<
-	chmod 644 $(DESTDIR)$(PREFIX)/$<
-
-uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/$(TARGET_PATH)
+	$(COMPILER) -MM $(CXXFLAGS) $< > $(DEPEND_PATH)/$*.d
+	@sed -i '1s/^/bin\//' $(DEPEND_PATH)/$*.d
 
 clean :
-	$(RM) -r $(BUILD_PATH) *~ bin $(TARGET_PATH) vgcore* callgrind* *.so
+	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH)
 
--include $(shell find $(BUILD_PATH) -type f -name "*.d" -printf '%p ')
+-include $(shell find $(DEPEND_PATH) -type f -name "*.d" -printf '%p ')

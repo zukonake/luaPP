@@ -1,33 +1,33 @@
 #include <luna/typedef.hpp>
 #include <luna/element/element.hpp>
-#include <luna/element/number.hpp>
+#include <luna/element/boolean.hpp>
 #include <luna/rawStack.hpp>
 
 namespace Luna
 {
 
-Number::Number( const RawStack &rawStack, const Index &index ) :
+Boolean::Boolean( const RawStack &rawStack, const Index &index ) :
 	Element( rawStack, index ),
-	mValue( rawStack.toNumber( index ))
+	mValue( rawStack.toBoolean( index ))
 {
 	
 }
 
-Number::Number( Number &&that ) :
+Boolean::Boolean( Boolean &&that ) :
 	Element( dynamic_cast< Element && >( that )),
 	mValue( that.mValue )
 {
 
 }
 
-Number &Number::operator=( Number &&that )
+Boolean &Boolean::operator=( Boolean &&that )
 {
 	static_cast< Element & >( *this ) = static_cast< Element && >( that );
 	mValue = that.mValue;
 	return *this;
 }
 
-Number::operator const NumberValue &() const noexcept
+Boolean::operator const bool &() const noexcept
 {
 	return mValue;
 }

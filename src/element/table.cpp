@@ -1,60 +1,53 @@
-//2016-luaPP zukonake
-
-#include <luaPP/element/table.hpp>
+#include <utility>
 //
-#include <stdexcept>
-//
-#include <luaPP/luaStack.hpp>
+#include <luna/typedef.hpp>
+#include <luna/rawStack.hpp>
+#include <luna/element/table.hpp>
 
-using namespace LPP;
-
-Table::Table( const LuaStack& luaStack, const Index& index ) :
-	StackElement( luaStack, index )
+namespace Luna
 {
-	if( luaStack.getType( index ) != LuaType::TABLE )
+
+Table::Table( const RawStack &rawStack, const Index &index ) :
+	Element( rawStack , index )
+{
+	AbsoluteIndex realIndex = rawStack.getAbsoluteIndex( index );
+	rawStack.pushNil();
+	while( rawStack.iterate( realIndex ))
 	{
-		throw std::runtime_error( "LW::Table::Table: tried to convert a non-table lua type to table" );
-	}
-	luaStack.push( index );
-	luaStack.pushNil();
-	while( luaStack.iterate())
-	{
-		if( luaStack.getType( -2 ) == LuaType::NUMBER )
+		rawStack.insert( -2 );
+		if( rawStack.getType( -1 ) == NUMBER )
 		{
-			std::size_t key = luaStack.getNumber( -2 );
-			luaStack.insert(( index + 1 ) + -3 );
-			const StackElement* value = luaStack.get(( index + 1 ) + -3 );
-			mValue.first[ key ] = value;
-		}
-		else if( luaStack.getType( -2 ) == LuaType::STRING )
+			this->operator[]( rawStack.toNumber( -1 )) = rawStack.getAbsoluteIndex( -2 );
+		}	
+		else if( rawStack.getType( -1 ) == STRING )
 		{
-			std::string key = luaStack.getString( -2 );
-			luaStack.insert(( index + 1 ) + -3 );
-			const StackElement* value = luaStack.get(( index + 1 ) + -3 );
-			mValue.second[ key ] = value;
+			this->operator[]( rawStack.toString( -1 )) = rawStack.getAbsoluteIndex( -2 );
 		}
 	}
-	luaStack.pop();
 }
 
-Table::~Table()
+Table::Table( Table &&that ) :
+	Element( dynamic_cast< Element && >( that )),
+	TableValue( dynamic_cast< TableValue && >( that ))
 {
-	for( auto& iElement : mValue.first )
-	{
-		delete iElement.second;
-	}
-	for( auto& iElement : mValue.second )
-	{
-		delete iElement.second;
-	}
+	
 }
 
-Table::operator const Table::Value&() const noexcept
+Table &Table::operator=( Table &&that )
 {
-	return mValue;
+	Element::operator=( dynamic_cast< Element && >( that ));
+	TableValue::operator=( dynamic_cast< TableValue && >( that ));
+	return *this;
 }
 
-const Table::Value& Table::get() const noexcept
+Index &Table::operator[]( const std::size_t &index )
+{	
+	return TableValue::first[ index ];
+}
+
+Index &Table::operator[]( const std::string &key )
 {
-	return mValue;
+	return TableValue::second[ key ];
+}
+
 }

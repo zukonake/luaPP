@@ -1,29 +1,30 @@
-//2016-luaPP zukonake
+#include <luna/typedef.hpp>
+#include <luna/element/element.hpp>
+#include <luna/element/string.hpp>
+#include <luna/rawStack.hpp>
 
-#include <luaPP/element/string.hpp>
-//
-#include <stdexcept>
-//
-#include <luaPP/luaStack.hpp>
-
-using namespace LPP;
-
-String::String( const LuaStack& luaStack, const Index& index ) :
-	StackElement( luaStack, index )
+namespace Luna
 {
-	if( luaStack.getType( index ) != LuaType::STRING )
-	{
-		throw std::runtime_error( "LW::String::String: tried to convert a non-string lua type to string" );
-	}
-	mValue = luaStack.getString( index );
+
+String::String( const RawStack &rawStack, const Index &index ) :
+	Element( rawStack, index ),
+	StringValue( rawStack.toString( index ))
+{
+	
 }
 
-String::operator const StringValue&() const noexcept
+String::String( String &&that ) :
+	Element( dynamic_cast< Element && >( that )),
+	StringValue( dynamic_cast< StringValue && >( that ))
 {
-	return mValue;
+
 }
 
-const StringValue& String::get() const noexcept
+String &String::operator=( String &&that )
 {
-	return mValue;
+	static_cast< Element & >( *this ) = static_cast< Element && >( that );
+	static_cast< StringValue & >( *this ) = static_cast< StringValue && >( that );
+	return *this;
+}
+
 }
