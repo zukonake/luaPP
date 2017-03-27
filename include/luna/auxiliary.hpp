@@ -16,10 +16,6 @@
 namespace Luna::Auxiliary
 {
 
-constexpr uint8_t lunaVersionMajor = 0;
-constexpr uint8_t lunaVersionMinor = 0;
-constexpr uint8_t lunaVersionPatch = 0;
-
 std::string getTypeName( const Type &type ) noexcept;
 void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize );
 int panic( lua_State *L );

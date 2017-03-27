@@ -13,3 +13,12 @@
 #include <luna/rawStack.hpp>
 #include <luna/stack.hpp>
 #include <luna/state.hpp>
+
+namespace Luna
+{
+
+constexpr uint8_t lunaVersionMajor = 1;
+constexpr uint8_t lunaVersionMinor = 0;
+constexpr uint8_t lunaVersionPatch = 0;
+
+}
