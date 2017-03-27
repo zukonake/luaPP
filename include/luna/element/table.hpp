@@ -19,13 +19,13 @@ class RawStack;
 class Table : public Element, TableValue
 {
 public:
-	explicit Table( const RawStack &rawStack, const Index &index = -1 );
-	Table( const Table &that ) = default;
+	explicit Table( RawStack const &rawStack, Index const &index = -1 );
+	Table( Table const &that ) = default;
 	Table( Table &&that );
 
 	virtual ~Table() = default;
 
-	Table &operator=( const Table &that ) = default;
+	Table &operator=( Table const &that ) = default;
 	Table &operator=( Table &&that );
 	Index &operator[]( const std::size_t &index );
 	Index &operator[]( const std::string &key );

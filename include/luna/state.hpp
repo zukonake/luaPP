@@ -5,31 +5,28 @@
 
 #pragma once
 
-#include <memory>
-//
 #include <luna/typedef.hpp>
+#include <luna/stack.hpp>
 
 namespace Luna
 {
 
-struct LuaStateDeleter
-{
-	void operator()( LuaState *ptr ) const;
-};
-
-class State
+class State : public Stack
 {
 public:
 	State();
+	State( LuaState const &luaState );
 	State( State &&that );
 
-	virtual ~State() = default;
+	virtual ~State();
 
 	State &operator=( State &&that ) noexcept;
 
-	operator LuaState *() const noexcept;
+	operator LuaState () const noexcept;
+
+	NumberValue getLuaVersion();
 private:
-	std::unique_ptr< LuaState, LuaStateDeleter > mL;
+	LuaState mLuaState;
 };
 
 

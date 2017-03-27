@@ -16,13 +16,13 @@ class RawStack;
 class Number : public Element
 {
 public:
-	explicit Number( const RawStack &rawStack, const Index &index = -1 );
+	explicit Number( RawStack const &rawStack, Index const &index = -1 );
 	Number( Number &&that );
 
 	virtual ~Number() = default;
 
 	Number &operator=( Number &&that );
-	operator const NumberValue &() const noexcept;
+	operator NumberValue const &() const noexcept;
 private:
 	NumberValue mValue;
 };

@@ -6,7 +6,7 @@
 namespace Luna
 {
 
-Boolean::Boolean( const RawStack &rawStack, const Index &index ) :
+Boolean::Boolean( RawStack const &rawStack, Index const &index ) :
 	Element( rawStack, index ),
 	mValue( rawStack.toBoolean( index ))
 {
@@ -27,7 +27,7 @@ Boolean &Boolean::operator=( Boolean &&that )
 	return *this;
 }
 
-Boolean::operator const bool &() const noexcept
+Boolean::operator bool const &() const noexcept
 {
 	return mValue;
 }

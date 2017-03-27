@@ -6,7 +6,7 @@
 namespace Luna
 {
 
-Number::Number( const RawStack &rawStack, const Index &index ) :
+Number::Number( RawStack const &rawStack, Index const &index ) :
 	Element( rawStack, index ),
 	mValue( rawStack.toNumber( index ))
 {
@@ -27,7 +27,7 @@ Number &Number::operator=( Number &&that )
 	return *this;
 }
 
-Number::operator const NumberValue &() const noexcept
+Number::operator NumberValue const &() const noexcept
 {
 	return mValue;
 }

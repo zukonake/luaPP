@@ -12,41 +12,48 @@
 namespace Luna
 {
 
-void LuaStateDeleter::operator()( LuaState *ptr ) const
-{
-	if( ptr != nullptr )
-	{
-		lua_close( ptr );
-	}
-}
-
 State::State() :
-	mL( lua_newstate( Auxiliary::allocate, nullptr ))
+	mLuaState( lua_newstate( Auxiliary::allocate, nullptr )),
+	Stack( mLuaState )
 {
-	if( mL == nullptr )
+	if( mLuaState == nullptr )
 	{
 		throw Exception::StateError( "Luna::State::State: couldn't create LuaState" );
 		return;
 	}
-	lua_atpanic( mL.get(), Auxiliary::panic );
-	luaL_openlibs( mL.get());
+	lua_atpanic( mLuaState, Auxiliary::panic );
+	luaL_openlibs( mLuaState );
+}
+
+State::State( LuaState const &luaState ) :
+	mLuaState( luaState )
+{
+	
 }
 
 State::State( State &&that ) :
-	mL( std::move( that.mL ))
+	mLuaState( std::move( that.mLuaState ))
 {
 
+}
+
+State::~State()
+{
+	if( mL != nullptr )
+	{
+		lua_close( mLuaState );
+	}
 }
 
 State &State::operator=( State &&that ) noexcept
 {
-	mL = std::move( that.mL );
+	mLuaState = std::move( that.mLuaState );
 	return *this;
 }
 
-State::operator LuaState *() const noexcept
+State::operator LuaState () const noexcept
 {
-	return const_cast< LuaState * >( mL.get());
+	return mLuaState;
 }
 
 }

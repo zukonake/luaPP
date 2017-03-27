@@ -12,21 +12,21 @@
 namespace Luna
 {
 
-RawStack::RawStack() :
-	mState()
+RawStack::RawStack( const LuaState &luaState ) :
+	mLuaState( luaState )
 {
 	
 }
 
 RawStack::RawStack( RawStack &&that ) :
-	mState( std::move( that.mState ))
+	mLuaState( std::move( that.mLuaState ))
 {
 
 }
 
 RawStack &RawStack::operator=( RawStack &&that )
 {
-	mState = std::move( that.mState );
+	mLuaState = std::move( that.mLuaState );
 	return *this;
 }
 
@@ -41,7 +41,7 @@ void RawStack::loadFile( const std::string &path ) const
 		throw;
 		return;
 	}
-	checkForError( luaL_loadfile( mState, path.c_str()), path );
+	checkForError( luaL_loadfile( mLuaState, path.c_str()), path );
 }
 
 void RawStack::loadString( const std::string &value ) const
@@ -55,7 +55,7 @@ void RawStack::loadString( const std::string &value ) const
 		throw;
 		return;
 	}
-	checkForError( luaL_loadstring( mState, value.c_str()), value );
+	checkForError( luaL_loadstring( mLuaState, value.c_str()), value );
 }
 
 void RawStack::loadGlobal( const std::string &name ) const
@@ -68,9 +68,9 @@ void RawStack::loadGlobal( const std::string &name ) const
 	{
 		return;
 	}
-	if( lua_getglobal( mState, name.c_str()) == NIL )
+	if( Auxiliary::convertType( lua_getglobal( mLuaState, name.c_str())) == NIL )
 	{
-		throw Exception::StackError( "Luna::RawStack::loadGlobal: loaded type nil global" );
+		throw Exception::StackError( "Luna::RawStack::loadGlobal: couldn't load global:" + name );
 	}
 }
 
@@ -85,10 +85,10 @@ NumberValue RawStack::toNumber( const Index &index ) const
 		throw;
 		return 0;
 	}
-	return lua_tonumber( mState, index );
+	return lua_tonumber( mLuaState, index );
 }
 
-bool RawStack::toBoolean( const Index &index ) const
+BooleanValue RawStack::toBoolean( const Index &index ) const
 {
 	try
 	{
@@ -99,7 +99,7 @@ bool RawStack::toBoolean( const Index &index ) const
 		throw;
 		return 0;
 	}
-	return lua_toboolean( mState, index );
+	return lua_toboolean( mLuaState, index );
 }
 
 StringValue RawStack::toString( const Index &index ) const
@@ -113,7 +113,7 @@ StringValue RawStack::toString( const Index &index ) const
 		throw;
 		return "";
 	}
-	return lua_tostring( mState, index );
+	return lua_tostring( mLuaState, index );
 }
 
 Size RawStack::doFile( const std::string &path, const uint16_t &arguments ) const
@@ -141,7 +141,7 @@ Size RawStack::call( const Index &index, const uint16_t &arguments ) const
 		return 0;
 	}
 	Size before = getSize();
-	checkForError( lua_pcall( mState, arguments, LUA_MULTRET, 0 ) != LUA_OK, std::to_string( index ));
+	checkForError( lua_pcall( mLuaState, arguments, LUA_MULTRET, 0 ) != LUA_OK, std::to_string( index ));
 	return getSize() - before;
 }
 
@@ -155,7 +155,7 @@ void RawStack::pushNil() const
 	{
 		return;
 	}
-	lua_pushnil( mState );
+	lua_pushnil( mLuaState );
 }
 
 void RawStack::pushNumber( const NumberValue &value ) const
@@ -168,7 +168,7 @@ void RawStack::pushNumber( const NumberValue &value ) const
 	{
 		return;
 	}
-	lua_pushnumber( mState, value );
+	lua_pushnumber( mLuaState, value );
 }
 
 void RawStack::pushBoolean( const bool &value ) const
@@ -181,7 +181,7 @@ void RawStack::pushBoolean( const bool &value ) const
 	{
 		return;
 	}
-	lua_pushboolean( mState, value );
+	lua_pushboolean( mLuaState, value );
 }
 
 void RawStack::pushString( const StringValue &value ) const
@@ -194,7 +194,7 @@ void RawStack::pushString( const StringValue &value ) const
 	{
 		return;
 	}
-	lua_pushstring( mState, value.c_str());
+	lua_pushstring( mLuaState, value.c_str());
 }
 
 void RawStack::replace( const Index &from, const Index &to ) const
@@ -215,7 +215,7 @@ void RawStack::replace( const Index &from, const Index &to ) const
 		throw;
 		return;
 	}
-	lua_copy( mState, realFrom, realTo );
+	lua_copy( mLuaState, realFrom, realTo );
 }
 
 void RawStack::move( const Index &from, const Index &to ) const
@@ -234,7 +234,7 @@ void RawStack::move( const Index &from, const Index &to ) const
 		{
 			copy( realFrom );
 		}
-		lua_replace( mState, realTo );
+		lua_replace( mLuaState, realTo );
 		if( from != -1 )
 		{
 			remove( realFrom );
@@ -272,7 +272,7 @@ void RawStack::copy( const Index &from ) const
 		throw;
 		return;
 	}
-	lua_pushvalue( mState, from );
+	lua_pushvalue( mLuaState, from );
 }
 
 void RawStack::insert( const Index &index ) const
@@ -287,7 +287,7 @@ void RawStack::insert( const Index &index ) const
 		throw;
 		return;
 	}
-	lua_insert( mState, getAbsoluteIndex( index ));
+	lua_insert( mLuaState, getAbsoluteIndex( index ));
 }
 
 void RawStack::remove( const Index &index ) const
@@ -301,7 +301,7 @@ void RawStack::remove( const Index &index ) const
 		throw;
 		return;
 	}
-	lua_remove( mState, getAbsoluteIndex( index ));
+	lua_remove( mLuaState, getAbsoluteIndex( index ));
 }
 
 void RawStack::erase( const Index &index ) const
@@ -323,7 +323,7 @@ bool RawStack::iterate( const Index &index ) const
 		throw;
 		return false;
 	}
-	return lua_next( mState, index );
+	return lua_next( mLuaState, index );
 }
 
 void RawStack::pop( const Size &space ) const
@@ -333,12 +333,12 @@ void RawStack::pop( const Size &space ) const
 		throw Exception::StackError( "Luna::RawStack::pop: tried to pop " + std::to_string( space ) + " elements while the stack has only " + std::to_string( getSize()));
 		return;
 	}
-	lua_pop( mState, space );
+	lua_pop( mLuaState, space );
 }
 
 void RawStack::clear() const noexcept
 {
-	lua_settop( mState, 0 );
+	lua_settop( mLuaState, 0 );
 }
 
 bool RawStack::isValid( const Index & index ) const noexcept
@@ -357,17 +357,17 @@ Type RawStack::getType( const Index &index ) const
 		throw;
 		return INVALID;
 	}
-	return static_cast< Type >( lua_type( mState, index ));
+	return Auxiliary::convertType( lua_type( mLuaState, index ));
 }
 
 Size RawStack::getSize() const noexcept
 {
-	return ( Size )lua_gettop( mState );
+	return ( Size )lua_gettop( mLuaState );
 }
 
 const State &RawStack::getState() const noexcept
 {
-	return mState;
+	return mLuaState;
 }
 
 Index RawStack::getRelativeIndex( const AbsoluteIndex &index ) const
@@ -427,7 +427,7 @@ void RawStack::checkForError( const int &code, const std::string &message ) cons
 
 void RawStack::allocate( const Size &space ) const
 {
-	if( !lua_checkstack( mState, space ))
+	if( !lua_checkstack( mLuaState, space ))
 	{
 		throw Exception::AllocationError( "Luna::RawStack::allocate: couldn't allocate: " + std::to_string( space ) + " space" );
 	}

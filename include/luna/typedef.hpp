@@ -16,12 +16,14 @@
 namespace Luna
 {
 
-class Element;
-
 typedef int32_t Index;
 typedef uint32_t AbsoluteIndex;
 typedef uint32_t Size;
-typedef lua_State LuaState;
+typedef lua_State *LuaState;
+typedef int16_t LuaErrorCode;
+typedef uint8_t LuaType;
+typedef luaL_Reg LibraryEntry;
+typedef const luaL_Reg[] Library;
 
 typedef double NumberValue;
 typedef std::string StringValue;
@@ -29,17 +31,21 @@ typedef std::pair<
 		std::unordered_map< std::size_t, Index >,
 		std::unordered_map< std::string, Index > >
 		TableValue;
+typedef lua_CFunction FunctionValue;
+typedef void *UserDataValue;
+typedef void *LightUserdataValue;
+typedef LuaState ThreadValue;
 
 enum Type
 {
 	NIL,
 	BOOLEAN,
-	LIGHT_USERDATA,
 	NUMBER,
 	STRING,
 	TABLE,
+	LIGHT_USER_DATA,
+	USER_DATA,
 	FUNCTION,
-	USERDATA,
 	THREAD,
 	INVALID
 };

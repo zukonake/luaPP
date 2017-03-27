@@ -7,7 +7,7 @@
 namespace Luna
 {
 
-Element::Element( const RawStack &rawStack, const Index &index ) :
+Element::Element( RawStack const &rawStack, Index const &index ) :
 	mRawStack( rawStack ),
 	mIndex( rawStack.getAbsoluteIndex( index ))
 {
@@ -33,7 +33,7 @@ Element &Element::operator=( Element &&that )
 	return *this;
 }
 
-const Index &Element::getIndex() const noexcept
+Index const &Element::getIndex() const noexcept
 {
 	return mIndex;
 }

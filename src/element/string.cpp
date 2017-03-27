@@ -6,7 +6,7 @@
 namespace Luna
 {
 
-String::String( const RawStack &rawStack, const Index &index ) :
+String::String( RawStack const &rawStack, Index const &index ) :
 	Element( rawStack, index ),
 	StringValue( rawStack.toString( index ))
 {

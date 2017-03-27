@@ -16,6 +16,12 @@ public:
 	using std::runtime_error::runtime_error;
 };
 
+class AllocationError : public std::runtime_error
+{
+public:
+	using std::runtime_error::runtime_error;
+};
+
 class LuaError : public std::runtime_error
 {
 public:
@@ -34,16 +40,10 @@ public:
 	using std::runtime_error::runtime_error;
 };
 
-class AllocationError : public std::runtime_error
+class StackError : public StateError
 {
 public:
-	using std::runtime_error::runtime_error;
-};
-
-class StackError : public std::runtime_error
-{
-public:
-	using std::runtime_error::runtime_error;
+	using StateError::StateError;
 };
 
 class IndexError : public StackError

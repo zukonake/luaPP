@@ -16,7 +16,7 @@ class RawStack;
 class String : public Element, public StringValue
 {
 public:
-	explicit String( const RawStack &rawStack, const Index &index = -1 );
+	explicit String( RawStack const &rawStack, Index const &index = -1 );
 	String( String &&that );
 
 	virtual ~String() = default;

@@ -15,16 +15,16 @@ class RawStack;
 class Element
 {
 public:
-	explicit Element( const RawStack &stack, const Index &index = -1 );
+	explicit Element( RawStack const &stack, Index const &index = -1 );
 	Element( Element &&that );
 
 	virtual ~Element() = default;
 
 	Element &operator=( Element &&that );
 
-	virtual const Index &getIndex() const noexcept final;
+	virtual Index const &getIndex() const noexcept final;
 protected:
-	const RawStack &mRawStack;
+	RawStack const &mRawStack;
 private:
 	Index mIndex;
 };

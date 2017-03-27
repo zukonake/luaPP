@@ -16,13 +16,13 @@ class RawStack;
 class Boolean : public Element
 {
 public:
-	explicit Boolean( const RawStack &rawStack, const Index &index = -1 );
+	explicit Boolean( RawStack const &rawStack, Index const &index = -1 );
 	Boolean( Boolean &&that );
 
 	virtual ~Boolean() = default;
 
 	Boolean &operator=( Boolean &&that );
-	operator const bool &() const noexcept;
+	operator bool const &() const noexcept;
 private:
 	bool mValue;
 };
