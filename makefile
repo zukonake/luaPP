@@ -2,8 +2,9 @@ SOURCE_PATH := src
 OBJ_PATH := bin
 DEPEND_PATH := depend
 TEST_PATH := $(SOURCE_PATH)/test
-TARGET_PATH := libluna.so
-VERSION := 1.0.0
+TARGET_PATH := libluna-2.0.0-alpha.so
+LINK_PATH := libluna.so
+VERSION := 2.0.0
 SOURCES := $(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -printf '%p ')
 OBJS := $(addprefix $(OBJ_PATH)/,$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -exec basename {} \;)))
 TEST_SOURCES := $(shell find $(TEST_PATH) -type f -name "*.cpp" -printf '%p ')
@@ -35,8 +36,11 @@ $(OBJ_PATH)/%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
 	@sed -i '1s/^/bin\//' $(DEPEND_PATH)/$*.d
 
 install: $(TARGET_PATH)
+	install -m 755 $(TARGET_PATH) $(PREFIX)/$(TARGET_PATH)
+	ln -sf $(PREFIX)/$(TARGET_PATH) $(PREXIX)/$(LINK_PATH)
 
 uninstall:
+	rm -f $(PREFIX)/$(TARGET_PATH) $(PREFIX)/$(LINK_PATH)
 
 clean :
 	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH)
