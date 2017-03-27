@@ -17,7 +17,7 @@ namespace Luna
 class Stack : public RawStack
 {
 public:
-	Stack( LuaState const &luaState );
+	Stack() = default;
 	Stack( Stack &&that );
 
 	virtual ~Stack() = default;

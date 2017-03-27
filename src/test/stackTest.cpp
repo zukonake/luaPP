@@ -41,8 +41,6 @@ BOOST_AUTO_TEST_CASE( loadGlobalsTest )
 	BOOST_CHECK_EQUAL( tStack01.loadGlobal< String >( "string" ), "tet" );
 	BOOST_CHECK_EQUAL( tStack01.loadGlobal< Table >( "luna" ).at< Number >( "var" ), 25 );
 	BOOST_CHECK_THROW( tStack01.loadGlobal< Table >( "luna" ).at< Number >( "var2" ), std::out_of_range );
-	BOOST_CHECK_THROW( tStack01.at< Table >( "luna" ).at< Number >( "var2" ), std::out_of_range );
-	BOOST_CHECK_EQUAL( tStack01.at< String >( "string" ), "tet" );
 }
 
 BOOST_AUTO_TEST_SUITE_END();

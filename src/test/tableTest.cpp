@@ -34,9 +34,6 @@ BOOST_AUTO_TEST_CASE( test )
 	BOOST_CHECK_THROW( tTable01.at< Table >( 3 ), std::out_of_range );
 	BOOST_CHECK_THROW( tTable01.at< Number >( -1 ), std::out_of_range );
 	BOOST_CHECK_THROW( tTable01.at< String >( 0 ), std::out_of_range );
-
-	Stack tStack02;
-//	const Table &tTable03 = tStack02, Exception::IndexError );
 }
 
 BOOST_AUTO_TEST_SUITE_END();
