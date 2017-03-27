@@ -6,9 +6,9 @@
 #pragma once
 
 #include <stdexcept>
-#include <memory>
 #include <string>
 //
+#include <luna/typedef.hpp>
 #include <luna/rawStack.hpp>
 
 namespace Luna
@@ -17,7 +17,7 @@ namespace Luna
 class Stack : public RawStack
 {
 public:
-	Stack() = default;
+	Stack( LuaState const &luaState );
 	Stack( Stack &&that );
 
 	virtual ~Stack() = default;
@@ -29,11 +29,6 @@ public:
 	 */
 	template< typename T >
 	T loadGlobal( const std::string &name );
-
-	/* same as loadGlobal
-	 */
-	template< typename T >
-	T at( const std::string &name );
 };
 
 template< typename T >
@@ -41,12 +36,6 @@ T Stack::loadGlobal( const std::string &name )
 {
 	RawStack::loadGlobal( name );
 	return T( *this );
-}
-
-template< typename T >
-T Stack::at( const std::string &name )
-{
-	return loadGlobal< T >( name );
 }
 
 }
