@@ -13,3 +13,14 @@
 #include <luna/rawStack.hpp>
 #include <luna/stack.hpp>
 #include <luna/state.hpp>
+
+//TODO update includes
+
+namespace Luna
+{
+
+constexpr uint8_t lunaVersionMajor = 2;
+constexpr uint8_t lunaVersionMinor = 0;
+constexpr uint8_t lunaVersionPatch = 0;
+
+}

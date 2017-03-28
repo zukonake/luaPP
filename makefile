@@ -1,5 +1,6 @@
 SOURCE_PATH := src
 OBJ_PATH := bin
+DOC_PATH := doc
 DEPEND_PATH := depend
 TEST_PATH := $(SOURCE_PATH)/test
 TARGET_PATH := libluna-2.0.0-alpha.so
@@ -18,8 +19,9 @@ CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
 LDFLAGS := $(STD) -fPIC -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
 COMPILER := g++
 PREFIX := /usr/lib
+DOXYFILE := $(DOC_PATH)/Doxyfile
 
-.PHONY : clean install uninstall test
+.PHONY : clean install uninstall test doc
 
 $(TARGET_PATH) : $(OBJS)
 	$(COMPILER) -shared $(LDFLAGS) $(OBJS) -o $@
@@ -44,5 +46,8 @@ uninstall:
 
 clean :
 	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH)
+
+doc :
+	doxygen $(DOXYFILE)
 
 -include $(shell find $(DEPEND_PATH) -type f -name "*.d" -printf '%p ')

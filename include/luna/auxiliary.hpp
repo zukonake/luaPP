@@ -13,16 +13,44 @@
 //
 #include <luna/typedef.hpp>
 
+/**
+ * Namespace containing auxiliary functions.
+ */
+
 namespace Luna::Auxiliary
 {
 
-constexpr uint8_t lunaVersionMajor = 2;
-constexpr uint8_t lunaVersionMinor = 0;
-constexpr uint8_t lunaVersionPatch = 0;
+/**
+ *  Converts Lua C API type to Luna::Type.
+ */
 
 Type convertType( const LuaType &luaType ) noexcept;
+
+/** 
+ * Returns a type name for Luna::Type.
+ */
+
 std::string getTypeName( Type const &type ) noexcept;
+
+/**
+ * Default allocate function for Luna::State.
+ *
+ * @param ud UserData pointer.
+ * @param ptr Allocated pointer.
+ * @param osize Original size.
+ * @param nsize New size.
+ *
+ * @return Allocated pointer.
+ */
+
 void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize );
-int panic( lua_State *L );
+
+/**
+ * Default panic function for Luna::State.
+ *
+ * @return Success in reporting error.
+ */
+
+int panic( LuaState L );
 
 }
