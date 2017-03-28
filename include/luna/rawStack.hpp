@@ -1,4 +1,5 @@
-/* luna/rawStack.hpp
+/**
+ * @file luna/rawStack.hpp
  * Copyleft zukonake
  * Distributed under GNU General Public License Version 3
  */
@@ -12,6 +13,10 @@
 
 namespace Luna
 {
+
+/**
+ * Represents the Lua C API stack.
+ */
 
 class RawStack
 {

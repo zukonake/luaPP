@@ -19,7 +19,8 @@ CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
 LDFLAGS := $(STD) -fPIC -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
 COMPILER := g++
 PREFIX := /usr/lib
-DOXYFILE := $(DOC_PATH)/Doxyfile
+DOXYFILE := Doxyfile
+
 
 .PHONY : clean install uninstall test doc
 
@@ -45,9 +46,10 @@ uninstall:
 	rm -f $(PREFIX)/$(TARGET_PATH) $(PREFIX)/$(LINK_PATH)
 
 clean :
-	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH)
+	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH) $(DOC_PATH)
 
 doc :
+	@mkdir -p $(DOC_PATH)
 	doxygen $(DOXYFILE)
 
 -include $(shell find $(DEPEND_PATH) -type f -name "*.d" -printf '%p ')

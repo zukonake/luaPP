@@ -1,4 +1,5 @@
-/* luna/auxiliary.hpp
+/**
+ * @file luna/auxiliary.hpp
  * Copyleft zukonake
  * Distributed under GNU General Public License Version 3
  */
@@ -14,26 +15,26 @@
 #include <luna/typedef.hpp>
 
 /**
- * Namespace containing auxiliary functions.
+ * Contains auxiliary functions.
  */
 
 namespace Luna::Auxiliary
 {
 
 /**
- *  Converts Lua C API type to Luna::Type.
+ * Converts Lua C API type to Type.
  */
 
 Type convertType( const LuaType &luaType ) noexcept;
 
 /** 
- * Returns a type name for Luna::Type.
+ * Returns a type name for Type.
  */
 
 std::string getTypeName( Type const &type ) noexcept;
 
 /**
- * Default allocate function for Luna::State.
+ * Default allocate function for State.
  *
  * @param ud UserData pointer.
  * @param ptr Allocated pointer.
@@ -46,7 +47,7 @@ std::string getTypeName( Type const &type ) noexcept;
 void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize );
 
 /**
- * Default panic function for Luna::State.
+ * Default panic function for State.
  *
  * @return Success in reporting error.
  */

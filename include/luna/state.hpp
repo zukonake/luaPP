@@ -1,4 +1,5 @@
-/* luna/state.hpp
+/**
+ * @file luna/state.hpp
  * Copyleft zukonake
  * Distributed under GNU General Public License Version 3
  */
@@ -12,7 +13,7 @@ namespace Luna
 {
 
 /** 
- * Main class wrapping the Luna::LuaState and Luna::Stack.
+ * Main class wrapping the LuaState and Stack.
  */
 
 class State : public Stack
@@ -29,7 +30,7 @@ public:
 	State();
 
 	/**
-	 * Constructs a new State, from an existing Luna::LuaState.
+	 * Constructs a new State, from an existing LuaState.
 	 *
 	 * The LuaState is unchanged.
 	 */
@@ -37,29 +38,29 @@ public:
 	State( LuaState const &luaState );
 
 	/**
-	 * Moves the Luna::LuaState to new Luna::State.
+	 * Moves the LuaState to new State.
 	 *
-	 * @param that Its Luna::LuaState will be set to nullptr.
+	 * @param that Its LuaState will be set to nullptr.
 	 */
 
 	State( State &&that );
 
 	/**
-	 * Closes the Luna::LuaState.
+	 * Closes the LuaState.
 	 */
 
 	virtual ~State();
 
 	/**
-	 * Moves the Luna::LuaState to an existing Luna::State.
+	 * Moves the LuaState to an existing State.
 	 *
-	 * @param that Its Luna::LuaState will be set to nullptr.
+	 * @param that Its LuaState will be set to nullptr.
 	 */
 
 	State &operator=( State &&that ) noexcept;
 
 	/**
-	 * Returns an underlying Luna::LuaState.
+	 * Returns an underlying LuaState.
 	 */
 
 	operator LuaState () const noexcept;

@@ -1,4 +1,5 @@
-/* luna/exeception.hpp
+/**
+ * @file luna/exeception.hpp
  * Copyleft zukonake
  * Distributed under GNU General Public License Version 3
  */
@@ -8,14 +9,14 @@
 #include <stdexcept>
 
 /**
- * Namespace containing Luna exceptions.
+ * Contains Luna exceptions.
  */
 
 namespace Luna::Exception
 {
 
 /**
- * Exception thrown when file can't be opened.
+ * Thrown when file can't be opened.
  */
 
 class FileError : public std::runtime_error
@@ -25,7 +26,7 @@ public:
 };
 
 /**
- * Exception thrown when Luna fails to allocate memory.
+ * Thrown when Luna fails to allocate memory.
  */
 
 class AllocationError : public std::runtime_error
@@ -35,7 +36,7 @@ public:
 };
 
 /**
- * Exception thrown when there is Lua C API error.
+ * Thrown when there is Lua C API error.
  */
 
 class LuaError : public std::runtime_error
@@ -45,7 +46,7 @@ public:
 };
 
 /**
- * Exception thrown when there is a syntax error in a lua script.
+ * Thrown when there is a syntax error in a lua script.
  */
 
 class SyntaxError : public LuaError
@@ -55,7 +56,7 @@ public:
 };
 
 /**
- * Exception thrown when there is an error concerning Luna::State
+ * Thrown when there is an error concerning State
  */
 
 class StateError : public std::runtime_error
@@ -65,7 +66,7 @@ public:
 };
 
 /**
- * Exception thrown when there is an error concerning Luna::Stack or Luna::RawStack.
+ * Thrown when there is an error concerning Stack or RawStack.
  */
 
 class StackError : public StateError
@@ -75,7 +76,7 @@ public:
 };
 
 /**
- * Exception thrown when an invalid index is accessed on Luna::Stack or Luna::RawStack.
+ * Thrown when an invalid index is accessed on Stack or RawStack.
  */
 
 class IndexError : public StackError
@@ -85,7 +86,7 @@ public:
 };
 
 /**
- * Exception thrown when a stack value contains unexpected type.
+ * Thrown when a stack value contains unexpected type.
  */
 
 class TypeError : public StackError
