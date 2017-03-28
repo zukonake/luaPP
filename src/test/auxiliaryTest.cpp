@@ -4,36 +4,43 @@
 #include <luna/typedef.hpp>
 #include <luna/auxiliary.hpp>
 
-namespace Luna
+namespace Luna::Auxiliary::Test
 {
-
-using namespace Auxiliary;
 
 BOOST_AUTO_TEST_SUITE( auxiliaryTest );
 
-BOOST_AUTO_TEST_CASE( getTypeNameTest )
+BOOST_AUTO_TEST_CASE( getTypeNameTest00 )
 {
 	BOOST_CHECK( getTypeName( NUMBER ) == "number" );
 	BOOST_CHECK( getTypeName( INVALID ) == "invalid" );
 	BOOST_CHECK( getTypeName( static_cast< Type >( 250 )) == "invalid" );
 }
 
-BOOST_AUTO_TEST_CASE( allocateTest )
+BOOST_AUTO_TEST_CASE( allocateTest00 )
 {
 	BOOST_CHECK( allocate( nullptr, nullptr, 0, 0 ) == nullptr );
 	BOOST_CHECK( allocate( nullptr, nullptr, 16, 0 ) == nullptr );
+}
 
+BOOST_AUTO_TEST_CASE( allocateTest01 )
+{
 	void *ptr01 = nullptr;
-	BOOST_CHECK_NO_THROW( allocate( nullptr, ptr01, 0, 0 ));
+	BOOST_REQUIRE_NO_THROW( ptr01 = allocate( nullptr, ptr01, 0, 0 ));
 	BOOST_CHECK( ptr01 == nullptr );
+}
 
+BOOST_AUTO_TEST_CASE( allocateTest02 )
+{
 	void *ptr02 = nullptr;
 	BOOST_REQUIRE_NO_THROW( ptr02 = allocate( nullptr, ptr02, 0, sizeof( char )));
 	BOOST_REQUIRE_NO_THROW( *static_cast< char *>( ptr02 ) = 't' );
 	BOOST_CHECK_EQUAL( *static_cast< char *>( ptr02 ), 't' );
 	BOOST_CHECK_NO_THROW( ptr02 = allocate( nullptr, ptr02, sizeof( char ), 0 ));
 	BOOST_CHECK( ptr02 == nullptr );
+}
 
+BOOST_AUTO_TEST_CASE( allocateTest03 )
+{
 	void *ptr03 = nullptr;
 	BOOST_REQUIRE_NO_THROW( ptr03 = allocate( nullptr, ptr03, 0, sizeof( char )));
 	BOOST_REQUIRE( ptr03 = allocate( nullptr, ptr03, sizeof( char ), sizeof( long int )));

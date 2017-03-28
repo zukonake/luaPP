@@ -22,9 +22,11 @@ typedef uint32_t Size;
 typedef lua_State *LuaState;
 typedef int16_t LuaErrorCode;
 typedef uint8_t LuaType;
+typedef Index LuaReference;
 typedef luaL_Reg LibraryEntry;
-typedef const luaL_Reg[] Library;
+typedef const luaL_Reg *Library;
 
+typedef bool BooleanValue;
 typedef double NumberValue;
 typedef std::string StringValue;
 typedef std::pair<
@@ -49,5 +51,8 @@ enum Type
 	THREAD,
 	INVALID
 };
+
+constexpr LuaReference noReference = LUA_NOREF;
+constexpr Index LuaRegistryIndex = LUA_REGISTRYINDEX;
 
 }

@@ -19,7 +19,7 @@ class RawStack;
 class Table : public Element, TableValue
 {
 public:
-	explicit Table( RawStack const &rawStack, Index const &index = -1 );
+	explicit Table( RawStack &rawStack, Index const &index = -1 );
 	Table( Table const &that ) = default;
 	Table( Table &&that );
 
@@ -27,7 +27,7 @@ public:
 
 	Table &operator=( Table const &that ) = default;
 	Table &operator=( Table &&that );
-	Index &operator[]( const std::size_t &index );
+	Index &operator[]( const std::size_t &index ); //TODO insert values in stack
 	Index &operator[]( const std::string &key );
 
 	template< typename T >

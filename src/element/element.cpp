@@ -7,18 +7,25 @@
 namespace Luna
 {
 
-Element::Element( RawStack const &rawStack, Index const &index ) :
+Element::Element( RawStack &rawStack  ) :
 	mRawStack( rawStack ),
-	mIndex( rawStack.getAbsoluteIndex( index ))
+	mReference( rawStack.newReference( LuaRegistryIndex, -1 ))
+{
+	
+}
+
+Element::Element( RawStack &rawStack, LuaReference const &reference ) :
+	mRawStack( rawStack ),
+	mReference( reference )
 {
 	
 }
 
 Element::Element( Element &&that ) :
-	mRawStack( that.mRawStack )
+	mRawStack( that.mRawStack ),
+	mReference( that.mReference )
 {
-	mIndex = that.mIndex;
-	that.mIndex = 0;
+	that.mReference = noReference;
 }
 
 Element &Element::operator=( Element &&that )
@@ -28,14 +35,14 @@ Element &Element::operator=( Element &&that )
 		throw std::logic_error( "Luna::Element::operator=: tried to move element within different stack" );
 		return *this;
 	}
-	mIndex = that.mIndex;
-	that.mIndex = 0;
+	mReference = that.mReference;
+	that.mReference = noReference;
 	return *this;
 }
 
-Index const &Element::getIndex() const noexcept
+LuaReference const &Element::getReference() const noexcept
 {
-	return mIndex;
+	return mReference;
 }
 
 }

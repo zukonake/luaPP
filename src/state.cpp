@@ -13,8 +13,8 @@ namespace Luna
 {
 
 State::State() :
-	mLuaState( lua_newstate( Auxiliary::allocate, nullptr )),
-	Stack( mLuaState )
+	Stack( mLuaState ),
+	mLuaState( lua_newstate( Auxiliary::allocate, nullptr ))
 {
 	if( mLuaState == nullptr )
 	{
@@ -26,12 +26,14 @@ State::State() :
 }
 
 State::State( LuaState const &luaState ) :
+	Stack( mLuaState ),
 	mLuaState( luaState )
 {
 	
 }
 
 State::State( State &&that ) :
+	Stack( mLuaState ),
 	mLuaState( std::move( that.mLuaState ))
 {
 
@@ -39,7 +41,7 @@ State::State( State &&that ) :
 
 State::~State()
 {
-	if( mL != nullptr )
+	if( mLuaState != nullptr )
 	{
 		lua_close( mLuaState );
 	}

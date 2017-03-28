@@ -6,7 +6,7 @@
 namespace Luna
 {
 
-Boolean::Boolean( RawStack const &rawStack, Index const &index ) :
+Boolean::Boolean( RawStack &rawStack, Index const &index ) :
 	Element( rawStack, index ),
 	mValue( rawStack.toBoolean( index ))
 {

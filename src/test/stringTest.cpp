@@ -5,20 +5,20 @@
 #include <luna/typedef.hpp>
 #include <luna/rawStack.hpp>
 #include <luna/element/string.hpp>
+#include <luna/test/rawStackFixture.hpp>
 
-namespace Luna
+namespace Luna::Test::Test
 {
 
-BOOST_AUTO_TEST_SUITE( stringTest );
+BOOST_FIXTURE_TEST_SUITE( stringTest, RawStackFixture );
 
-BOOST_AUTO_TEST_CASE( test )
+BOOST_AUTO_TEST_CASE( conversionTest00 )
 {
-	RawStack tRawStack01;
-	BOOST_REQUIRE_NO_THROW( tRawStack01.pushString( "test" ));
-	BOOST_REQUIRE_NO_THROW( tRawStack01.pushString( "xd" ));
-	String tString01( tRawStack01, -1 );
-	BOOST_CHECK_EQUAL( tString01, "xd" );
-	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "test" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "xd" ));
+	String tString00( fRawStack, -1 );
+	BOOST_CHECK_EQUAL( tString00, "xd" );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
 
 BOOST_AUTO_TEST_SUITE_END();

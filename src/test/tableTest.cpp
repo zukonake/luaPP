@@ -1,25 +1,21 @@
-#include <memory>
 #include <stdexcept>
 //
 #include <boost/test/unit_test.hpp>
 //
-#include <luna/exception.hpp>
-#include <luna/typedef.hpp>
 #include <luna/element/number.hpp>
 #include <luna/element/string.hpp>
 #include <luna/element/table.hpp>
-#include <luna/stack.hpp>
+#include <luna/test/stackFixture.hpp>
 
-namespace Luna
+namespace Luna::Test
 {
 
-BOOST_AUTO_TEST_SUITE( tableTest );
+BOOST_FIXTURE_TEST_SUITE( tableTest, StackFixture );
 
-BOOST_AUTO_TEST_CASE( test )
+BOOST_AUTO_TEST_CASE( atTest00 )
 {
-	Stack tStack01;
-	BOOST_REQUIRE_NO_THROW( tStack01.doFile( "src/test/tableTest.lua" ));
-	Table tTable01 = tStack01.loadGlobal< Table >( "test" );
+	BOOST_REQUIRE_NO_THROW( fStack.doFile( "src/test/tableTest.lua" ));
+	Table tTable01 = fStack.loadGlobal< Table >( "test" );
 	BOOST_CHECK_EQUAL( tTable01.at< Number >( "var" ), 12 );
 	BOOST_CHECK_EQUAL( tTable01.at< String >( "var1" ), "test" );
 	BOOST_CHECK_EQUAL( tTable01.at< Number >( 1 ), 25 );
@@ -34,10 +30,9 @@ BOOST_AUTO_TEST_CASE( test )
 	BOOST_CHECK_THROW( tTable01.at< Table >( 3 ), std::out_of_range );
 	BOOST_CHECK_THROW( tTable01.at< Number >( -1 ), std::out_of_range );
 	BOOST_CHECK_THROW( tTable01.at< String >( 0 ), std::out_of_range );
-
-	Stack tStack02;
-//	const Table &tTable03 = tStack02, Exception::IndexError );
 }
+
+//TODO operator[] test
 
 BOOST_AUTO_TEST_SUITE_END();
 

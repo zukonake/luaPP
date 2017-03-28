@@ -6,7 +6,7 @@
 namespace Luna
 {
 
-Number::Number( RawStack const &rawStack, Index const &index ) :
+Number::Number( RawStack &rawStack, Index const &index ) :
 	Element( rawStack, index ),
 	mValue( rawStack.toNumber( index ))
 {

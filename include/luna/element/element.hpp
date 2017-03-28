@@ -15,18 +15,19 @@ class RawStack;
 class Element
 {
 public:
-	explicit Element( RawStack const &stack, Index const &index = -1 );
+	explicit Element( RawStack &rawStack );
+	Element( RawStack &rawStack, LuaReference const &reference );
 	Element( Element &&that );
 
 	virtual ~Element() = default;
 
 	Element &operator=( Element &&that );
 
-	virtual Index const &getIndex() const noexcept final;
+	virtual LuaReference const &getReference() const noexcept final;
 protected:
-	RawStack const &mRawStack;
+	RawStack &mRawStack;
 private:
-	Index mIndex;
+	LuaReference mReference;
 };
 
 }

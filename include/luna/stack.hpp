@@ -18,24 +18,27 @@ class Stack : public RawStack
 {
 public:
 	Stack( LuaState const &luaState );
-	Stack( Stack &&that );
 
 	virtual ~Stack() = default;
 
-	Stack &operator=( Stack &&that );
-
-	/* load global into stack
-	 * and return bound element
-	 */
 	template< typename T >
-	T loadGlobal( const std::string &name );
+	T at( Index const &index = -1 );
+
+	template< typename T >
+	T loadGlobal( std::string const &name );
 };
 
 template< typename T >
-T Stack::loadGlobal( const std::string &name )
+T Stack::at( Index const &index )
+{
+	return T( *this, index );
+}
+
+template< typename T >
+T Stack::loadGlobal( std::string const &name )
 {
 	RawStack::loadGlobal( name );
-	return T( *this );
+	return at< T >();
 }
 
 }

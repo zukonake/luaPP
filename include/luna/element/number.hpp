@@ -16,7 +16,7 @@ class RawStack;
 class Number : public Element
 {
 public:
-	explicit Number( RawStack const &rawStack, Index const &index = -1 );
+	explicit Number( RawStack &rawStack, Index const &index = -1 );
 	Number( Number &&that );
 
 	virtual ~Number() = default;

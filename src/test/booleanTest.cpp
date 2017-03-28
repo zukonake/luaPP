@@ -1,22 +1,21 @@
 #include <boost/test/unit_test.hpp>
 //
 #include <luna/typedef.hpp>
-#include <luna/rawStack.hpp>
 #include <luna/element/boolean.hpp>
+#include <luna/test/rawStackFixture.hpp>
 
-namespace Luna
+namespace Luna::Test
 {
 
-BOOST_AUTO_TEST_SUITE( booleanTest );
+BOOST_FIXTURE_TEST_SUITE( booleanTest, RawStackFixture );
 
-BOOST_AUTO_TEST_CASE( test )
+BOOST_AUTO_TEST_CASE( conversionTest00 )
 {
-	RawStack tRawStack01;
-	BOOST_REQUIRE_NO_THROW( tRawStack01.pushBoolean( true ));
-	BOOST_REQUIRE_NO_THROW( tRawStack01.pushBoolean( false ));
-	Boolean tBoolean01( tRawStack01, -2 );
-	BOOST_CHECK_EQUAL( tBoolean01, true );
-	BOOST_CHECK_EQUAL( tRawStack01.getSize(), 2 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushBoolean( true ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushBoolean( false ));
+	Boolean tBoolean00( fRawStack, -2 );
+	BOOST_CHECK_EQUAL( tBoolean00, true );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
 
 BOOST_AUTO_TEST_SUITE_END();

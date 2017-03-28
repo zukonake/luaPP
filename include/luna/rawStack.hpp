@@ -27,7 +27,7 @@ public:
 	Size doString( std::string const &value, Size const &arguments = 0 );
 
 	Size call( Index const &index = -1, Size const &arguments = 0 );
-	void callMetaMethod( Index const &index, const std::string& name );
+	void callMetaMethod( Index const &index, std::string const &name );
 
 	void pushNil();
 	void pushBoolean( BooleanValue const &value );
@@ -39,7 +39,7 @@ public:
 	void pushFunction( FunctionValue function );
 	void pushClosure( FunctionValue closure, Size const &capture = 0 );
 	void pushThread( ThreadValue const &thread );
-	void pushMetaTable( const std::string &name );
+	void pushMetaTable( std::string const &name );
 
 	void loadGlobal( std::string const &name );
 	void loadGlobalTable();
@@ -51,7 +51,7 @@ public:
 
 	void registerLibrary( Library const &library );
 	void registerFunction( FunctionValue function, std::string const &name );
-	void registerValue( Index const &index, const std::string& name );
+	void registerValue( Index const &index, std::string const &name );
 
 	NumberValue toNumber( Index const &index = -1 ) const;
 	BooleanValue toBoolean( Index const &index = -1 ) const;
@@ -80,8 +80,8 @@ public:
 	void setTableField( Index const &table, std::string const &key );
 
 	void setRawTableField( Index const &table );
-	void setRawTableField( Index const &table, std::size_t const &index, Index const &value );
-	void setRawTableField( Index const &table, std::string const &key, Index const &value );
+	void setRawTableField( Index const &table, std::size_t const &index, Index const &value = -1 );
+	void setRawTableField( Index const &table, std::string const &key, Index const &value = -1 );
 
 	void setMetaTable( Index const &target, std::string const &metaTable );
 	void setMetaTable( Index const &target, Index const &metaTable );
@@ -94,7 +94,7 @@ public:
 	void remove( Index const &index );
 	void erase( Index const &index );
 	void pop( Size const &space = 1 );
-	void clear() const noexcept;
+	void clear() noexcept;
 
 	void replace( Index const &from, Index const &to );
 	void move( Index const &from, Index const &to );

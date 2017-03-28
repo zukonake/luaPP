@@ -7,7 +7,7 @@
 namespace Luna
 {
 
-Table::Table( RawStack const &rawStack, Index const &index ) :
+Table::Table( RawStack &rawStack, Index const &index ) :
 	Element( rawStack , index )
 {
 	AbsoluteIndex realIndex = rawStack.getAbsoluteIndex( index );

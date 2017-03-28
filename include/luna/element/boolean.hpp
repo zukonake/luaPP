@@ -16,7 +16,7 @@ class RawStack;
 class Boolean : public Element
 {
 public:
-	explicit Boolean( RawStack const &rawStack, Index const &index = -1 );
+	explicit Boolean( RawStack &rawStack, Index const &index = -1 );
 	Boolean( Boolean &&that );
 
 	virtual ~Boolean() = default;
