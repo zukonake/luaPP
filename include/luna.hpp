@@ -1,4 +1,5 @@
-/* luna.hpp
+/**
+ * @file luna.hpp
  * Copyleft zukonake
  * Distributed under GNU General Public License Version 3
  */
@@ -15,6 +16,10 @@
 #include <luna/state.hpp>
 
 //TODO update includes
+
+/**
+ * Used by Luna API everywhere.
+ */
 
 namespace Luna
 {

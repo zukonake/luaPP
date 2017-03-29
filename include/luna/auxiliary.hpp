@@ -17,20 +17,17 @@
 /**
  * Contains auxiliary functions.
  */
-
 namespace Luna::Auxiliary
 {
 
 /**
  * Converts Lua C API type to Type.
  */
-
 Type convertType( const LuaType &luaType ) noexcept;
 
 /** 
  * Returns a type name for Type.
  */
-
 std::string getTypeName( Type const &type ) noexcept;
 
 /**
@@ -43,7 +40,6 @@ std::string getTypeName( Type const &type ) noexcept;
  *
  * @return Allocated pointer.
  */
-
 void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize );
 
 /**
@@ -51,7 +47,6 @@ void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize );
  *
  * @return Success in reporting error.
  */
-
 int panic( LuaState L );
 
 }

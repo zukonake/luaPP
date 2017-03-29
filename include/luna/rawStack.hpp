@@ -21,17 +21,95 @@ namespace Luna
 class RawStack
 {
 public:
+
+	/**
+	 * Construct a new RawStack, from an existing LuaState.
+	 */
 	RawStack( LuaState const &luaState ) noexcept;
 
 	virtual ~RawStack() = default;
 
+	/**
+	 * Loads file.
+	 *
+	 * The file is loaded and pushed as a function to the stack.
+	 *
+	 * @param path Path to the file.
+	 */
 	void loadFile( std::string const &path );
+
+	/**
+	 * Loads a script as a std::string.
+	 *
+	 * The script is loaded and pushed as a function to the stack.
+	 *
+	 * @param value The Lua script to load.
+	 */
 	void loadString( std::string const &value );
 
-	Size doFile( std::string const &path, Size const &arguments = 0 );
-	Size doString( std::string const &value, Size const &arguments = 0 );
 
-	Size call( Index const &index = -1, Size const &arguments = 0 );
+	/**
+	 * Loads a file and calls it.
+	 *
+	 * The file is loaded and pushed as a function to the stack.
+	 * The Lua function may return return multiple values,
+	 * as defined by the returnNumber, if LuaMultiReturn is used,
+	 * all of the return values will be pushed to the stack.
+	 * The Lua function may pop multiple values,
+	 * as defined by the arguments.
+	 *
+	 * @param path Path to the file.
+	 * @param returnNumber Number of returned values to push to the stack.
+	 * @param arguments Number of values to pop from the stack and pass to the function.
+	 * @see LuaMultiReturn
+	 * @return Returns the number of returnedValues.
+	 */
+	Size doFile( std::string const &path, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
+
+	/**
+	 * Loads a script as a std::string and calls it.
+	 *
+	 * The string is loaded and pushed as a function to the stack.
+	 * The Lua function may return return multiple values,
+	 * as defined by the returnNumber, if LuaMultiReturn is used,
+	 * all of the return values will be pushed to the stack.
+	 * The Lua function may pop multiple values,
+	 * as defined by the arguments.
+	 *
+	 * @param value The Lua script to load.
+	 * @param returnNumber Number of returned values to push to the stack.
+	 * @param arguments Number of values to pop from the stack and pass to the function.
+	 * @see LuaMultiReturn
+	 * @return Returns the number of returnedValues.
+	 */
+	Size doString( std::string const &value, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
+
+	/**
+	 * Calls a function on the stack.
+	 *
+	 * The Lua function may return return multiple values,
+	 * as defined by the returnNumber, if LuaMultiReturn is used,
+	 * all of the return values will be pushed to the stack.
+	 * The Lua function may pop multiple values,
+	 * as defined by the arguments.
+	 *
+	 * @param index Index to the function.
+	 * @param returnNumber Number of returned values to push to the stack.
+	 * @param arguments Number of values to pop from the stack and pass to the function.
+	 * @see LuaMultiReturn
+	 * @return Returns the number of returnedValues.
+	 */
+	Size call( Index const &index = -1, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
+
+	/**
+	 * Calls a meta method of a value.
+	 *
+	 * The target value is passed as meta method's only argument.
+	 * The meta method may return value onto the stakc.
+	 *
+	 * @param index Index of target value.
+	 * @param name Name of the meta method to call.
+	 */
 	void callMetaMethod( Index const &index, std::string const &name );
 
 	void pushNil();

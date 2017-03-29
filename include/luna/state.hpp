@@ -15,18 +15,16 @@ namespace Luna
 /** 
  * Main class wrapping the LuaState and Stack.
  */
-
 class State : public Stack
 {
 public:
 
 	/**
-	 * Constructs a new State.
+	 * Constructs a new State, with a new LuaState.
 	 *
 	 * A new LuaState is created, its allocate and panic functions set and
 	 * its libs loaded.
 	 */
-	
 	State();
 
 	/**
@@ -34,7 +32,6 @@ public:
 	 *
 	 * The LuaState is unchanged.
 	 */
-
 	State( LuaState const &luaState );
 
 	/**
@@ -42,13 +39,11 @@ public:
 	 *
 	 * @param that Its LuaState will be set to nullptr.
 	 */
-
 	State( State &&that );
 
 	/**
 	 * Closes the LuaState.
 	 */
-
 	virtual ~State();
 
 	/**
@@ -56,19 +51,16 @@ public:
 	 *
 	 * @param that Its LuaState will be set to nullptr.
 	 */
-
 	State &operator=( State &&that ) noexcept;
 
 	/**
 	 * Returns an underlying LuaState.
 	 */
-
 	operator LuaState () const noexcept;
 
 	/**
 	 * Returns its Lua Version;
 	 */
-
 	NumberValue getLuaVersion();
 private:
 	LuaState mLuaState;

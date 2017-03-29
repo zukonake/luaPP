@@ -18,15 +18,13 @@ namespace Luna
 /**
  * Wraps the RawStack with Element handling.
  */
-
 class Stack : public RawStack
 {
 public:
 
 	/**
-	 * @param luaState LuaState to be used.
+	 * Constructs a new Stack, from an existing LuaState.
 	 */
-
 	Stack( LuaState const &luaState );
 
 	virtual ~Stack() = default;
@@ -37,7 +35,6 @@ public:
 	 * @param index Index of the value.
 	 * @return Value of the Element.
 	 */
-
 	template< typename T >
 	T at( Index const &index = -1 );
 
@@ -47,7 +44,6 @@ public:
 	 * @param name Name of the global.
 	 * @return Value of the Element.
 	 */	
-
 	template< typename T >
 	T loadGlobal( std::string const &name );
 };

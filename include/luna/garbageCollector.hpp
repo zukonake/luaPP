@@ -14,7 +14,6 @@ namespace Luna
 /**
  * Represents the Lua C API garbage collector.
  */
-
 class GarbageCollector
 {
 public:
