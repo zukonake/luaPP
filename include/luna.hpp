@@ -20,7 +20,6 @@
 /**
  * Used by Luna API everywhere.
  */
-
 namespace Luna
 {
 

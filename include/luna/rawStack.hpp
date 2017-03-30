@@ -17,7 +17,6 @@ namespace Luna
 /**
  * Represents the Lua C API stack.
  */
-
 class RawStack
 {
 public:
@@ -28,6 +27,8 @@ public:
 	RawStack( LuaState const &luaState ) noexcept;
 
 	virtual ~RawStack() = default;
+
+
 
 	/**
 	 * Loads file.
@@ -46,6 +47,7 @@ public:
 	 * @param value The Lua script to load.
 	 */
 	void loadString( std::string const &value );
+
 
 
 	/**
@@ -84,6 +86,8 @@ public:
 	 */
 	Size doString( std::string const &value, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
 
+
+
 	/**
 	 * Calls a function on the stack.
 	 *
@@ -105,91 +109,571 @@ public:
 	 * Calls a meta method of a value.
 	 *
 	 * The target value is passed as meta method's only argument.
-	 * The meta method may return value onto the stakc.
+	 * The meta method may return value onto the stack.
 	 *
 	 * @param index Index of target value.
 	 * @param name Name of the meta method to call.
 	 */
 	void callMetaMethod( Index const &index, std::string const &name );
 
-	void pushNil();
-	void pushBoolean( BooleanValue const &value );
-	void pushNumber( NumberValue const &value );
-	void pushString( StringValue const &value );
-	void pushTable( Size const &arrayLength = 0, Size const &mapLength = 0 );
-	void pushLightUserData( UserDataValue const &userdata );
-	void pushUserData( std::size_t const &size );
-	void pushFunction( FunctionValue function );
-	void pushClosure( FunctionValue closure, Size const &capture = 0 );
-	void pushThread( ThreadValue const &thread );
-	void pushMetaTable( std::string const &name );
 
+
+	/**
+	 * Pushes a nil value onto the stack.
+	 */
+	void pushNil();
+
+	/**
+	 * Pushes a boolean onto the stack.
+	 */
+	void pushBoolean( BooleanValue const &value );
+
+	/**
+	 * Pushes a number onto the stack.
+	 */
+	void pushNumber( NumberValue const &value );
+
+	/**
+	 * Pushes a string onto the stack.
+	 */
+	void pushString( StringValue const &value );
+
+	/**
+	 * Pushes a table onto the stack.
+	 */
+	void pushTable( TableValue const &value ); //TODO
+
+	/**
+	 * Pushes a LightUserData onto the stack.
+	 */
+	void pushLightUserData( LightUserDataValue const &lightUserdata );
+
+	/**
+	 * Pushes a function onto the stack.
+	 */
+	void pushFunction( FunctionValue function );
+
+	/**
+	 * Pushes a function as a closure onto the stack.
+	 *
+	 * Captured values are popped from the stack.
+	 * Values are pushed by their absolute index order.
+	 *
+	 * @param capture Number of values to capture.
+	 */
+	void pushClosure( FunctionValue closure, Size const &capture = 0 );
+
+	/**
+	 * Pushes a thread onto the stack.
+	 */
+	void pushThread( ThreadValue const &thread );
+
+
+
+	/**
+	 * Pushes a global variable onto the stack.
+	 *
+	 * @param name Name of the variable.
+	 */
 	void loadGlobal( std::string const &name );
+
+	/**
+	 * Pushes the global table onto the stack.
+	 */
 	void loadGlobalTable();
 
+	/**
+	 * Creates a new empty meta table in the Lua registry.
+	 *
+	 * @param name Name to map the meta table.
+	 */
+	void newMetaTable( std::string const &name );
+
+	/**
+	 * Creates a new empty table onto the stack.
+	 *
+	 * Can allocate space for better performance.
+	 *
+	 * @param arrayLength Hint for number of index mapped elements.
+	 * @param mapLength Hint for number of key mapped elements.
+	 */
+	void newTable( Size const &arrayLength = 0, Size const &mapLength = 0 );
+
+	/**
+	 * Creates a new memory block onto the stack to use as user data.
+	 *
+	 * @param size Desired size of the block.
+	 * @return The new user data.
+	 */
+	UserDataValue newUserData( const std::size_t &size );
+
+	/**
+	 * Creates a new thread on the stack.
+	 *
+	 * @return The new thread.
+	 */
 	ThreadValue newThread();
+
+	/**
+	 * Creates a new reference to a value.
+	 *
+	 * The target value is popped from the stack.
+	 *
+	 * @param table Index of the table to create reference in.
+	 * @param value Index of the value to create reference to.
+	 *
+	 * @return The new reference.
+	 */
 	LuaReference newReference( const Index &table, const Index &value );
 
+	/**
+	 * Dereferences a reference.
+	 *
+	 * The target value is pushed to the stack.
+	 *
+	 * @param table Index of the table containing the reference.
+	 * @param reference Target reference.
+	 */
 	void dereference( const Index &table, const LuaReference &reference );
 
+
+
+	/**
+	 * Register a library.
+	 *
+	 * The library will be registered to be used by Lua.
+	 *
+	 * @param library Library to register.
+	 */
 	void registerLibrary( Library const &library );
+
+	/**
+	 * Register a function as a global.
+	 *
+	 * The function will be registered to be used by Lua.
+	 *
+	 * @param function Function to register.
+	 * @param name Name to register the function as.
+	 */
 	void registerFunction( FunctionValue function, std::string const &name );
+
+	/**
+	 * Register a value as a global.
+	 *
+	 * The value will be registered to be used by Lua.
+	 *
+	 * @param index Index to the value to register.
+	 * @param name Name to register the value as.
+	 */
 	void registerValue( Index const &index, std::string const &name );
 
+
+
+	/**
+	 * Get the value of a number on the stack.
+	 *
+	 * @param index Index to the number.
+	 *
+	 * @return Value of the number.
+	 */
 	NumberValue toNumber( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a boolean on the stack.
+	 *
+	 * @param index Index to the boolean.
+	 *
+	 * @return Value of the boolean.
+	 */
 	BooleanValue toBoolean( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a string on the stack.
+	 *
+	 * @param index Index to the string.
+	 *
+	 * @return Value of the string.
+	 */
 	StringValue toString( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a table on the stack.
+	 *
+	 * @param index Index to the table.
+	 *
+	 * @return Value of the table.
+	 */
 	TableValue toTable( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a light user data on the stack.
+	 *
+	 * @param index Index to the light user data.
+	 *
+	 * @return Value of the light user data.
+	 */
+	LightUserDataValue toLightUserData( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a user data on the stack.
+	 *
+	 * @param index Index to the user data.
+	 *
+	 * @return Value of the user data.
+	 */
 	UserDataValue toUserData( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a function on the stack.
+	 *
+	 * @param index Index to the function.
+	 *
+	 * @return Value of the function.
+	 */
 	FunctionValue toFunction( Index const &index = -1 ) const;
+
+	/**
+	 * Get the value of a thread on the stack.
+	 *
+	 * @param index Index to the thread.
+	 *
+	 * @return Value of the thread.
+	 */
 	ThreadValue toThread( Index const &index = -1 ) const;
 
+
+
+	/**
+	 * Returns the length of a value (as in '#' operator in Lua).
+	 *
+	 * @param index Index to the value.
+	 *
+	 * @return Returned length.
+	 */
 	Size getLength( Index const &index = -1 ) const;
+
+	/**
+	 * Returns the Type of a value.
+	 *
+	 * @param index Index to the value.
+	 *
+	 * @return Returned Type.
+	 */
 	Type getType( Index const &index = -1 ) const; 
 
-	Type getTableField( Index const &table = -1 ) const;
-	Type getTableField( Index const &table, std::size_t const &index ) const;
-	Type getTableField( Index const &table, std::string const &key ) const;
 
-	Type getRawTableField( Index const &table = -1 ) const;
-	Type getRawTableField( Index const &table, std::size_t const &index ) const;
-	Type getRawTableField( Index const &table, std::string const &key ) const;
 
-	Type getMetaField( Index const &index, std::string const &name ) const;
-	Type getMetaTable( std::string const &name ) const;
+	/**
+	 * Pushes a table's field onto the stack.
+	 *
+	 * Top value is used as an index or key.
+	 *
+	 * @param table Index to the table.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getTableField( Index const &table );
 
+	/**
+	 * Pushes a table's field onto the stack.
+	 *
+	 * @param table Index to the table.
+	 * @param index %Index of the field.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getTableField( Index const &table, std::size_t const &index );
+
+	/**
+	 * Pushes a table's field onto the stack.
+	 *
+	 * @param table Index to the table.
+	 * @param key Key of the field.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getTableField( Index const &table, std::string const &key );
+
+
+
+	/**
+	 * Pushes a table's field onto the stack, without invoking any meta methods.
+	 *
+	 * Top value is used as an index or key.
+	 *
+	 * @param table Index to the table.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getRawTableField( Index const &table = -1 );
+
+	/**
+	 * Pushes a table's field onto the stack, without invoking any meta methods.
+	 *
+	 * @param table Index to the table.
+	 * @param index %Index of the field.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getRawTableField( Index const &table, std::size_t const &index );
+
+	/**
+	 * Pushes a table's field onto the stack, without invoking any meta methods.
+	 *
+	 * @param table Index to the table.
+	 * @param key Key of the field.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getRawTableField( Index const &table, std::string const &key );
+
+
+
+	//TODO add more variations of getMetaField
+	/**
+	 * Pushes a meta table's field onto the stack.
+	 *
+	 * @param table Index to the meta table.
+	 * @param name Name of the field.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getMetaField( Index const &index, std::string const &name );
+
+	/**
+	 * Pushes a meta table onto the stack.
+	 *
+	 * @param name Name of the meta table.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getMetaTable( std::string const &name );
+
+	/**
+	 * Pushes a value associated with user data on the stack.
+	 *
+	 * @param userData Index to the user data.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getUserValue( Index const &userData );
+
+
+
+	/**
+	 * Sets a table's field.
+	 *
+	 * Desired value is the value on the top of the stack.
+	 * %Index/key of the field is the value one Index below the value.
+	 *
+	 * @param table Index to the table.
+	 */
 	void setTableField( Index const &table );
-	void setTableField( Index const &table, std::size_t const &index );
-	void setTableField( Index const &table, std::string const &key );
 
+	/**
+	 * Sets a table's field.
+	 *
+	 * @param table Index to the table.
+	 * @param index %Index of the field.
+	 * @param value Index to the desired value.
+	 */
+	void setTableField( Index const &table, std::size_t const &index, Index const &value = -1 );
+
+	/**
+	 * Sets a table's field.
+	 *
+	 * @param table Index to the table.
+	 * @param key Key of the field.
+	 * @param value Index to the desired value.
+	 */
+	void setTableField( Index const &table, std::string const &key, Index const &value = -1 );
+
+
+
+	/**
+	 * Sets a table's field, without invoking any meta methods.
+	 *
+	 * Desired value is the value on the top of the stack.
+	 * %Index/key of the field is the value one Index below the value.
+	 *
+	 * @param table Index to the table.
+	 */
 	void setRawTableField( Index const &table );
+
+	/**
+	 * Sets a table's field, without invoking any meta methods.
+	 *
+	 * @param table Index to the table.
+	 * @param index %Index of the field.
+	 * @param value Index to the desired value.
+	 */
 	void setRawTableField( Index const &table, std::size_t const &index, Index const &value = -1 );
+
+	/**
+	 * Sets a table's field, without invoking any meta methods.
+	 *
+	 * @param table Index to the table.
+	 * @param key Key of the field.
+	 * @param value Index to the desired value.
+	 */
 	void setRawTableField( Index const &table, std::string const &key, Index const &value = -1 );
 
+
+
+	/**
+	 * Sets a meta table in the Lua register to a given value on the stack.
+	 *
+	 * @param target Index to the value to set meta table to.
+	 * @param metaTable Name of the meta table entry.
+	 */
 	void setMetaTable( Index const &target, std::string const &metaTable );
+
+	/**
+	 * Sets a meta table to a given value on the stack.
+	 *
+	 * @param target Index to the value to set meta table to.
+	 * @param metaTable Index to the meta table.
+	 */
 	void setMetaTable( Index const &target, Index const &metaTable );
 
-	void setUserData( Index const &value, Index const &userData );
 
+
+	/**
+	 * Associates a value to a user data on the stack.
+	 *
+	 * @param value Index to the value.
+	 * @param userData Index to the user data.
+	 */
+	void setUserValue( Index const &value, Index const &userData );
+
+
+
+	/**
+	 * Pushes a copy of a given value to the top of the stack.
+	 *
+	 * @param from Index of the value to copy.
+	 */
 	void copy( Index const &from  = -1 );
+
+	/**
+	 * Inserts the value on the top of the stack to given index.
+	 *
+	 * Elements above, that is elements with higher or equal absolute index,
+	 * are given index that is raised by one.
+	 *
+	 * @param index Index to insert the value into.
+	 */
 	void insert( Index const &index );
 
+
+
+	/**
+	 * Removes a value from the stack.
+	 *
+	 * Elements above, that is elements with higher absolute index,
+	 * are given index that is decreased by one.
+	 *
+	 * @param index Index of the value to remove.
+	 */
 	void remove( Index const &index );
+
+	/**
+	 * Removes a value from the stack and replaces it with nil type.
+	 *
+	 * Elements don't change their index.
+	 *
+	 * @param index Index of the value to erase.
+	 */
 	void erase( Index const &index );
+
+	/**
+	 * Pops a number of values from the top of the stack.
+	 *
+	 * @param space Number of values to pop.
+	 */
 	void pop( Size const &space = 1 );
+
+	/**
+	 * Removes all the elements on the stack.
+	 */
 	void clear() noexcept;
 
+
+
+	/**
+	 * Replaces the value with another.
+	 *
+	 * @param from Value to use.
+	 * @param to Value to replace.
+	 */
 	void replace( Index const &from, Index const &to );
+
+	/**
+	 * Moves value to another index.
+	 *
+	 * Target value is replaced with original value.
+	 * Original value is removed.
+	 * Elements above the target index, but below the original index,
+	 * that is elements with higher or equal absolute index and elements
+	 * with lower absolute index, are given index that is increased by one.
+	 *
+	 * @param from Index of the value to move.
+	 * @param to Index to move the value to.
+	 */
 	void move( Index const &from, Index const &to );
+
+	/**
+	 * Swaps the valuesr.
+	 *
+	 * @param one Index to the first value.
+	 * @param two Index to the second value.
+	 */
 	void swap( Index const &one, Index const &two );
+
+	/**
+	 * Iterates over a table.
+	 *
+	 * Pops the %index/key at the top of the stack to use when iterating.
+	 * If table isn't fully iterated, pushes the %index/key to the new
+	 * value and the value itself. If the table has been fully iterated,
+	 * it pushes no next %index/key or value. %Index/key of type nil
+	 * symbolizes beginning of the table.
+	 *
+	 * @param index Index to the table.
+	 *
+	 * @return Returns whether the table has not iterated elements left.
+	 */
 	bool iterate( Index const &index );
 
+
+
+	/**
+	 * Checks if the given index is valid.
+	 */
 	bool isValid( Index const &index = -1 ) const noexcept;
 
+
+
+	/**
+	 * Converts an AbsoluteIndex into Index.
+	 */
 	Index getRelativeIndex( AbsoluteIndex const &index ) const;
+
+	/**
+	 * Converts an Index into AbsoluteIndex.
+	 */
 	AbsoluteIndex getAbsoluteIndex( Index const &index ) const;
 
+
+
+	/**
+	 * Returns the number of values on the stack.
+	 */
 	Size getSize() const noexcept;
+
+	/**
+	 * Returns the reference to the LuaState.
+	 */
 	LuaState const &getLuaState() const noexcept;
 private:
 	void allocate( Size const &size = 1 );
