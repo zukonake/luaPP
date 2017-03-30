@@ -1,7 +1,7 @@
 /**
  * @file luna/typedef.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
@@ -63,6 +63,7 @@ typedef luaL_Reg LibraryEntry;
 typedef const LibraryEntry *Library;
 
 
+
 /**
  * Used to represent Lua boolean value.
  */
@@ -102,12 +103,14 @@ typedef void *UserDataValue;
 /**
  * Used to represent Lua Light User Data value.
  */
-typedef void *LightUserdataValue;
+typedef void *LightUserDataValue;
 
 /**
  * Used to represent Lua thread value.
  */
 typedef LuaState ThreadValue;
+
+
 
 /**
  * Used to represent a Lua value type.
@@ -133,17 +136,26 @@ enum ReturnCode
 {
 	OK = LUA_OK,
 	YIELD = LUA_YIELD,
-	RUNTIME_ERROR = LUA_ERRUN,
+	RUNTIME_ERROR = LUA_ERRRUN,
 	SYNTAX_ERROR = LUA_ERRSYNTAX,
 	MEMORY_ERROR = LUA_ERRMEM,
 	GARBAGE_COLLECTOR_ERROR = LUA_ERRGCMM,
 	UNKNOWN_ERROR = LUA_ERRERR
-}
+};
+
+
 
 /**
  * Reference which is guaranteed to be empty.
  */
 constexpr LuaReference noReference = LUA_NOREF;
+
+/**
+ * Reference which points to nil.
+ */
+constexpr LuaReference nilReference = LUA_REFNIL;
+
+
 
 /**
  * Points to Lua registry table.
@@ -156,4 +168,5 @@ constexpr Index LuaRegistryIndex = LUA_REGISTRYINDEX;
  * @see RawStack::call 
  */
 constexpr Size LuaMultiReturn = LUA_MULTRET;
+
 }

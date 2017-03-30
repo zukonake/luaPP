@@ -1,7 +1,7 @@
 /**
  * @file luna/state.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once

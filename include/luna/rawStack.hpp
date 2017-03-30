@@ -1,7 +1,7 @@
 /**
  * @file luna/rawStack.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
@@ -623,7 +623,7 @@ public:
 	void move( Index const &from, Index const &to );
 
 	/**
-	 * Swaps the valuesr.
+	 * Swaps the values.
 	 *
 	 * @param one Index to the first value.
 	 * @param two Index to the second value.
@@ -679,7 +679,7 @@ private:
 	void allocate( Size const &size = 1 );
 	void validate( Index const &index ) const;
 	void validateType( Index const &index, Type const &type ) const;
-	void checkForError( LuaErrorCode const &code, std::string const &message = "" ) const;
+	void checkForError( ReturnCode const &code, std::string const &message = "" ) const;
 
 	LuaState const &mLuaState;
 };
