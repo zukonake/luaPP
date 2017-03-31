@@ -1,30 +1,35 @@
-/* luna/element/boolean.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+/* @file luna/element/boolean.hpp
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
 
-#include <luna/typedef.hpp>
-#include <luna/element/element.hpp>
+#include<luna/typedef.hpp>
+#include<luna/element/element.hpp>
 
 namespace Luna
 {
 
-class RawStack;
-
+/**
+ * Represents a boolean value on the stack.
+ */
 class Boolean : public Element
 {
 public:
-	explicit Boolean( RawStack &rawStack, Index const &index = -1 );
-	Boolean( Boolean &&that );
+	using Element::Element;
 
-	virtual ~Boolean() = default;
+	~Boolean() = default;
 
-	Boolean &operator=( Boolean &&that );
-	operator bool const &() const noexcept;
-private:
-	bool mValue;
+	/**
+	 * Changes the value of the element on the stack.
+	 *
+	 * @param value Desired value.
+	 */
+	Boolean &operator=( BooleanValue const &value );
+	using Element::operator=
+
+	operator BooleanValue() const noexcept;
 };
 
 }

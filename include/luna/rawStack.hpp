@@ -66,7 +66,7 @@ public:
 	 * @see LuaMultiReturn
 	 * @return Returns the number of returnedValues.
 	 */
-	Size doFile( std::string const &path, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
+	Size doFile( std::string const &path, Size const &returnNumber = LuaMultiReturn, Size const &arguments = 0 );
 
 	/**
 	 * Loads a script as a std::string and calls it.
@@ -84,7 +84,7 @@ public:
 	 * @see LuaMultiReturn
 	 * @return Returns the number of returnedValues.
 	 */
-	Size doString( std::string const &value, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
+	Size doString( std::string const &value, Size const &returnNumber = LuaMultiReturn, Size const &arguments = 0 );
 
 
 
@@ -138,15 +138,20 @@ public:
 	 */
 	void pushString( StringValue const &value );
 
-	/**
+	/* TODO
 	 * Pushes a table onto the stack.
-	 */
-	void pushTable( TableValue const &value ); //TODO
+	 *
+	void pushTable( TableValue const &value ); */
 
 	/**
 	 * Pushes a LightUserData onto the stack.
 	 */
 	void pushLightUserData( LightUserDataValue const &lightUserdata );
+
+	/**
+	 * Pushes a UserData onto the stack.
+	 */
+	void pushUserData( UserDataValue const &lightUserdata ); //TODO
 
 	/**
 	 * Pushes a function onto the stack.
@@ -161,13 +166,19 @@ public:
 	 *
 	 * @param capture Number of values to capture.
 	 */
-	void pushClosure( FunctionValue closure, Size const &capture = 0 );
+	void pushClosure( FunctionValue closure, CaptureSize const &capture = 0 );
 
 	/**
 	 * Pushes a thread onto the stack.
 	 */
 	void pushThread( ThreadValue const &thread );
 
+	/**
+	 * Pushes a library on the stack.
+	 *
+	 * Library will be pushed as a table.
+	 */
+	void pushLibrary( Library const &library );
 
 
 	/**
@@ -181,6 +192,8 @@ public:
 	 * Pushes the global table onto the stack.
 	 */
 	void loadGlobalTable();
+
+
 
 	/**
 	 * Creates a new empty meta table in the Lua registry.
@@ -219,43 +232,24 @@ public:
 	 *
 	 * The target value is popped from the stack.
 	 *
-	 * @param table Index of the table to create reference in.
 	 * @param value Index of the value to create reference to.
+	 * @param table Index of the table to create reference in. By default Lua registry.
 	 *
 	 * @return The new reference.
 	 */
-	LuaReference newReference( const Index &table, const Index &value );
+	LuaReference newReference( const Index &value, const Index &table = LuaRegistryIndex );
 
 	/**
 	 * Dereferences a reference.
 	 *
 	 * The target value is pushed to the stack.
 	 *
-	 * @param table Index of the table containing the reference.
 	 * @param reference Target reference.
+	 * @param table Index of the table containing the reference. By default Lua registry.
 	 */
-	void dereference( const Index &table, const LuaReference &reference );
+	void dereference( const LuaReference &reference, const Index &table = LuaRegistryIndex );
 
 
-
-	/**
-	 * Register a library.
-	 *
-	 * The library will be registered to be used by Lua.
-	 *
-	 * @param library Library to register.
-	 */
-	void registerLibrary( Library const &library );
-
-	/**
-	 * Register a function as a global.
-	 *
-	 * The function will be registered to be used by Lua.
-	 *
-	 * @param function Function to register.
-	 * @param name Name to register the function as.
-	 */
-	void registerFunction( FunctionValue function, std::string const &name );
 
 	/**
 	 * Register a value as a global.
@@ -296,14 +290,14 @@ public:
 	 */
 	StringValue toString( Index const &index = -1 ) const;
 
-	/**
+	/* TODO
 	 * Get the value of a table on the stack.
 	 *
 	 * @param index Index to the table.
 	 *
 	 * @return Value of the table.
-	 */
-	TableValue toTable( Index const &index = -1 ) const;
+	 *
+	TableValue toTable( Index const &index = -1 ) const; */
 
 	/**
 	 * Get the value of a light user data on the stack.

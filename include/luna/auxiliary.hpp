@@ -20,11 +20,6 @@
 namespace Luna::Auxiliary
 {
 
-/**
- * Converts Lua C API type to Type.
- */
-Type convertType( const LuaType &luaType ) noexcept;
-
 /** 
  * Returns a type name for Type.
  */

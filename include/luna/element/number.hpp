@@ -1,30 +1,35 @@
-/* luna/element/number.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+/* @file luna/element/number.hpp
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
 
-#include <luna/typedef.hpp>
-#include <luna/element/element.hpp>
+#include<luna/typedef.hpp>
+#include<luna/element/element.hpp>
 
 namespace Luna
 {
 
-class RawStack;
-
+/**
+ * Represents a number value on the stack.
+ */
 class Number : public Element
 {
 public:
-	explicit Number( RawStack &rawStack, Index const &index = -1 );
-	Number( Number &&that );
+	using Element::Element;
 
-	virtual ~Number() = default;
+	~Number() = default;
 
-	Number &operator=( Number &&that );
-	operator NumberValue const &() const noexcept;
-private:
-	NumberValue mValue;
+	/** 
+	 * Changes the value of the element on the stack.
+	 *
+	 * @param value Desired value.
+	 */
+	Number &operator=( NumberValue const &value );
+	using Element::operator=;
+
+	operator NumberValue() const noexcept;
 };
 
 }
