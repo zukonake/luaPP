@@ -1,4 +1,4 @@
-luna =
-{
-	var = 10
-}
+testString = "test"
+function testFunction()
+	return "test1", 123
+end

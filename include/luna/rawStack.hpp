@@ -180,18 +180,10 @@ public:
 	 */
 	void pushLibrary( Library const &library );
 
-
-	/**
-	 * Pushes a global variable onto the stack.
-	 *
-	 * @param name Name of the variable.
-	 */
-	void loadGlobal( std::string const &name );
-
 	/**
 	 * Pushes the global table onto the stack.
 	 */
-	void loadGlobalTable();
+	void pushGlobalTable();
 
 
 
@@ -456,6 +448,15 @@ public:
 	 */
 	Type getUserValue( Index const &userData );
 
+	/**
+	 * Pushes a global variable onto the stack.
+	 *
+	 * @param name Name of the variable.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getGlobal( std::string const &name );
+
 
 
 	/**
@@ -679,7 +680,7 @@ private:
 	void allocate( Size const &size = 1 );
 	void validate( Index const &index ) const;
 	void validate( Index const &index, Type const &type ) const;
-	void checkForError( ReturnCode const &code, std::string const &message = "" ) const;
+	void checkForError( ReturnCode const &code );
 
 	LuaState const &mLuaState;
 };

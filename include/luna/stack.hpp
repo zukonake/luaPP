@@ -57,7 +57,7 @@ T Stack::at( Index const &index )
 template< typename T >
 T Stack::loadGlobal( std::string const &name )
 {
-	RawStack::loadGlobal( name );
+	RawStack::getGlobal( name );
 	return at< T >();
 }
 
