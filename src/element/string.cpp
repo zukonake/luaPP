@@ -6,25 +6,20 @@
 namespace Luna
 {
 
-String::String( RawStack &rawStack, Index const &index ) :
-	Element( rawStack, index ),
-	StringValue( rawStack.toString( index ))
+String &String::operator=( StringValue const &value )
 {
-	
-}
-
-String::String( String &&that ) :
-	Element( dynamic_cast< Element && >( that )),
-	StringValue( dynamic_cast< StringValue && >( that ))
-{
-
-}
-
-String &String::operator=( String &&that )
-{
-	static_cast< Element & >( *this ) = static_cast< Element && >( that );
-	static_cast< StringValue & >( *this ) = static_cast< StringValue && >( that );
+	Element::mRawStack.pushString( value );
+	Element::setValue();
 	return *this;
+}
+
+String::operator StringValue() const noexcept
+{
+	StringValue returnValue;
+	Element::getValue();
+	returnValue = Element::mRawStack.toString();
+	Element::mRawStack.pop();
+	return returnValue;
 }
 
 }

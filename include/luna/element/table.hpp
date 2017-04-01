@@ -9,6 +9,7 @@
 #include <string>
 //
 #include<luna/typedef.hpp>
+#include<luna/rawStack.hpp>
 #include<luna/element/element.hpp>
 
 namespace Luna
@@ -24,13 +25,16 @@ public:
 
 	~Table() = default;
 
-	/**
+	/* TODO
 	 * Changes the value of the element on the stack.
 	 *
 	 * @param value Desired value.
-	 */
-	Table &operator=( TableValue const &that );
+	 *
+	Table &operator=( TableValue const &that );*/
 	using Element::operator=;
+
+	//operator TableValue() const noexcept;
+
 
 	/**
 	 * Sets the given field.
@@ -70,7 +74,7 @@ public:
 };
 
 template< typename T >
-void set( std::size_t const &index, T const &value )
+void Table::set( std::size_t const &index, T const &value )
 {
 	value.getValue();
 	Element::getValue();
@@ -80,7 +84,7 @@ void set( std::size_t const &index, T const &value )
 }
 
 template< typename T >
-void set( std::string const &key, T const &value )
+void Table::set( std::string const &key, T const &value )
 {
 	value.getValue();
 	Element::getValue();

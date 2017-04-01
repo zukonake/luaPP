@@ -6,30 +6,20 @@
 namespace Luna
 {
 
-Boolean::Boolean( RawStack &rawStack, Index const &index ) :
-	Element( rawStack, index ),
-	mValue( rawStack.toBoolean( index ))
+Boolean &Boolean::operator=( BooleanValue const &value )
 {
-	
-}
-
-Boolean::Boolean( Boolean &&that ) :
-	Element( dynamic_cast< Element && >( that )),
-	mValue( that.mValue )
-{
-
-}
-
-Boolean &Boolean::operator=( Boolean &&that )
-{
-	static_cast< Element & >( *this ) = static_cast< Element && >( that );
-	mValue = that.mValue;
+	Element::mRawStack.pushBoolean( value );
+	Element::setValue();
 	return *this;
 }
 
-Boolean::operator bool const &() const noexcept
+Boolean::operator BooleanValue() const noexcept
 {
-	return mValue;
+	BooleanValue returnValue;
+	Element::getValue();
+	returnValue = Element::mRawStack.toBoolean();
+	Element::mRawStack.pop();
+	return returnValue;
 }
 
 }

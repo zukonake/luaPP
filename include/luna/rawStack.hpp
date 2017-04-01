@@ -103,7 +103,7 @@ public:
 	 * @see LuaMultiReturn
 	 * @return Returns the number of returnedValues.
 	 */
-	Size call( Index const &index = -1, Size returnNumber = LuaMultiReturn, Size const &arguments = 0 );
+	Size call( Index const &index = -1, Size const &returnNumber = LuaMultiReturn, Size const &arguments = 0 );
 
 	/**
 	 * Calls a meta method of a value.
@@ -146,17 +146,17 @@ public:
 	/**
 	 * Pushes a LightUserData onto the stack.
 	 */
-	void pushLightUserData( LightUserDataValue const &lightUserdata );
+	void pushLightUserData( LightUserDataValue const &value );
 
 	/**
 	 * Pushes a UserData onto the stack.
 	 */
-	void pushUserData( UserDataValue const &lightUserdata ); //TODO
+	void pushUserData( UserDataValue const &value ); //TODO
 
 	/**
 	 * Pushes a function onto the stack.
 	 */
-	void pushFunction( FunctionValue function );
+	void pushFunction( FunctionValue const &value );
 
 	/**
 	 * Pushes a function as a closure onto the stack.
@@ -166,12 +166,12 @@ public:
 	 *
 	 * @param capture Number of values to capture.
 	 */
-	void pushClosure( FunctionValue closure, CaptureSize const &capture = 0 );
+	void pushClosure( FunctionValue const &closure, CaptureSize const &capture = 0 );
 
 	/**
 	 * Pushes a thread onto the stack.
 	 */
-	void pushThread( ThreadValue const &thread );
+	void pushThread( ThreadValue const &value );
 
 	/**
 	 * Pushes a library on the stack.
@@ -361,6 +361,7 @@ public:
 	 * Pushes a table's field onto the stack.
 	 *
 	 * Top value is used as an index or key.
+	 * Key is popped.
 	 *
 	 * @param table Index to the table.
 	 *
@@ -394,6 +395,7 @@ public:
 	 * Pushes a table's field onto the stack, without invoking any meta methods.
 	 *
 	 * Top value is used as an index or key.
+	 * Key is popped.
 	 *
 	 * @param table Index to the table.
 	 *
@@ -425,9 +427,9 @@ public:
 
 	//TODO add more variations of getMetaField
 	/**
-	 * Pushes a meta table's field onto the stack.
+	 * Pushes a value's meta table's field onto the stack.
 	 *
-	 * @param table Index to the meta table.
+	 * @param index Value with the meta table.
 	 * @param name Name of the field.
 	 *
 	 * @return Type of the pushed value.
@@ -442,6 +444,8 @@ public:
 	 * @return Type of the pushed value.
 	 */
 	Type getMetaTable( std::string const &name );
+
+
 
 	/**
 	 * Pushes a value associated with user data on the stack.
@@ -459,6 +463,7 @@ public:
 	 *
 	 * Desired value is the value on the top of the stack.
 	 * %Index/key of the field is the value one Index below the value.
+	 * Value and %index/key will be popped.
 	 *
 	 * @param table Index to the table.
 	 */
@@ -489,6 +494,7 @@ public:
 	 *
 	 * Desired value is the value on the top of the stack.
 	 * %Index/key of the field is the value one Index below the value.
+	 * Value and %index/key will be popped.
 	 *
 	 * @param table Index to the table.
 	 */
@@ -535,10 +541,10 @@ public:
 	/**
 	 * Associates a value to a user data on the stack.
 	 *
-	 * @param value Index to the value.
 	 * @param userData Index to the user data.
+	 * @param value Index to the value.
 	 */
-	void setUserValue( Index const &value, Index const &userData );
+	void setUserValue( Index const &userData, Index const &value );
 
 
 
@@ -672,7 +678,7 @@ public:
 private:
 	void allocate( Size const &size = 1 );
 	void validate( Index const &index ) const;
-	void validateType( Index const &index, Type const &type ) const;
+	void validate( Index const &index, Type const &type ) const;
 	void checkForError( ReturnCode const &code, std::string const &message = "" ) const;
 
 	LuaState const &mLuaState;

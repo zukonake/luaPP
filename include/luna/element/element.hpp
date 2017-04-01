@@ -37,6 +37,11 @@ public:
 	Element( RawStack &rawStack, LuaReference const &reference );
 
 	/**
+	 * Creates a copy of an existing element.
+	 */
+	Element( Element const &that );
+
+	/**
 	 * Moves an Element.
 	 *
 	 * Target gains source's reference.
@@ -57,11 +62,18 @@ public:
 
 
 	/**
+	 * Creates a copy of an existing element.
+	 *
+	 * Target and source should have the same RawStack referenced.
+	 */
+	Element &operator=( Element const &that );
+
+	/**
 	 * Moves an Element.
 	 *
 	 * Target gains source's reference.
 	 * Source's reference is set to noReference.
-	 * Target and source should have the same RawStack reference.
+	 * Target and source should have the same RawStack referenced.
 	 */
 	Element &operator=( Element &&that );
 
@@ -70,7 +82,7 @@ public:
 	/**
 	 * Pushes a dereferenced copy of the value onto the stack.
 	 */
-	virtual void getValue();
+	virtual void getValue() const;
 
 	/**
 	 * Pops a value on the stack and reassigns the referenced value.

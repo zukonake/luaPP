@@ -26,7 +26,7 @@ public:
 	 *
 	 * @param value Desired value.
 	 */
-	Boolean &operator=( FunctionValue const &value );
+	Function &operator=( FunctionValue const &value );
 	using Element::operator=;
 
 	operator FunctionValue() const noexcept;

@@ -26,7 +26,7 @@ public:
 	 *
 	 * @param value Desired value.
 	 */
-	LightUserData &operator( LightUserDataValue const &value );
+	LightUserData &operator=( LightUserDataValue const &value );
 	using Element::operator=;
 
 	operator LightUserDataValue() const noexcept;

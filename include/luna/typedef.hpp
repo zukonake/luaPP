@@ -33,6 +33,13 @@ typedef uint32_t AbsoluteIndex;
 typedef uint32_t Size;
 
 /**
+ * Used to represent number of values to capture for closure.
+ *
+ * @see RawStack::pushClosure
+ */
+typedef uint8_t CaptureSize;
+
+/**
  * Used to represent a lua_State pointer.
  */
 typedef lua_State *LuaState;
@@ -140,6 +147,7 @@ enum ReturnCode
 	SYNTAX_ERROR = LUA_ERRSYNTAX,
 	MEMORY_ERROR = LUA_ERRMEM,
 	GARBAGE_COLLECTOR_ERROR = LUA_ERRGCMM,
+	FILE_ERROR = LUA_ERRFILE,
 	UNKNOWN_ERROR = LUA_ERRERR
 };
 
