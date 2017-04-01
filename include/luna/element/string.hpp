@@ -17,9 +17,12 @@ namespace Luna
 class String : public Element
 {
 public:
+	String( String const &that );
 	using Element::Element;
 
 	~String() = default;
+
+	String &operator=( String const &that );
 
 	/**
 	 * Changes the value of the element on the stack.

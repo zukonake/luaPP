@@ -36,6 +36,11 @@ Element::Element( Element &&that ) :
 	that.mReference = noReference;
 }
 
+Element::~Element()
+{
+	mRawStack.dereference( LuaRegistryIndex, mReference );
+}
+
 Element &Element::operator=( Element const &that )
 {
 	if( &mRawStack != &that.mRawStack )

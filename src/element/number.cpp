@@ -6,6 +6,18 @@
 namespace Luna
 {
 
+Number::Number( Number const &that ) :
+	Element( static_cast< Element const & >( that))
+{
+	
+}
+
+Number &Number::operator=( Number const &that )
+{
+	static_cast< Element & >( *this ) = static_cast< Element const & >( that );
+	return *this;
+}
+
 Number &Number::operator=( NumberValue const &value )
 {
 	Element::mRawStack.pushNumber( value );

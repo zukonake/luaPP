@@ -17,9 +17,12 @@ namespace Luna
 class Number : public Element
 {
 public:
+	Number( Number const &that );
 	using Element::Element;
 
 	~Number() = default;
+
+	Number &operator=( Number const &that );
 
 	/** 
 	 * Changes the value of the element on the stack.

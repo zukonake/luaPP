@@ -6,6 +6,18 @@
 namespace Luna
 {
 
+Thread::Thread( Thread const &that ) :
+	Element( static_cast< Element const & >( that))
+{
+	
+}
+
+Thread &Thread::operator=( Thread const &that )
+{
+	static_cast< Element & >( *this ) = static_cast< Element const & >( that );
+	return *this;
+}
+
 Thread &Thread::operator=( ThreadValue const &value )
 {
 	Element::mRawStack.pushThread( value );

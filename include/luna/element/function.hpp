@@ -17,9 +17,12 @@ namespace Luna
 class Function : public Element
 {
 public:
+	Function( Function const &that );
 	using Element::Element;
 
 	~Function() = default;
+
+	Function &operator=( Function const &that );
 
 	/**
 	 * Changes the value of the element on the stack.

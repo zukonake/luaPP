@@ -17,9 +17,12 @@ namespace Luna
 class Thread : public Element
 {
 public:
+	Thread( Thread const &that );
 	using Element::Element;
 
 	~Thread() = default;
+
+	Thread &operator=( Thread const &that );
 
 	/**
 	 * Changes the value of the element on the stack.

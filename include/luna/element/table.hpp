@@ -21,9 +21,12 @@ namespace Luna
 class Table : public Element
 {
 public:
+	Table( Table const &that );
 	using Element::Element;
 
 	~Table() = default;
+
+	Table &operator=( Table const &that );
 
 	/* TODO
 	 * Changes the value of the element on the stack.

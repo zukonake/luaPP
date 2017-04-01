@@ -17,9 +17,12 @@ namespace Luna
 class UserData : public Element
 {
 public:
+	UserData( UserData const &that );
 	using Element::Element;
 
 	~UserData() = default;
+
+	UserData &operator=( UserData const &that );
 
 	/**
 	 * Changes the value of the user data on the stack.

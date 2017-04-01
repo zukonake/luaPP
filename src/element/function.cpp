@@ -6,6 +6,18 @@
 namespace Luna
 {
 
+Function::Function( Function const &that ) :
+	Element( static_cast< Element const & >( that))
+{
+	
+}
+
+Function &Function::operator=( Function const &that )
+{
+	static_cast< Element & >( *this ) = static_cast< Element const & >( that );
+	return *this;
+}
+
 Function &Function::operator=( FunctionValue const &value )
 {
 	Element::mRawStack.pushFunction( value );

@@ -17,9 +17,12 @@ namespace Luna
 class LightUserData : public Element
 {
 public:
+	LightUserData( LightUserData const &that );
 	using Element::Element;
 
 	~LightUserData() = default;
+
+	LightUserData &operator=( LightUserData const &that );
 
 	/**
 	 * Changes the value of the element on the stack.

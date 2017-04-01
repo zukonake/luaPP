@@ -124,17 +124,6 @@ BOOST_AUTO_TEST_CASE( pushStringTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "tet" );
 }
 
-BOOST_AUTO_TEST_CASE( pushTableTest00 )
-{
-	BOOST_REQUIRE_NO_THROW( fRawStack.pushTable()); 
-	BOOST_REQUIRE( fRawStack.getType() == TABLE );
-	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "tet" ));
-	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -1, "" ));
-	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
-	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, "" ));
-	BOOST_CHECK_EQUAL( fRawStack.toString(), "tet" );
-}
-
 BOOST_AUTO_TEST_CASE( pushLightUserDataTest00 )
 {
 
@@ -199,6 +188,17 @@ BOOST_AUTO_TEST_CASE( loadGlobalTableTest01 )
 {
 	BOOST_CHECK_THROW( fRawStack.loadGlobalTable(), Exception::StackError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
+
+BOOST_AUTO_TEST_CASE( newTableTest00 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable()); 
+	BOOST_REQUIRE( fRawStack.getType() == TABLE );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "tet" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -1, "" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, "" ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "tet" );
 }
 
 BOOST_AUTO_TEST_CASE( newThreadTest00 )

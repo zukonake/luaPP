@@ -6,6 +6,18 @@
 namespace Luna
 {
 
+LightUserData::LightUserData( LightUserData const &that ) :
+	Element( static_cast< Element const & >( that))
+{
+	
+}
+
+LightUserData &LightUserData::operator=( LightUserData const &that )
+{
+	static_cast< Element & >( *this ) = static_cast< Element const & >( that );
+	return *this;
+}
+
 LightUserData &LightUserData::operator=( LightUserDataValue const &value )
 {
 	Element::mRawStack.pushLightUserData( value );

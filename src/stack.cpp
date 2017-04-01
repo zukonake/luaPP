@@ -1,12 +1,13 @@
-#include <utility>
-#include <memory>
-//
+#include <luna/typedef.hpp>
 #include <luna/stack.hpp>
-#include <luna/element/table.hpp>
 
 namespace Luna
 {
 
-//TODO?
+Stack::Stack( LuaState const &luaState ) :
+	RawStack( luaState )
+{
+
+}
 
 }

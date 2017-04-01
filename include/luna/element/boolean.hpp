@@ -18,8 +18,11 @@ class Boolean : public Element
 {
 public:
 	using Element::Element;
+	Boolean( Boolean const &that );
 
 	~Boolean() = default;
+
+	Boolean &operator=( Boolean const &that );
 
 	/**
 	 * Changes the value of the element on the stack.
