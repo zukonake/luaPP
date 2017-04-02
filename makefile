@@ -18,16 +18,16 @@ OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(CPP_FILES)))
 TEST_CPP_FILES = $(shell find $(SOURCE_DIR)/$(TEST_DIR) -type f -name "*.cpp" -printf '%p ')
 TEST_OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(TEST_CPP_FILES))))
 
-CPP_STANDARD = -std=c++17
 LIBS = -llua -lboost_unit_test_framework
 DEBUG_FLAGS = -g -O0 -DDEBUG
 WARNING_FLAGS = -Wall -Wextra
 INCLUDE_FLAGS = -I include
 LIB_FLAGS =
-
-CPP_FLAGS = $(CPP_STANDARD) -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS)
-LINKER_FLAGS = $(CPP_STANDARD) -fPIC $(WARNING_FLAGS) $(LIBS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) $(LIB_FLAGS)
 COMPILER = g++
+COMPILER_FLAGS = -std=c++17 -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS)
+
+COMPILE = $(COMPILER) $(COMPILER_FLAGS)
+LINK = $(COMPILER) $(COMPILER_FLAGS) $(LIBS) $(LIB_FLAGS) $(OBJ_FILES)
 
 PREFIX = /usr/lib
 DOXYFILE = Doxyfile
@@ -35,17 +35,17 @@ DOXYFILE = Doxyfile
 .PHONY : clean install uninstall test doc
 
 $(TARGET) : $(OBJ_FILES)
-	$(COMPILER) -shared $(LINKER_FLAGS) $(OBJ_FILES) -o $@
+	$(LINK) -shared -o $@
 
 test: $(TEST_OBJ_FILES) $(OBJ_FILES)
-	$(COMPILER) $(LINKER_FLAGS) $(TEST_OBJ_FILES) $(OBJ_FILES) -o $@.out
+	$(LINK) $(TEST_OBJ_FILES) -o $@.out
 
 .SECONDEXPANSION:
 $(OBJ_DIR)/%.o : $$(shell find $(SOURCE_DIR) -type f -name %.cpp)
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(DEPEND_DIR)
-	$(COMPILER) $(CPP_FLAGS) -c $< -o $@
-	$(COMPILER) -MM $(CPP_FLAGS) $< > $(DEPEND_DIR)/$*.d
+	$(COMPILE) -c $< -o $@
+	$(COMPILE) -MM $< > $(DEPEND_DIR)/$*.d
 	@sed -i '1s/^/$(OBJ_DIR)\//' $(DEPEND_DIR)/$*.d
 
 install: $(TARGET)
