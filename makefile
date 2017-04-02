@@ -1,55 +1,65 @@
-SOURCE_PATH := src
-OBJ_PATH := bin
-DOC_PATH := doc
-DEPEND_PATH := depend
-TEST_PATH := $(SOURCE_PATH)/test
-TARGET_PATH := libluna-2.0.0-alpha.so
-LINK_PATH := libluna.so
-VERSION := 2.0.0
-SOURCES := $(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -printf '%p ')
-OBJS := $(addprefix $(OBJ_PATH)/,$(patsubst %.cpp,%.o,$(shell find $(SOURCE_PATH) -path $(TEST_PATH) -prune -o -type f -name "*.cpp" -exec basename {} \;)))
-TEST_SOURCES := $(shell find $(TEST_PATH) -type f -name "*.cpp" -printf '%p ')
-TEST_OBJS := $(addprefix $(OBJ_PATH)/,$(patsubst %.cpp,%.o,$(shell find $(TEST_PATH) -type f -name "*.cpp" -exec basename {} \;)))
-DEBUG := -g -O0 -DDEBUG
-STD := -std=c++17
-LDLIBS := -llua -lboost_unit_test_framework
-INCFLAGS := -I include
-LIBFLAGS := -L /usr/lib
-CXXFLAGS := $(STD) -fPIC -Wall -Wextra $(DEBUG) $(INCFLAGS)
-LDFLAGS := $(STD) -fPIC -Wall -Wextra $(LDLIBS) $(DEBUG) $(INCFLAGS) $(LIBFLAGS)
-COMPILER := g++
-PREFIX := /usr/lib
-DOXYFILE := Doxyfile
+SOURCE_DIR = src
+INCLUDE_DIR = include
+OBJ_DIR = bin
+DOC_DIR = doc
+DEPEND_DIR = depend
+TEST_DIR = test
 
+TARGET = libluna-2.0.0-alpha.so
+TARGET_LINK = libluna.so
+
+VERSION_MAJOR = 2
+VERSION_MINOR = 0
+VERSION_PATCH = 0
+
+CPP_FILES = $(shell find $(SOURCE_DIR) -path $(SOURCE_DIR)/$(TEST_DIR) -prune -o -type f -name "*.cpp" -printf '%p ')
+OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(CPP_FILES))))
+
+TEST_CPP_FILES = $(shell find $(SOURCE_DIR)/$(TEST_DIR) -type f -name "*.cpp" -printf '%p ')
+TEST_OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(TEST_CPP_FILES))))
+
+CPP_STANDARD = -std=c++17
+LIBS = -llua -lboost_unit_test_framework
+DEBUG_FLAGS = -g -O0 -DDEBUG
+WARNING_FLAGS = -Wall -Wextra
+INCLUDE_FLAGS = -I include
+LIB_FLAGS =
+
+CPP_FLAGS = $(CPP_STANDARD) -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS)
+LINKER_FLAGS = $(CPP_STANDARD) -fPIC $(WARNING_FLAGS) $(LIBS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) $(LIB_FLAGS)
+COMPILER = g++
+
+PREFIX = /usr/lib
+DOXYFILE = Doxyfile
 
 .PHONY : clean install uninstall test doc
 
-$(TARGET_PATH) : $(OBJS)
-	$(COMPILER) -shared $(LDFLAGS) $(OBJS) -o $@
+$(TARGET) : $(OBJ_FILES)
+	$(COMPILER) -shared $(LINKER_FLAGS) $(OBJ_FILES) -o $@
 
-test: $(TEST_OBJS) $(OBJS)
-	$(COMPILER) $(LDFLAGS) $(TEST_OBJS) $(OBJS) -DTEST -o test.out
+test: $(TEST_OBJ_FILES) $(OBJ_FILES)
+	$(COMPILER) $(LINKER_FLAGS) $(TEST_OBJ_FILES) $(OBJ_FILES) -o $@.out
 
 .SECONDEXPANSION:
-$(OBJ_PATH)/%.o : $$(shell find $(SOURCE_PATH) -type f -name %.cpp)
-	@mkdir -p $(OBJ_PATH)
-	@mkdir -p $(DEPEND_PATH)
-	$(COMPILER) $(CXXFLAGS) -c $< -o $@
-	$(COMPILER) -MM $(CXXFLAGS) $< > $(DEPEND_PATH)/$*.d
-	@sed -i '1s/^/bin\//' $(DEPEND_PATH)/$*.d
+$(OBJ_DIR)/%.o : $$(shell find $(SOURCE_DIR) -type f -name %.cpp)
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(DEPEND_DIR)
+	$(COMPILER) $(CPP_FLAGS) -c $< -o $@
+	$(COMPILER) -MM $(CPP_FLAGS) $< > $(DEPEND_DIR)/$*.d
+	@sed -i '1s/^/$(OBJ_DIR)\//' $(DEPEND_DIR)/$*.d
 
-install: $(TARGET_PATH)
-	install -m 755 $(TARGET_PATH) $(PREFIX)/$(TARGET_PATH)
-	ln -sf $(PREFIX)/$(TARGET_PATH) $(PREXIX)/$(LINK_PATH)
+install: $(TARGET)
+	install -m 755 $(TARGET) $(PREFIX)/$(TARGET)
+	ln -sf $(PREFIX)/$(TARGET) $(PREXIX)/$(TARGET_LINK)
 
 uninstall:
-	rm -f $(PREFIX)/$(TARGET_PATH) $(PREFIX)/$(LINK_PATH)
+	rm -f $(PREFIX)/$(TARGET) $(PREFIX)/$(TARGET_LINK)
 
 clean :
-	$(RM) -r $(OBJ_PATH) $(DEPEND_PATH) $(TARGET_PATH) $(DOC_PATH)
+	$(RM) -r $(OBJ_DIR) $(DEPEND_DIR) $(TARGET) $(DOC_DIR)
 
 doc :
-	@mkdir -p $(DOC_PATH)
+	@mkdir -p $(DOC_DIR)
 	doxygen $(DOXYFILE)
 
--include $(shell find $(DEPEND_PATH) -type f -name "*.d" -printf '%p ')
+-include $(subst $(OBJ_DIR)/,,$(patsubst %.o,%.d,$(OBJ_FILES)))

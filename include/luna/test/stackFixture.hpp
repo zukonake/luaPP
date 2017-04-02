@@ -1,4 +1,4 @@
-/* luna/test/stackFixture.hpp
+/* stackFixture.hpp
  * Copyleft zukonake
  * Distributed under GNU General Public License Version 3
  */
