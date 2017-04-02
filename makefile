@@ -56,7 +56,7 @@ uninstall:
 	rm -f $(PREFIX)/$(TARGET) $(PREFIX)/$(TARGET_LINK)
 
 clean :
-	$(RM) -r $(OBJ_DIR) $(DEPEND_DIR) $(TARGET) $(DOC_DIR)
+	$(RM) -r $(OBJ_DIR) $(DEPEND_DIR) $(TARGET) test.out $(DOC_DIR)
 
 doc :
 	@mkdir -p $(DOC_DIR)
