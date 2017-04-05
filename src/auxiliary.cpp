@@ -10,52 +10,6 @@
 namespace Luna::Auxiliary
 {
 
-Type convertType( const LuaType &luaType ) noexcept
-{	
-	switch( luaType )
-	{
-		case LUA_TNIL:
-			return NIL;
-			break;
-
-		case LUA_TNUMBER:
-			return NUMBER;
-			break;
-
-		case LUA_TBOOLEAN:
-			return BOOLEAN;
-			break;
-
-		case LUA_TSTRING:
-			return STRING;
-			break;
-
-		case LUA_TTABLE:
-			return TABLE;
-			break;
-
-		case LUA_TFUNCTION:
-			return FUNCTION;
-			break;
-
-		case LUA_TTHREAD:
-			return THREAD;
-			break;
-
-		case LUA_TUSERDATA:
-			return USER_DATA;
-			break;
-
-		case LUA_TLIGHTUSERDATA:
-			return LIGHT_USER_DATA;
-			break;
-
-		default:
-			return INVALID;
-			break;
-	}
-}
-
 std::string getTypeName( Type const &type ) noexcept
 {
 	switch( type )

@@ -1,3 +1,5 @@
+#include <cstring>
+//
 #include <luna/typedef.hpp>
 #include <luna/element/element.hpp>
 #include <luna/element/string.hpp>
@@ -27,20 +29,46 @@ String &String::operator=( StringValue const &value )
 
 String::operator StringValue() const noexcept
 {
-	StringValue returnValue;
-	Element::getValue();
-	returnValue = Element::mRawStack.toString();
-	Element::mRawStack.pop();
-	return returnValue;
+	//StringValue returnValue;
+	//Element::getValue();
+	//returnValue = Element::mRawStack.toString();
+	//Element::mRawStack.pop();
+	//return returnValue;
+	return "test";
 }
 
-String::operator char const *() const noexcept
+bool String::operator==( char const * const &that ) const noexcept
 {
-	char const *returnValue;
-	Element::getValue();
-	returnValue = Element::mRawStack.toString().c_str();
-	Element::mRawStack.pop();
-	return returnValue;
+	//char const * value;
+	//Element::getValue();
+	//value = Element::mRawStack.toString().c_str();
+	//Element::mRawStack.pop();
+	//return !static_cast< bool >( std::strcmp( value, that ));
+	return true;
+}
+
+bool String::operator!=( char const * const &that ) const noexcept
+{
+	//char const * value;
+	//Element::getValue();
+	//value = Element::mRawStack.toString().c_str();
+	//Element::mRawStack.pop();
+	//return static_cast< bool >( std::strcmp( value, that ));
+	return true;
+}
+
+std::ostream &operator<<( std::ostream &output, String const &that )
+{
+	output << static_cast< StringValue >( that );
+	return output;
+}
+
+std::istream &operator>>( std::istream &input, String &that )
+{
+	StringValue newValue;
+	input >> newValue;
+	that = newValue;
+	return input;
 }
 
 }

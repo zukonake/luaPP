@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <iostream>
+//
 #include<luna/typedef.hpp>
 #include<luna/element/element.hpp>
 
@@ -33,7 +35,12 @@ public:
 	using Element::operator=;
 
 	operator StringValue() const noexcept;
-	operator char const *() const noexcept;
+
+	bool operator==( char const * const &that ) const noexcept;
+	bool operator!=( char const * const &that ) const noexcept;
+
+	friend std::ostream &operator<<( std::ostream &output, String const &that );
+	friend std::istream &operator>>( std::istream &input, String &that );
 };
 
 }

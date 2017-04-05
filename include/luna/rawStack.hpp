@@ -658,12 +658,12 @@ public:
 	/**
 	 * Converts an AbsoluteIndex into Index.
 	 */
-	Index getRelativeIndex( AbsoluteIndex const &index ) const;
+	Index getRelativeIndex( Index const &index ) const;
 
 	/**
 	 * Converts an Index into AbsoluteIndex.
 	 */
-	AbsoluteIndex getAbsoluteIndex( Index const &index ) const;
+	Index getAbsoluteIndex( Index const &index ) const;
 
 
 

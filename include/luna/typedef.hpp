@@ -20,17 +20,12 @@ namespace Luna
 /**
  * Used to represent a relative or absolute RawStack index.
  */
-typedef int32_t Index;
-
-/**
- * Used to represent an absolute RawStack index.
- */
-typedef uint32_t AbsoluteIndex;
+typedef int64_t Index;
 
 /**
  * Used to represent number of values on RawStack.
  */
-typedef uint32_t Size;
+typedef uint64_t Size;
 
 /**
  * Used to represent number of values to capture for closure.
@@ -43,11 +38,6 @@ typedef uint8_t CaptureSize;
  * Used to represent a lua_State pointer.
  */
 typedef lua_State *LuaState;
-
-/**
- * Used to represent Lua types defined by Lua C API.
- */
-typedef uint8_t LuaType;
 
 /**
  * Used to represent Lua references to values on RawStack.

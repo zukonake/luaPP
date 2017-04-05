@@ -14,9 +14,11 @@ VERSION_PATCH = 0
 
 CPP_FILES = $(shell find $(SOURCE_DIR) -path $(SOURCE_DIR)/$(TEST_DIR) -prune -o -type f -name "*.cpp" -printf '%p ')
 OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(CPP_FILES))))
+DEPEND_FILES = $(patsubst $(OBJ_DIR)/%,$(DEPEND_DIR)/%,$(patsubst %.o,%.d,$(OBJ_FILES)))
 
 TEST_CPP_FILES = $(shell find $(SOURCE_DIR)/$(TEST_DIR) -type f -name "*.cpp" -printf '%p ')
 TEST_OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(TEST_CPP_FILES))))
+TEST_DEPEND_FILES = $(patsubst $(OBJ_DIR)/%,$(DEPEND_DIR)/%,$(patsubst %.o,%.d,$(TEST_OBJ_FILES)))
 
 LIBS = -llua -lboost_unit_test_framework
 DEBUG_FLAGS = -g -O0 -DDEBUG
@@ -62,4 +64,4 @@ doc :
 	@mkdir -p $(DOC_DIR)
 	doxygen $(DOXYFILE)
 
--include $(subst $(OBJ_DIR)/,,$(patsubst %.o,%.d,$(OBJ_FILES)))
+-include $(TEST_DEPEND_FILES) $(DEPEND_FILES)
