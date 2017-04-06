@@ -5,28 +5,33 @@ DOC_DIR = doc
 DEPEND_DIR = depend
 TEST_DIR = test
 
-TARGET = libluna-2.0.0-alpha.so
-TARGET_LINK = libluna.so
-
+VERSION_STAGE = alpha
 VERSION_MAJOR = 2
 VERSION_MINOR = 0
 VERSION_PATCH = 0
 
+BASE_NAME = luna
+TARGET = lib$(BASE_NAME)-$(VERSION_MAJOR)-$(VERSION_MINOR)-$(VERSION_PATCH)-$(VERSION_STAGE).so
+TARGET_LINK = lib$(BASE_NAME).so
+BASE_NAME_DEFINE = $(shell echo $(BASE_NAME) | tr '[:lower:]' '[:upper:]')
+
 CPP_FILES = $(shell find $(SOURCE_DIR) -path $(SOURCE_DIR)/$(TEST_DIR) -prune -o -type f -name "*.cpp" -printf '%p ')
 OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(CPP_FILES))))
-DEPEND_FILES = $(patsubst $(OBJ_DIR)/%,$(DEPEND_DIR)/%,$(patsubst %.o,%.d,$(OBJ_FILES)))
 
 TEST_CPP_FILES = $(shell find $(SOURCE_DIR)/$(TEST_DIR) -type f -name "*.cpp" -printf '%p ')
 TEST_OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(TEST_CPP_FILES))))
-TEST_DEPEND_FILES = $(patsubst $(OBJ_DIR)/%,$(DEPEND_DIR)/%,$(patsubst %.o,%.d,$(TEST_OBJ_FILES)))
 
-LIBS = -llua -lboost_unit_test_framework
+LIBS = -llua
+ifeq ($(MAKECMDGOALS),test)
+LIBS += -lboost_unit_test_framework
+endif
+VERSION_FLAGS=-D$(BASE_NAME_DEFINE)_VERSION_STAGE="$(VERSION_STAGE)" -D$(BASE_NAME_DEFINE)_VERSION_MAJOR="$(VERSION_MAJOR)" -D$(BASE_NAME_DEFINE)_VERSION_MINOR="$(VERSION_MINOR)" -D$(BASE_NAME_DEFINE)_VERSION_PATCH="$(VERSION_PATCH)"
 DEBUG_FLAGS = -g -O0 -DDEBUG
 WARNING_FLAGS = -Wall -Wextra
 INCLUDE_FLAGS = -I include
 LIB_FLAGS =
 COMPILER = g++
-COMPILER_FLAGS = -std=c++17 -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS)
+COMPILER_FLAGS = -std=c++17 -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) $(VERSION_FLAGS)
 
 COMPILE = $(COMPILER) $(COMPILER_FLAGS)
 LINK = $(COMPILER) $(COMPILER_FLAGS) $(LIBS) $(LIB_FLAGS) $(OBJ_FILES)
@@ -64,4 +69,4 @@ doc :
 	@mkdir -p $(DOC_DIR)
 	doxygen $(DOXYFILE)
 
--include $(TEST_DEPEND_FILES) $(DEPEND_FILES)
+-include $(subst $(OBJ_DIR)/,,$(patsubst %.o,%.d,$(OBJ_FILES)))
