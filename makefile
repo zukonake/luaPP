@@ -21,7 +21,7 @@ OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(CPP_FILES)))
 TEST_CPP_FILES = $(shell find $(SOURCE_DIR)/$(TEST_DIR) -type f -name "*.cpp" -printf '%p ')
 TEST_OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(TEST_CPP_FILES))))
 
-LIBS =
+LIBS = -llua
 ifeq ($(MAKECMDGOALS),test)
 LIBS += -lboost_unit_test_framework
 endif
