@@ -9,7 +9,7 @@ namespace Luna
 
 Element::Element( RawStack &rawStack  ) :
 	mRawStack( rawStack ),
-	mReference( rawStack.newReference( LuaRegistryIndex, -1 ))
+	mReference( rawStack.newReference( -1 ))
 {
 	
 }
@@ -26,7 +26,7 @@ Element::Element( Element const &that ) :
 	mReference( noReference )
 {
 	that.getValue();
-	mReference = mRawStack.newReference( LuaRegistryIndex, -1 );
+	mReference = mRawStack.newReference( -1 );
 }
 
 Element::Element( Element &&that ) :
@@ -38,7 +38,7 @@ Element::Element( Element &&that ) :
 
 Element::~Element()
 {
-	mRawStack.dereference( LuaRegistryIndex, mReference );
+	mRawStack.dereference( mReference );
 }
 
 Element &Element::operator=( Element const &that )

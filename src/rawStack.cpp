@@ -313,7 +313,7 @@ void RawStack::newTable( Size const &arrayLength, Size const &mapLength )
 	lua_createtable( mLuaState, arrayLength, mapLength );
 }
 
-UserDataValue RawStack::newUserData( const std::size_t &size )
+UserDataValue RawStack::newUserData( std::size_t const &size )
 {
 	try
 	{
@@ -339,11 +339,11 @@ ThreadValue RawStack::newThread()
 	return lua_newthread( mLuaState );
 }
 
-LuaReference RawStack::newReference( const Index &value, const Index &table )
+LuaReference RawStack::newReference( Index const &value, Index const &table )
 {
 	try
 	{
-		validate( value );
+		validate( value ); //TODO will crash if the value is set to LuaRegistryIndex
 		validate( table );
 	}
 	catch( ... )
@@ -358,7 +358,7 @@ LuaReference RawStack::newReference( const Index &value, const Index &table )
 	return luaL_ref( mLuaState, table );
 }
 
-void RawStack::dereference( const LuaReference &reference, const Index &table )
+void RawStack::dereference( LuaReference const &reference, Index const &table )
 {
 	try
 	{
@@ -570,7 +570,9 @@ Type RawStack::getTableField( Index const &table, std::size_t const &index )
 	{
 		throw;
 	}
-	return static_cast< Type >( lua_geti( mLuaState, table, index ));
+	pushNil();
+	return NIL;
+	//return static_cast< Type >( lua_geti( mLuaState, table, index ));
 }
 
 Type RawStack::getTableField( Index const &table, std::string const &key )

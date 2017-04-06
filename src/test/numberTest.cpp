@@ -2,7 +2,7 @@
 //
 #include <luna/typedef.hpp>
 #include <luna/element/number.hpp>
-#include <luna/test/rawStackFixture.hpp>
+#include <test/rawStackFixture.hpp>
 
 namespace Luna::Test
 {

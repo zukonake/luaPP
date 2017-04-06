@@ -5,7 +5,7 @@
 #include <luna/element/number.hpp>
 #include <luna/element/string.hpp>
 #include <luna/element/table.hpp>
-#include <luna/test/stackFixture.hpp>
+#include <test/stackFixture.hpp>
 
 namespace Luna::Test
 {

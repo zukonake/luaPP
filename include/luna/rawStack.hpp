@@ -229,7 +229,7 @@ public:
 	 *
 	 * @return The new reference.
 	 */
-	LuaReference newReference( const Index &value, const Index &table = LuaRegistryIndex );
+	LuaReference newReference( Index const &value, Index const &table = LuaRegistryIndex );
 
 	/**
 	 * Dereferences a reference.
@@ -239,7 +239,7 @@ public:
 	 * @param reference Target reference.
 	 * @param table Index of the table containing the reference. By default Lua registry.
 	 */
-	void dereference( const LuaReference &reference, const Index &table = LuaRegistryIndex );
+	void dereference( LuaReference const &reference, Index const &table = LuaRegistryIndex );
 
 
 
