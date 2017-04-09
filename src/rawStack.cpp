@@ -559,7 +559,7 @@ Type RawStack::getTableField( Index const &table )
 	return static_cast< Type >( lua_gettable( mLuaState, table ));
 }
 
-Type RawStack::getTableField( Index const &table, std::size_t const &index )
+Type RawStack::getTableField( Index const &table, Index const &index )
 {
 	try
 	{
@@ -572,7 +572,7 @@ Type RawStack::getTableField( Index const &table, std::size_t const &index )
 	}
 	pushNil();
 	return NIL;
-	//return static_cast< Type >( lua_geti( mLuaState, table, index ));
+	return static_cast< Type >( lua_geti( mLuaState, table, index ));
 }
 
 Type RawStack::getTableField( Index const &table, std::string const &key )
@@ -609,7 +609,7 @@ Type RawStack::getRawTableField( Index const &table )
 	return static_cast< Type >( lua_rawget( mLuaState, table ));
 }
 
-Type RawStack::getRawTableField( Index const &table, std::size_t const &index )
+Type RawStack::getRawTableField( Index const &table, Index const &index )
 {
 	try
 	{
@@ -721,7 +721,7 @@ void RawStack::setTableField( Index const &table )
 	lua_settable( mLuaState, table );
 }
 
-void RawStack::setTableField( Index const &table, std::size_t const &index, Index const &value )
+void RawStack::setTableField( Index const &table, Index const &index, Index const &value )
 {
 	try
 	{
@@ -769,7 +769,7 @@ void RawStack::setRawTableField( Index const &table )
 	lua_rawset( mLuaState, table );
 }
 
-void RawStack::setRawTableField( Index const &table, std::size_t const &index, Index const &value )
+void RawStack::setRawTableField( Index const &table, Index const &index, Index const &value )
 {
 	try
 	{

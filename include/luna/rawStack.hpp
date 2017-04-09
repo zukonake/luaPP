@@ -369,7 +369,7 @@ public:
 	 *
 	 * @return Type of the pushed value.
 	 */
-	Type getTableField( Index const &table, std::size_t const &index );
+	Type getTableField( Index const &table, Index const &index );
 
 	/**
 	 * Pushes a table's field onto the stack.
@@ -403,7 +403,7 @@ public:
 	 *
 	 * @return Type of the pushed value.
 	 */
-	Type getRawTableField( Index const &table, std::size_t const &index );
+	Type getRawTableField( Index const &table, Index const &index );
 
 	/**
 	 * Pushes a table's field onto the stack, without invoking any meta methods.
@@ -477,7 +477,7 @@ public:
 	 * @param index %Index of the field.
 	 * @param value Index to the desired value.
 	 */
-	void setTableField( Index const &table, std::size_t const &index, Index const &value = -1 );
+	void setTableField( Index const &table, Index const &index, Index const &value = -1 );
 
 	/**
 	 * Sets a table's field.
@@ -508,7 +508,7 @@ public:
 	 * @param index %Index of the field.
 	 * @param value Index to the desired value.
 	 */
-	void setRawTableField( Index const &table, std::size_t const &index, Index const &value = -1 );
+	void setRawTableField( Index const &table, Index const &index, Index const &value = -1 );
 
 	/**
 	 * Sets a table's field, without invoking any meta methods.
