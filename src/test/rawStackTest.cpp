@@ -6,7 +6,7 @@
 #include <luna/typedef.hpp>
 #include <test/rawStackFixture.hpp>
 
-namespace Luna::Test::Test
+namespace Luna::Test
 {
 
 BOOST_FIXTURE_TEST_SUITE( rawStackTest, RawStackFixture );
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( callTest02 )
 	BOOST_CHECK_THROW( fRawStack.call( -1 ), Exception::TypeError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
-
+//TODO check for args
 BOOST_AUTO_TEST_CASE( callMetaMethodTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
@@ -124,42 +124,62 @@ BOOST_AUTO_TEST_CASE( pushNilTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
 	BOOST_CHECK( fRawStack.getType() == NIL );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
 BOOST_AUTO_TEST_CASE( pushBooleanTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushBoolean( true ));
-	BOOST_REQUIRE( fRawStack.getType() == BOOLEAN );
+	BOOST_CHECK( fRawStack.getType() == BOOLEAN );
 	BOOST_CHECK_EQUAL( fRawStack.toBoolean(), true );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
 BOOST_AUTO_TEST_CASE( pushNumberTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
-	BOOST_REQUIRE( fRawStack.getType() == NUMBER );
+	BOOST_CHECK( fRawStack.getType() == NUMBER );
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 25 );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
 BOOST_AUTO_TEST_CASE( pushStringTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "tet" ));
-	BOOST_REQUIRE( fRawStack.getType() == STRING );
+	BOOST_CHECK( fRawStack.getType() == STRING );
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "tet" );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
 BOOST_AUTO_TEST_CASE( pushLightUserDataTest00 )
 {
-
+	LightUserDataValue test = new int( 253 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushLightUserData( test ));
+	BOOST_CHECK( fRawStack.getType() == LIGHT_USER_DATA );
+	BOOST_CHECK_EQUAL( *static_cast< int * >( fRawStack.toLightUserData()), 253 );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
 BOOST_AUTO_TEST_CASE( pushUserDataTest00 )
 {
+	//TODO
+}
 
+int testFunction( LuaState L )
+{
+	int a = lua_tonumber( L, -1 );
+	lua_pushnumber( L, a * a );
+	return 1;
 }
 
 BOOST_AUTO_TEST_CASE( pushFunctionTest00 )
 {
-
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushFunction( testFunction ));
+	BOOST_CHECK( fRawStack.getType() == FUNCTION );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 15 ));
+	BOOST_CHECK_NO_THROW( fRawStack.call( -1, 1, 1 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 225 );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 3 );
 }
 
 BOOST_AUTO_TEST_CASE( pushClosureTest00 )

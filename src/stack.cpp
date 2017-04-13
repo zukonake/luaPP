@@ -7,7 +7,7 @@ namespace Luna
 Stack::Stack( LuaState const &luaState ) :
 	RawStack( luaState )
 {
-
+	
 }
 
 }

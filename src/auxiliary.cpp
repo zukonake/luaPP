@@ -17,45 +17,46 @@ std::string getTypeName( Type const &type ) noexcept
 		case NIL:
 			return "nil";
 			break;
-
+		
 		case BOOLEAN:
 			return "boolean";
 			break;
-
+		
 		case NUMBER:
 			return "number";
 			break;
-
+		
 		case STRING:
 			return "string";
 			break;
-
+		
 		case TABLE:
 			return "table";
 			break;
-
+		
 		case FUNCTION:
 			return "function";
 			break;
-
+		
 		case THREAD:
 			return "thread";
 			break;
-
+		
 		case USER_DATA:
 			return "userdata";
 			break;
-
+		
 		case LIGHT_USER_DATA:
 			return "light userdata";
 			break;
-
+		
 		default:
 			return "invalid";
 			break;
 	}
 }
 
+//Implemented as described in Lua reference manual
 void *allocate( void *ud, void *ptr, std::size_t osize, std::size_t nsize )
 {
 	( void )ud,( void )osize;

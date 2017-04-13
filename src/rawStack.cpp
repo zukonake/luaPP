@@ -83,7 +83,7 @@ Size RawStack::call( Index const &index, Size const &returnNumber, Size const &a
 	try
 	{
 		validate( index, FUNCTION );
-		copy();
+		copy(); //We copy because pcall pops the function later
 		if( returnNumber != LuaMultiReturn )
 		{
 			allocate( returnNumber );
@@ -350,7 +350,7 @@ LuaReference RawStack::newReference( Index const &value, Index const &table )
 	{
 		throw;
 	}
-	if( getAbsoluteIndex( value ) != ( Index )getSize())
+	if( getAbsoluteIndex( value ) != ( Index )getSize()) //The value needs to be at the top of the stack, so we ensure it
 	{
 		copy( value );
 		remove( value );
@@ -633,7 +633,7 @@ Type RawStack::getRawTableField( Index const &table, std::string const &key )
 	try
 	{
 		validate( table == LuaRegistryIndex ? table : realTable, TABLE );
-		pushString( key );
+		pushString( key ); //Key at top of the stack used by lua_rawget, unfortunately strings can't be used directly
 		allocate();
 	}
 	catch( ... )
@@ -785,16 +785,12 @@ void RawStack::setRawTableField( Index const &table, Index const &index, Index c
 
 void RawStack::setRawTableField( Index const &table, std::string const &key, Index const &value )
 {
-	Index realTable;
-	if( table != LuaRegistryIndex )
-	{
-		realTable = getAbsoluteIndex( table );
-	}
+	Index realTable = table == LuaRegistryIndex ? table : getAbsoluteIndex( realTable );
 	Index realValue = getAbsoluteIndex( value );
 	try
 	{
-		validate( table == LuaRegistryIndex ? table : realTable, TABLE );
-		pushString( key );
+		validate( table );
+		pushString( key ) //Key at top of the stack used by lua_rawset, unfortunately strings can't be used directly;
 		copy( realValue );
 	}
 	catch( ... )
@@ -811,14 +807,14 @@ void RawStack::setMetaTable( Index const &target, std::string const &metaTable )
 	try
 	{
 		validate( target );
-		copy( target );
+		copy( target ); //target needs to be at the top of the stack
 	}
 	catch( ... )
 	{
 		throw;
 	}
 	luaL_setmetatable( mLuaState, metaTable.c_str());
-	move( -1, target );
+	move( -1, target ); //we replace old target with the new one
 }
 
 void RawStack::setMetaTable( Index const &target, Index const &metaTable )
@@ -955,7 +951,7 @@ void RawStack::move( Index const &from, Index const &to )
 		}
 		if( from != -1 )
 		{
-			copy( realFrom );
+			copy( realFrom ); //from needs to be at the top of the stack
 		}
 		lua_replace( mLuaState, realTo );
 		if( from != -1 )
@@ -1075,22 +1071,22 @@ void RawStack::checkForError( ReturnCode const &code )
 		case OK:
 		case YIELD:
 			return;
-
+		
 		case RUNTIME_ERROR:
 			throw Exception::LuaError( "Luna::Auxiliary::checkForError: " + toString());
-
+		
 		case SYNTAX_ERROR:
 			throw Exception::SyntaxError( "Luna::Auxiliary::checkForError: " + toString());
-
+		
 		case MEMORY_ERROR:
 			throw Exception::AllocationError( "Luna::Auxiliary::checkForError: " + toString());
-
+		
 		case GARBAGE_COLLECTOR_ERROR:
 			throw Exception::LuaError( "Luna::Auxiliary::checkForError: " + toString());
-
+		
 		case FILE_ERROR:
 			throw Exception::FileError( "Luna::Auxiliary::checkForError: " + toString());
-
+		
 		case UNKNOWN_ERROR:
 		default:
 			throw Exception::LuaError( "Luna::Auxiliary::checkForError: " + toString());
