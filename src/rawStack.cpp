@@ -262,7 +262,7 @@ void RawStack::pushLibrary( Library const &library )
 	{
 		throw;
 	}
-	luaL_newlib( mLuaState, library );
+	luaL_newlib( mLuaState, library ); //TODO overflow warning
 }
 
 
@@ -790,7 +790,7 @@ void RawStack::setRawTableField( Index const &table, std::string const &key, Ind
 	try
 	{
 		validate( table );
-		pushString( key ) //Key at top of the stack used by lua_rawset, unfortunately strings can't be used directly;
+		pushString( key ); //Key at top of the stack used by lua_rawset, unfortunately strings can't be used directly
 		copy( realValue );
 	}
 	catch( ... )
