@@ -22,9 +22,17 @@ BOOST_AUTO_TEST_CASE( loadFileTest00 )
 
 BOOST_AUTO_TEST_CASE( loadFileTest01 )
 {
-	BOOST_CHECK_THROW( fRawStack.loadFile( "src/test/nofile.lua" ), Exception::FileError );
+	BOOST_CHECK_THROW( fRawStack.loadFile( "test/nofile.lua" ), Exception::FileError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
+
+BOOST_AUTO_TEST_CASE( loadFileTest02 )
+{
+	BOOST_CHECK_THROW( fRawStack.loadFile( "test/badTest.lua" ), Exception::SyntaxError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
+}
+
+
 
 BOOST_AUTO_TEST_CASE( loadStringTest00 )
 {
@@ -41,6 +49,8 @@ BOOST_AUTO_TEST_CASE( loadStringTest01 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( doFileTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
@@ -51,9 +61,17 @@ BOOST_AUTO_TEST_CASE( doFileTest00 )
 
 BOOST_AUTO_TEST_CASE( doFileTest01 )
 {
-	BOOST_CHECK_THROW( fRawStack.doFile( "src/test/nofile.lua" ), Exception::FileError );
+	BOOST_CHECK_THROW( fRawStack.doFile( "test/nofile.lua" ), Exception::FileError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
+
+BOOST_AUTO_TEST_CASE( doFileTest01 )
+{
+	BOOST_CHECK_THROW( fRawStack.doFile( "test/badTest.lua" ), Exception::SyntaxError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
+}
+
+
 
 BOOST_AUTO_TEST_CASE( doStringTest00 )
 {
@@ -68,6 +86,8 @@ BOOST_AUTO_TEST_CASE( doStringTest01 )
 	BOOST_CHECK_THROW( fRawStack.doString( "sdfasdfwe23r23423{}{{@" ), Exception::SyntaxError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( callTest00 )
 {
@@ -96,6 +116,61 @@ BOOST_AUTO_TEST_CASE( callTest02 )
 	BOOST_CHECK_THROW( fRawStack.call( -1 ), Exception::TypeError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
+
+BOOST_AUTO_TEST_CASE( callTest03 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
+	BOOST_CHECK_NO_THROW( fRawStack.call( -3, 2, 2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
+	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1, 53 ));
+	BOOST_CHECK_EQUAL( fRawStack.toString( -2, 40 ));
+}
+
+BOOST_AUTO_TEST_CASE( callTest04 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
+	BOOST_CHECK_THROW( fRawStack.call( -3, 2, 4 ), Exception::IndexError);
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
+}
+
+BOOST_AUTO_TEST_CASE( callTest05 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
+	BOOST_CHECK_THROW( fRawStack.call( -1, 3, 0 ), Exception::UnexpectedReturnError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+}
+
+BOOST_AUTO_TEST_CASE( callTest06 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
+	BOOST_CHECK_NO_THROW( fRawStack.call( -2, LuaMultiReturn, 2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+	BOOST_CHECK_NO_THROW( fRawStack.call( -2, LuaMultiReturn, 2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1, 53 ));
+	BOOST_CHECK_EQUAL( fRawStack.toString( -2, 40 ));
+}
+
+BOOST_AUTO_TEST_CASE( callTest07 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
+	BOOST_CHECK_THROW( fRawStack.call( -3, 3, 2 ), Exception::UnexpectedReturnError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
+}
+
 //TODO check for args
 BOOST_AUTO_TEST_CASE( callMetaMethodTest00 )
 {
@@ -120,12 +195,16 @@ BOOST_AUTO_TEST_CASE( callMetaMethodTest02 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushNilTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
 	BOOST_CHECK( fRawStack.getType() == NIL );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( pushBooleanTest00 )
 {
@@ -135,6 +214,8 @@ BOOST_AUTO_TEST_CASE( pushBooleanTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushNumberTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
@@ -143,6 +224,8 @@ BOOST_AUTO_TEST_CASE( pushNumberTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushStringTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "tet" ));
@@ -150,6 +233,8 @@ BOOST_AUTO_TEST_CASE( pushStringTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "tet" );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( pushLightUserDataTest00 )
 {
@@ -160,10 +245,14 @@ BOOST_AUTO_TEST_CASE( pushLightUserDataTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushUserDataTest00 )
 {
 	//TODO
 }
+
+
 
 int testFunction( LuaState L )
 {
@@ -182,20 +271,28 @@ BOOST_AUTO_TEST_CASE( pushFunctionTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 3 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushClosureTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( pushThreadTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushMetaTableTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( pushGlobalTest00 )
 {
@@ -220,6 +317,8 @@ BOOST_AUTO_TEST_CASE( pushGlobalTest02 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( pushGlobalTableTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushGlobalTable());
@@ -233,6 +332,8 @@ BOOST_AUTO_TEST_CASE( pushGlobalTableTest01 )
 	BOOST_CHECK( fRawStack.getType() == TABLE );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( newTableTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.newTable()); 
@@ -244,120 +345,168 @@ BOOST_AUTO_TEST_CASE( newTableTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( newThreadTest00 )
 {
 
 }
 
-BOOST_AUTO_TEST_CASE( neweReferenceTest00 )
+
+
+BOOST_AUTO_TEST_CASE( newReferenceTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( dereferenceTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( registerLibraryTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( registerFunctionTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( registerValueTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( toNumberTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( toBooleanTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( toStringTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( toTableTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( toUserDataTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( toFunctionTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( toThreadTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( getLengthTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( getTypeTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( getTableFieldTest00 )
 {
 	
 }
+
+
 
 BOOST_AUTO_TEST_CASE( getRawTableFieldTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( getMetaFieldTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( getMetaTableTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( setTableFieldTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( setRawTableFieldTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( setMetaTableTest00 )
 {
 
 }
 
+
+
 BOOST_AUTO_TEST_CASE( setUserDataTest00 )
 {
 
 }
+
+
 
 BOOST_AUTO_TEST_CASE( copyTest00 )
 {
@@ -396,6 +545,8 @@ BOOST_AUTO_TEST_CASE( copyTest03 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( insertTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
@@ -431,6 +582,8 @@ BOOST_AUTO_TEST_CASE( insertTest03 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( removeTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
@@ -465,6 +618,8 @@ BOOST_AUTO_TEST_CASE( removeTest03 )
 	BOOST_CHECK_THROW( fRawStack.remove( 4 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( eraseTest00 )
 {
@@ -502,6 +657,8 @@ BOOST_AUTO_TEST_CASE( eraseTest03 )
 	BOOST_CHECK_THROW( fRawStack.erase( 4 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( popTest00 )
 {
@@ -541,6 +698,8 @@ BOOST_AUTO_TEST_CASE( popTest04 )
 	BOOST_CHECK_NO_THROW( fRawStack.pop( 0 ));
 }
 
+
+
 BOOST_AUTO_TEST_CASE( clearTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
@@ -556,8 +715,10 @@ BOOST_AUTO_TEST_CASE( clearTest01 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( replaceTest00 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "test" ));
@@ -568,7 +729,7 @@ BOOST_AUTO_TEST_CASE( replaceTest00 )
 }
 
 BOOST_AUTO_TEST_CASE( replaceTest01 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_CHECK_NO_THROW( fRawStack.replace( -1, 1 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
@@ -576,22 +737,24 @@ BOOST_AUTO_TEST_CASE( replaceTest01 )
 }
 
 BOOST_AUTO_TEST_CASE( replaceTest02 )
-{	
+{
 	BOOST_CHECK_THROW( fRawStack.replace( -1, 1 ), Exception::IndexError );
 	BOOST_CHECK_THROW( fRawStack.replace( 0, 0 ), Exception::IndexError );
 	BOOST_CHECK_THROW( fRawStack.replace( 1, 0 ), Exception::IndexError );
 }
 
 BOOST_AUTO_TEST_CASE( replaceTest03 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_CHECK_THROW( fRawStack.replace( -1, 2 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 64 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( moveTest00 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "test" ));
@@ -601,7 +764,7 @@ BOOST_AUTO_TEST_CASE( moveTest00 )
 }
 
 BOOST_AUTO_TEST_CASE( moveTest01 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_CHECK_NO_THROW( fRawStack.move( -1, 1 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
@@ -609,22 +772,24 @@ BOOST_AUTO_TEST_CASE( moveTest01 )
 }
 
 BOOST_AUTO_TEST_CASE( moveTest02 )
-{	
+{
 	BOOST_CHECK_THROW( fRawStack.move( -1, 1 ), Exception::IndexError );
 	BOOST_CHECK_THROW( fRawStack.move( 0, 0 ), Exception::IndexError );
 	BOOST_CHECK_THROW( fRawStack.move( 1, 0 ), Exception::IndexError );
 }
 
 BOOST_AUTO_TEST_CASE( moveTest03 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_CHECK_THROW( fRawStack.move( -1, 2 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 64 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( swapTest00 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "test" ));
@@ -635,7 +800,7 @@ BOOST_AUTO_TEST_CASE( swapTest00 )
 }
 
 BOOST_AUTO_TEST_CASE( swapTest01 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_CHECK_NO_THROW( fRawStack.swap( -1, 1 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
@@ -643,20 +808,23 @@ BOOST_AUTO_TEST_CASE( swapTest01 )
 }
 
 BOOST_AUTO_TEST_CASE( swapTest02 )
-{	
+{
 	BOOST_CHECK_THROW( fRawStack.swap( -1, 1 ), Exception::IndexError );
 	BOOST_CHECK_THROW( fRawStack.swap( 0, 0 ), Exception::IndexError );
 	BOOST_CHECK_THROW( fRawStack.swap( 1, 0 ), Exception::IndexError );
 }
 
 BOOST_AUTO_TEST_CASE( swapTest03 )
-{	
+{
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
 	BOOST_CHECK_THROW( fRawStack.swap( -1, 2 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 64 );
 }
 
+
+
+//TODO iterate is a subject to more tests
 BOOST_AUTO_TEST_CASE( iterateTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
@@ -696,7 +864,7 @@ BOOST_AUTO_TEST_CASE( iterateTest02 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
-//TODO iterate is a subject to more tests
+
 
 BOOST_AUTO_TEST_CASE( isValidTest00 )
 {
@@ -713,6 +881,8 @@ BOOST_AUTO_TEST_CASE( isValidTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 3 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( getRelativeIndexTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
@@ -724,6 +894,8 @@ BOOST_AUTO_TEST_CASE( getRelativeIndexTest00 )
 	BOOST_CHECK_THROW( fRawStack.getRelativeIndex( 0 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 3 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( getAbsoluteIndexTest00 )
 {
@@ -739,6 +911,8 @@ BOOST_AUTO_TEST_CASE( getAbsoluteIndexTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 3 );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( getSizeTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 64 ));
@@ -750,6 +924,8 @@ BOOST_AUTO_TEST_CASE( getSizeTest00 )
 	BOOST_REQUIRE_NO_THROW( fRawStack.pop( 2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
+
+
 
 BOOST_AUTO_TEST_CASE( getLuaStateTest00 )
 {

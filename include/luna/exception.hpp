@@ -86,4 +86,13 @@ public:
 	using StackError::StackError;
 };
 
+/**
+ * Thrown when function returns an unexpected number of arguments
+ */
+class UnexpectedReturnError : public LuaError
+{
+public:
+	using StackError::StackError;
+}
+
 }

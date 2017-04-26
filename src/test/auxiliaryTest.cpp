@@ -24,28 +24,28 @@ BOOST_AUTO_TEST_CASE( allocateTest00 )
 
 BOOST_AUTO_TEST_CASE( allocateTest01 )
 {
-	void *ptr01 = nullptr;
-	BOOST_REQUIRE_NO_THROW( ptr01 = allocate( nullptr, ptr01, 0, 0 ));
-	BOOST_CHECK( ptr01 == nullptr );
+	void *ptr00 = nullptr;
+	BOOST_REQUIRE_NO_THROW( ptr00 = allocate( nullptr, ptr00, 0, 0 ));
+	BOOST_CHECK( ptr00 == nullptr );
 }
 
 BOOST_AUTO_TEST_CASE( allocateTest02 )
 {
-	void *ptr02 = nullptr;
-	BOOST_REQUIRE_NO_THROW( ptr02 = allocate( nullptr, ptr02, 0, sizeof( char )));
-	BOOST_REQUIRE_NO_THROW( *static_cast< char *>( ptr02 ) = 't' );
-	BOOST_CHECK_EQUAL( *static_cast< char *>( ptr02 ), 't' );
-	BOOST_CHECK_NO_THROW( ptr02 = allocate( nullptr, ptr02, sizeof( char ), 0 ));
-	BOOST_CHECK( ptr02 == nullptr );
+	void *ptr00 = nullptr;
+	BOOST_REQUIRE_NO_THROW( ptr00 = allocate( nullptr, ptr00, 0, sizeof( char )));
+	BOOST_REQUIRE_NO_THROW( *static_cast< char *>( ptr00 ) = 't' );
+	BOOST_CHECK_EQUAL( *static_cast< char *>( ptr00 ), 't' );
+	BOOST_CHECK_NO_THROW( ptr00 = allocate( nullptr, ptr00, sizeof( char ), 0 ));
+	BOOST_CHECK( ptr00 == nullptr );
 }
 
 BOOST_AUTO_TEST_CASE( allocateTest03 )
 {
-	void *ptr03 = nullptr;
-	BOOST_REQUIRE_NO_THROW( ptr03 = allocate( nullptr, ptr03, 0, sizeof( char )));
-	BOOST_REQUIRE( ptr03 = allocate( nullptr, ptr03, sizeof( char ), sizeof( long int )));
-	BOOST_CHECK( ptr03 != nullptr );
-	BOOST_CHECK_NO_THROW( ptr03 = allocate( nullptr, ptr03, sizeof( long int ), 0 ));
+	void *ptr00 = nullptr;
+	BOOST_REQUIRE_NO_THROW( ptr00 = allocate( nullptr, ptr00, 0, sizeof( char )));
+	BOOST_REQUIRE( ptr00 = allocate( nullptr, ptr00, sizeof( char ), sizeof( long int )));
+	BOOST_CHECK( ptr00 != nullptr );
+	BOOST_CHECK_NO_THROW( ptr00 = allocate( nullptr, ptr00, sizeof( long int ), 0 ));
 }
 
 BOOST_AUTO_TEST_SUITE_END();
