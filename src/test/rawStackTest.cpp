@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( doFileTest01 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
-BOOST_AUTO_TEST_CASE( doFileTest01 )
+BOOST_AUTO_TEST_CASE( doFileTest02 )
 {
 	BOOST_CHECK_THROW( fRawStack.doFile( "test/badTest.lua" ), Exception::SyntaxError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
@@ -125,8 +125,8 @@ BOOST_AUTO_TEST_CASE( callTest03 )
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
 	BOOST_CHECK_NO_THROW( fRawStack.call( -3, 2, 2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
-	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1, 53 ));
-	BOOST_CHECK_EQUAL( fRawStack.toString( -2, 40 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1 ), 53 );
+	BOOST_CHECK_EQUAL( fRawStack.toString( -2 ), "40" );
 }
 
 BOOST_AUTO_TEST_CASE( callTest04 )
@@ -157,8 +157,8 @@ BOOST_AUTO_TEST_CASE( callTest06 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 	BOOST_CHECK_NO_THROW( fRawStack.call( -2, LuaMultiReturn, 2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
-	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1, 53 ));
-	BOOST_CHECK_EQUAL( fRawStack.toString( -2, 40 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1 ), 53 );
+	BOOST_CHECK_EQUAL( fRawStack.toString( -2 ), "40" );
 }
 
 BOOST_AUTO_TEST_CASE( callTest07 )
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_CASE( newReferenceTest00 )
 	LuaReference tReference00;
 	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
-	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryTable, tReference00 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryIndex, tReference00 ));
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
 }
 
@@ -407,16 +407,14 @@ BOOST_AUTO_TEST_CASE( newReferenceTest01 )
 
 BOOST_AUTO_TEST_CASE( newReferenceTest02 )
 {
-	LuaReference tReference00;
-	BOOST_CHECK_THROW( tReference00 = fRawStack.newReference( -1 ), Exception::IndexError );
+	BOOST_CHECK_THROW( fRawStack.newReference( -1 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
 BOOST_AUTO_TEST_CASE( newReferenceTest03 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
-	LuaReference tReference00;
-	BOOST_CHECK_THROW( tReference00 = fRawStack.newReference( -1, -2 ), Exception::IndexError );
+	BOOST_CHECK_THROW( fRawStack.newReference( -1, -2 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
@@ -424,8 +422,7 @@ BOOST_AUTO_TEST_CASE( newReferenceTest04 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
-	LuaReference tReference00;
-	BOOST_CHECK_THROW( tReference00 = fRawStack.newReference( -1, -2 ), Exception::TypeError );
+	BOOST_CHECK_THROW( fRawStack.newReference( -1, -2 ), Exception::TypeError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
 
@@ -436,7 +433,7 @@ BOOST_AUTO_TEST_CASE( newReferenceTest05 )
 	LuaReference tReference00;
 	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1, -2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
-	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryTable, tReference00 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryIndex, tReference00 ));
 	BOOST_CHECK( fRawStack.getType() == NIL );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
@@ -451,8 +448,8 @@ BOOST_AUTO_TEST_CASE( dereferenceTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 	BOOST_REQUIRE_NO_THROW( fRawStack.dereference( tReference00 ));
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
-	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryTable, tReference00 ));
-	BOSOT_CHECK( fRawStack.getType() == NIL );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryIndex, tReference00 ));
+	BOOST_CHECK( fRawStack.getType() == NIL );
 }
 
 BOOST_AUTO_TEST_CASE( dereferenceTest01 )
@@ -462,23 +459,21 @@ BOOST_AUTO_TEST_CASE( dereferenceTest01 )
 	LuaReference tReference00;
 	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1, -2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
-	BOOST_REQUIRE_NO_THROW( fRawStack.dereference( tReference01, -1 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.dereference( tReference00, -1 ));
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "asdasda" );
 	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -2, tReference00 ));
-	BOSOT_CHECK( fRawStack.getType() == NIL );
+	BOOST_CHECK( fRawStack.getType() == NIL );
 }
 
 BOOST_AUTO_TEST_CASE( dereferenceTest02 )
 {
-	LuaReference tReference00 = 123123;
-	BOOST_CHECK_NO_THROW( tReference00 = fRawStack.deReference( tReference ));
+	BOOST_CHECK_NO_THROW( fRawStack.dereference( 123123 ));
 	BOOST_CHECK( fRawStack.getType() == NIL );
 }
 
 BOOST_AUTO_TEST_CASE( dereferenceTest03 )
 {
-	LuaReference tReference00 = 123123;
-	BOOST_CHECK_THROW( tReference00 = fRawStack.deReference( tReference00, -2 ), Exception::IndexError );
+	BOOST_CHECK_THROW( fRawStack.dereference( 123123, -2 ), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 

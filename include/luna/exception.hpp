@@ -56,8 +56,8 @@ public:
 class UnexpectedReturnError : public LuaError
 {
 public:
-	using StackError::StackError;
-}
+	using LuaError::LuaError;
+};
 
 /**
  * Thrown when there is an error concerning State
