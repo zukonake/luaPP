@@ -171,6 +171,7 @@ BOOST_AUTO_TEST_CASE( callTest07 )
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
 }
 
+
 //TODO check for args
 BOOST_AUTO_TEST_CASE( callMetaMethodTest00 )
 {
@@ -275,46 +276,21 @@ BOOST_AUTO_TEST_CASE( pushFunctionTest00 )
 
 BOOST_AUTO_TEST_CASE( pushClosureTest00 )
 {
-
+	//TODO
 }
 
 
 
 BOOST_AUTO_TEST_CASE( pushThreadTest00 )
 {
-
+	//TODO
 }
 
 
 
-BOOST_AUTO_TEST_CASE( pushMetaTableTest00 )
+BOOST_AUTO_TEST_CASE( pushLibraryTest00 )
 {
-
-}
-
-
-
-BOOST_AUTO_TEST_CASE( pushGlobalTest00 )
-{
-	BOOST_REQUIRE_NO_THROW( fRawStack.doString( "var = 23" ));
-	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "var" ));
-	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
-	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
-}
-
-BOOST_AUTO_TEST_CASE( pushGlobalTest01 )
-{
-	BOOST_REQUIRE_NO_THROW( fRawStack.doString( "var = 23" ));
-	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "varr" ));
-	BOOST_CHECK( fRawStack.getType() == NIL );
-	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
-}
-
-BOOST_AUTO_TEST_CASE( pushGlobalTest02 )
-{
-	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "var" ));
-	BOOST_CHECK( fRawStack.getType() == NIL );
-	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+	//TODO
 }
 
 
@@ -334,6 +310,23 @@ BOOST_AUTO_TEST_CASE( pushGlobalTableTest01 )
 
 
 
+BOOST_AUTO_TEST_CASE( newMetaTableTest00 )
+{
+	BOOST_CHECK_NO_THROW( fRawStack.newMetaTable( "test" ));
+	BOOST_CHECK( fRawStack.getType() == TABLE );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
+
+BOOST_AUTO_TEST_CASE( newMetaTableTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newMetaTable( "test" ));
+	BOOST_CHECK_THROW( fRawStack.newMetaTable( "test" ), Exception::ReservedNameError );
+	BOOST_CHECK( fRawStack.getType() == TABLE );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+} //TODO more tests to check in practice
+
+
+
 BOOST_AUTO_TEST_CASE( newTableTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.newTable()); 
@@ -345,46 +338,155 @@ BOOST_AUTO_TEST_CASE( newTableTest00 )
 	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
 }
 
+BOOST_AUTO_TEST_CASE( newTableTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 1, 2 )); 
+	BOOST_REQUIRE( fRawStack.getType() == TABLE );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "10" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asda" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdas" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, 1 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, "asd" ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, "asda" ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "10" );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, 1 ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "asdas" );
+}
+
+
+
+BOOST_AUTO_TEST_CASE( newUserDataTest00 )
+{
+	//TODO
+}
+
 
 
 BOOST_AUTO_TEST_CASE( newThreadTest00 )
 {
-
+	//TODO
 }
 
 
 
 BOOST_AUTO_TEST_CASE( newReferenceTest00 )
 {
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	LuaReference tReference00;
+	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryTable, tReference00 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
+}
 
+BOOST_AUTO_TEST_CASE( newReferenceTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdasda" ));
+	LuaReference tReference00;
+	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1, -3 ));
+	LuaReference tReference01;
+	BOOST_REQUIRE_NO_THROW( tReference01 = fRawStack.newReference( -1, -2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, tReference00 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 25 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -1, tReference01 ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "asdasda" );
+}
+
+BOOST_AUTO_TEST_CASE( newReferenceTest02 )
+{
+	LuaReference tReference00;
+	BOOST_CHECK_THROW( tReference00 = fRawStack.newReference( -1 ), Exception::IndexError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
+}
+
+BOOST_AUTO_TEST_CASE( newReferenceTest03 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	LuaReference tReference00;
+	BOOST_CHECK_THROW( tReference00 = fRawStack.newReference( -1, -2 ), Exception::IndexError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
+
+BOOST_AUTO_TEST_CASE( newReferenceTest04 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	LuaReference tReference00;
+	BOOST_CHECK_THROW( tReference00 = fRawStack.newReference( -1, -2 ), Exception::TypeError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+}
+
+BOOST_AUTO_TEST_CASE( newReferenceTest05 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	LuaReference tReference00;
+	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1, -2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryTable, tReference00 ));
+	BOOST_CHECK( fRawStack.getType() == NIL );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
 
 
 
 BOOST_AUTO_TEST_CASE( dereferenceTest00 )
 {
-
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	LuaReference tReference00;
+	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.dereference( tReference00 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( LuaRegistryTable, tReference00 ));
+	BOSOT_CHECK( fRawStack.getType() == NIL );
 }
 
-
-
-BOOST_AUTO_TEST_CASE( registerLibraryTest00 )
+BOOST_AUTO_TEST_CASE( dereferenceTest01 )
 {
-
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdasda" ));
+	LuaReference tReference00;
+	BOOST_REQUIRE_NO_THROW( tReference00 = fRawStack.newReference( -1, -2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+	BOOST_REQUIRE_NO_THROW( fRawStack.dereference( tReference01, -1 ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "asdasda" );
+	BOOST_REQUIRE_NO_THROW( fRawStack.getRawTableField( -2, tReference00 ));
+	BOSOT_CHECK( fRawStack.getType() == NIL );
 }
 
-
-
-BOOST_AUTO_TEST_CASE( registerFunctionTest00 )
+BOOST_AUTO_TEST_CASE( dereferenceTest02 )
 {
+	LuaReference tReference00 = 123123;
+	BOOST_CHECK_NO_THROW( tReference00 = fRawStack.deReference( tReference ));
+	BOOST_CHECK( fRawStack.getType() == NIL );
+}
 
+BOOST_AUTO_TEST_CASE( dereferenceTest03 )
+{
+	LuaReference tReference00 = 123123;
+	BOOST_CHECK_THROW( tReference00 = fRawStack.deReference( tReference00, -2 ), Exception::IndexError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
 
 
 BOOST_AUTO_TEST_CASE( registerValueTest00 )
 {
-
+	
 }
 
 
@@ -476,6 +578,31 @@ BOOST_AUTO_TEST_CASE( getMetaFieldTest00 )
 BOOST_AUTO_TEST_CASE( getMetaTableTest00 )
 {
 
+}
+
+
+
+BOOST_AUTO_TEST_CASE( getGlobalTest00 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doString( "var = 23" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "var" ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
+}
+
+BOOST_AUTO_TEST_CASE( getGlobalTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.doString( "var = 23" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "varr" ));
+	BOOST_CHECK( fRawStack.getType() == NIL );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+}
+
+BOOST_AUTO_TEST_CASE( getGlobalTest02 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "var" ));
+	BOOST_CHECK( fRawStack.getType() == NIL );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
 

@@ -51,6 +51,15 @@ public:
 };
 
 /**
+ * Thrown when function returns an unexpected number of arguments
+ */
+class UnexpectedReturnError : public LuaError
+{
+public:
+	using StackError::StackError;
+}
+
+/**
  * Thrown when there is an error concerning State
  */
 class StateError : public std::runtime_error
@@ -87,12 +96,12 @@ public:
 };
 
 /**
- * Thrown when function returns an unexpected number of arguments
+ * Thrown when a reserved name is used, for example when creating meta tables.
  */
-class UnexpectedReturnError : public LuaError
+class ReservedNameError : public StackError
 {
 public:
 	using StackError::StackError;
-}
+};
 
 }
