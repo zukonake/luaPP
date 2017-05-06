@@ -14,6 +14,11 @@
 namespace Luna::Exception
 {
 
+class NotImplementedError : public std::logic_error
+{
+	using std::logic_error::logic_error;
+};
+
 /**
  * Thrown when file can't be opened.
  */

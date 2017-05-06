@@ -168,7 +168,6 @@ void RawStack::pushString( StringValue const &value )
 	lua_pushstring( mLuaState, value.c_str());
 }
 
-/* TODO
 void RawStack::pushTable( TableValue const &value )
 {
 	try
@@ -179,9 +178,8 @@ void RawStack::pushTable( TableValue const &value )
 	{
 		throw;
 	}
-	//TODO
+	throw Exception::NotImplementedError( "Luna::RawStack::pushTable" );
 }
-*/
 
 void RawStack::pushLightUserData( LightUserDataValue const &value )
 {
@@ -206,6 +204,7 @@ void RawStack::pushUserData( UserDataValue const &value )
 	{
 		throw;
 	}
+	throw Exception::NotImplementedError( "Luna::RawStack::pushUserData" );
 	//TODO
 }
 
@@ -433,9 +432,9 @@ StringValue RawStack::toString( Index const &index ) const
 	return lua_tostring( mLuaState, index );
 }
 
-/* TODO
 TableValue RawStack::toTable( Index const &index ) const
 {
+	throw Exception::NotImplementedError( "Luna::RawStack::toTable" );/*
 	TableValue returnValue;
 	try
 	{
@@ -452,9 +451,8 @@ TableValue RawStack::toTable( Index const &index ) const
 		if( getType() == NUMBER )
 		{
 			returnValue.operator[]( toNumber()) =
-	}
+	}*/
 }
-*/
 
 LightUserDataValue RawStack::toLightUserData( Index const &index ) const
 {

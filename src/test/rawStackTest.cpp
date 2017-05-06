@@ -593,7 +593,7 @@ BOOST_AUTO_TEST_CASE( toTableTest02 )
 BOOST_AUTO_TEST_CASE( toLightUserDataTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushLightUserData( new int( 35 )));
-	BOOST_CHECK_EQUAL( *static_cast< int * >( fRawStack.toLightUserData()));
+	BOOST_CHECK_EQUAL( *static_cast< int * >( fRawStack.toLightUserData()), 35 );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 	BOOST_CHECK_NO_THROW( delete static_cast< int * >( fRawStack.toLightUserData()));
 }
@@ -615,22 +615,24 @@ BOOST_AUTO_TEST_CASE( toLightUserDataTest02 )
 
 BOOST_AUTO_TEST_CASE( toUserDataTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( new int( 35 )));
-	BOOST_CHECK_EQUAL( *static_cast< int * >( fRawStack.toUserData()));
+	BOOST_REQUIRE_NO_THROW( fRawStack.newUserData( sizeof( int )));
+	BOOST_CHECK_NO_THROW( *static_cast< int * >( fRawStack.toUserData()) = 96 );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
-	BOOST_CHECK_NO_THROW( delete static_cast< int * >( fRawStack.toLightUserData()));
+	BOOST_CHECK_EQUAL( *static_cast< int * >( fRawStack.toUserData()), 96 );
+	BOOST_CHECK_NO_THROW( delete static_cast< int * >( fRawStack.toUserData()));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
-BOOST_AUTO_TEST_CASE( toLightUserDataTest01 )
+BOOST_AUTO_TEST_CASE( toUserDataTest01 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
-	BOOST_CHECK_THROW( fRawStack.toLightUserData(), Exception::TypeError );
+	BOOST_CHECK_THROW( fRawStack.toUserData(), Exception::TypeError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 }
 
-BOOST_AUTO_TEST_CASE( toLightUserDataTest02 )
+BOOST_AUTO_TEST_CASE( toUserDataTest02 )
 {
-	BOOST_CHECK_THROW( fRawStack.toLightUserData(), Exception::IndexError );
+	BOOST_CHECK_THROW( fRawStack.toUserData(), Exception::IndexError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
@@ -638,28 +640,94 @@ BOOST_AUTO_TEST_CASE( toLightUserDataTest02 )
 
 BOOST_AUTO_TEST_CASE( toFunctionTest00 )
 {
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushFunction( testFunction ));
+	BOOST_CHECK_EQUAL( (fRawStack.toFunction())( fRawStack.getLuaState()), 1 );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
 
+BOOST_AUTO_TEST_CASE( toFunctionTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
+	BOOST_CHECK_THROW( fRawStack.toFunction(), Exception::TypeError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
+
+BOOST_AUTO_TEST_CASE( toFunctionTest02 )
+{
+	BOOST_CHECK_THROW( fRawStack.toFunction(), Exception::IndexError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
 
 
 BOOST_AUTO_TEST_CASE( toThreadTest00 )
 {
+	BOOST_REQUIRE_NO_THROW( fRawStack.newThread());
+	BOOST_CHECK_NO_THROW( fRawStack.toThread()); //TODO test if the thread actually works fine
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
 
+BOOST_AUTO_TEST_CASE( toThreadTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
+	BOOST_CHECK_THROW( fRawStack.toThread(), Exception::TypeError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
+
+BOOST_AUTO_TEST_CASE( toThreadTest02 )
+{
+	BOOST_CHECK_THROW( fRawStack.toThread(), Exception::IndexError );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
 
 
 BOOST_AUTO_TEST_CASE( getLengthTest00 )
 {
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 1, 2 )); 
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "10" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asda" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdas" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, 1 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_CHECK_EQUAL( fRawStack.getLength(), 3 );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
+}
 
+BOOST_AUTO_TEST_CASE( getLengthTest01 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "xd_asd l" ));
+	BOOST_CHECK_EQUAL( fRawStack.getLength(), 8 );
+}
+
+BOOST_AUTO_TEST_CASE( getLengthTest02 )
+{
+	BOOST_CHECK_THROW( fRawStack.getLength(), Exception::IndexError );
 }
 
 
 
 BOOST_AUTO_TEST_CASE( getTypeTest00 )
 {
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
+	BOOST_CHECK( fRawStack.getType() == STRING );
+}
 
+BOOST_AUTO_TEST_CASE( getTypeTest01 )
+{
+	BOOST_CHECK_THROW( fRawStack.getType(), Exception::IndexError );
+}
+
+BOOST_AUTO_TEST_CASE( getTypeTest02 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 25 ));
+	BOOST_CHECK( fRawStack.getType( -1 ) == NUMBER );
+	BOOST_CHECK( fRawStack.getType( -2 ) == STRING );
 }
 
 
