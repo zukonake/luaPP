@@ -118,6 +118,7 @@ public:
 	
 	
 	
+	//TODO Replace with template< typename T > void pushValue( T const &value ) const;?
 	/**
 	 * Pushes a nil value onto the stack.
 	 */
@@ -138,20 +139,20 @@ public:
 	 */
 	void pushString( StringValue const &value );
 	
-	/* TODO
+	/**
 	 * Pushes a table onto the stack.
-	 *
-	void pushTable( TableValue const &value ); */
+	 */
+	void pushTable( TableValue const &value );
 	
 	/**
 	 * Pushes a LightUserData onto the stack.
 	 */
 	void pushLightUserData( LightUserDataValue const &value );
 	
-	/**
+	/** 
 	 * Pushes a UserData onto the stack.
 	 */
-	void pushUserData( UserDataValue const &value ); //TODO
+	void pushUserData( UserDataValue const &value );
 	
 	/**
 	 * Pushes a function onto the stack.
@@ -255,6 +256,7 @@ public:
 	
 	
 	
+	//TODO Replace with template< typename T > T toValue( Index const &index = 0 ) const;?
 	/**
 	 * Get the value of a number on the stack.
 	 *
@@ -282,14 +284,14 @@ public:
 	 */
 	StringValue toString( Index const &index = -1 ) const;
 	
-	/* TODO
+	/**
 	 * Get the value of a table on the stack.
 	 *
 	 * @param index Index to the table.
 	 *
 	 * @return Value of the table.
-	 *
-	TableValue toTable( Index const &index = -1 ) const; */
+	 */
+	TableValue toTable( Index const &index = -1 ) const;
 	
 	/**
 	 * Get the value of a light user data on the stack.
@@ -447,6 +449,15 @@ public:
 	 * @return Type of the pushed value.
 	 */
 	Type getUserValue( Index const &userData );
+
+	/**
+	 * Pushes a value associated with user data.
+	 *
+	 * @param userData User data value.
+	 *
+	 * @return Type of the pushed value.
+	 */
+	Type getUserValue( UserDataValue const &userData );
 	
 	/**
 	 * Pushes a global variable onto the stack.
@@ -546,6 +557,14 @@ public:
 	 * @param value Index to the value.
 	 */
 	void setUserValue( Index const &userData, Index const &value );
+
+	/**
+	 * Associates a value to a user data.
+	 *
+	 * @param userData UserData value.
+	 * @param value Index to the value.
+	 */
+	void setUserValue( UserDataValue const &userData, Index const &value );
 	
 	
 	
