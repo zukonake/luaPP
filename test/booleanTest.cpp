@@ -2,7 +2,7 @@
 //
 #include <luna/typedef.hpp>
 #include <luna/element/boolean.hpp>
-#include <test/rawStackFixture.hpp>
+#include <rawStackFixture.hpp>
 
 namespace Luna::Test
 {

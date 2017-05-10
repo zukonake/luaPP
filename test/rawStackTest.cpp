@@ -4,7 +4,7 @@
 //
 #include <luna/exception.hpp>
 #include <luna/typedef.hpp>
-#include <test/rawStackFixture.hpp>
+#include <rawStackFixture.hpp>
 
 namespace Luna::Test
 {

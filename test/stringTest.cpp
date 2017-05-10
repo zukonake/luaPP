@@ -5,7 +5,7 @@
 #include <luna/typedef.hpp>
 #include <luna/rawStack.hpp>
 #include <luna/element/string.hpp>
-#include <test/rawStackFixture.hpp>
+#include <rawStackFixture.hpp>
 
 namespace Luna::Test::Test
 {

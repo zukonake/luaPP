@@ -3,7 +3,7 @@
 #include <luna/typedef.hpp>
 #include <luna/auxiliary.hpp>
 #include <luna/element/element.hpp>
-#include <test/rawStackFixture.hpp>
+#include <rawStackFixture.hpp>
 
 namespace Luna::Test
 {

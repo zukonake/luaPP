@@ -1,8 +1,10 @@
 SOURCE_DIR = src
-INCLUDE_DIR = include
 OBJ_DIR = bin
 DOC_DIR = doc
 DEPEND_DIR = depend
+INCLUDE_DIR = include
+LIB_DIR = lib
+
 TEST_DIR = test
 
 VERSION_STAGE = alpha
@@ -15,26 +17,17 @@ TARGET = lib$(BASE_NAME)-$(VERSION_MAJOR)-$(VERSION_MINOR)-$(VERSION_PATCH)-$(VE
 TARGET_LINK = lib$(BASE_NAME).so
 BASE_NAME_DEFINE = $(shell echo $(BASE_NAME) | tr '[:lower:]' '[:upper:]')
 
-CPP_FILES = $(shell find $(SOURCE_DIR) -path $(SOURCE_DIR)/$(TEST_DIR) -prune -o -type f -name "*.cpp" -printf '%p ')
+CPP_FILES = $(shell find $(SOURCE_DIR) -type f -name "*.cpp" -printf '%p ')
 OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(CPP_FILES))))
 
-TEST_CPP_FILES = $(shell find $(SOURCE_DIR)/$(TEST_DIR) -type f -name "*.cpp" -printf '%p ')
-TEST_OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(TEST_CPP_FILES))))
-
-LIBS = -llua
-ifeq ($(MAKECMDGOALS),test)
-LIBS += -lboost_unit_test_framework
-endif
 VERSION_FLAGS=-D$(BASE_NAME_DEFINE)_VERSION_STAGE="$(VERSION_STAGE)" -D$(BASE_NAME_DEFINE)_VERSION_MAJOR="$(VERSION_MAJOR)" -D$(BASE_NAME_DEFINE)_VERSION_MINOR="$(VERSION_MINOR)" -D$(BASE_NAME_DEFINE)_VERSION_PATCH="$(VERSION_PATCH)"
 DEBUG_FLAGS = -g -O0 -DDEBUG
 WARNING_FLAGS = -Wall -Wextra
-INCLUDE_FLAGS = -I include
-LIB_FLAGS =
-COMPILER = g++
-COMPILER_FLAGS = -std=c++17 -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) $(VERSION_FLAGS)
-
-COMPILE = $(COMPILER) $(COMPILER_FLAGS)
-LINK = $(COMPILER) $(COMPILER_FLAGS) $(LIBS) $(LIB_FLAGS) $(OBJ_FILES)
+STD = --std=c++17
+INCLUDES = -I $(SOURCE_DIR) -I $(INCLUDE_DIR)
+LDLIBS = -llua
+LDFLAGS = $(INCLUDES) $(STD) -shared -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) -L $(LIB_DIR) $(VERSION_FLAGS)
+CXXFLAGS = $(INCLUDES) $(STD) -fPIC $(WARNING_FLAGS) $(DEBUG_FLAGS) $(VERSION_FLAGS)
 
 PREFIX = /usr/lib
 DOXYFILE = Doxyfile
@@ -42,28 +35,29 @@ DOXYFILE = Doxyfile
 .PHONY : clean install uninstall test doc
 
 $(TARGET) : $(OBJ_FILES)
-	$(LINK) -shared -o $@
-
-test: $(TEST_OBJ_FILES) $(OBJ_FILES)
-	$(LINK) $(TEST_OBJ_FILES) -o $@.out
+	$(CXX) $(LDFLAGS) $(OBJ_FILES) -o $@
 
 .SECONDEXPANSION:
 $(OBJ_DIR)/%.o : $$(shell find $(SOURCE_DIR) -type f -name %.cpp)
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(DEPEND_DIR)
-	$(COMPILE) -c $< -o $@
-	$(COMPILE) -MM $< > $(DEPEND_DIR)/$*.d
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -MM $< > $(DEPEND_DIR)/$*.d
 	@sed -i '1s/^/$(OBJ_DIR)\//' $(DEPEND_DIR)/$*.d
 
 install: $(TARGET)
 	install -m 755 $(TARGET) $(PREFIX)/$(TARGET)
-	ln -sf $(PREFIX)/$(TARGET) $(PREXIX)/$(TARGET_LINK)
+	ln -sf $(PREFIX)/$(TARGET) $(PREFIX)/$(TARGET_LINK)
 
 uninstall:
-	rm -f $(PREFIX)/$(TARGET) $(PREFIX)/$(TARGET_LINK)
+	$(RM) -f $(PREFIX)/$(TARGET) $(PREFIX)/$(TARGET_LINK)
 
 clean :
-	$(RM) -r $(OBJ_DIR) $(DEPEND_DIR) $(TARGET) test.out $(DOC_DIR)
+	$(RM) -r $(OBJ_DIR) $(DEPEND_DIR) $(TARGET) $(DOC_DIR)
+	$(MAKE) -C ./$(TEST_DIR) clean
+
+test : $(OBJ_FILES)
+	$(MAKE) -C ./$(TEST_DIR)
 
 doc :
 	@mkdir -p $(DOC_DIR)
