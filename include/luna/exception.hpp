@@ -14,6 +14,7 @@
 namespace Luna::Exception
 {
 
+//TODO
 class NotImplementedError : public std::logic_error
 {
 	using std::logic_error::logic_error;
@@ -24,7 +25,6 @@ class NotImplementedError : public std::logic_error
  */
 class FileError : public std::runtime_error
 {
-public:
 	using std::runtime_error::runtime_error;
 };
 
@@ -33,7 +33,6 @@ public:
  */
 class AllocationError : public std::runtime_error
 {
-public:
 	using std::runtime_error::runtime_error;
 };
 
@@ -42,8 +41,15 @@ public:
  */
 class LuaError : public std::runtime_error
 {
-public:
 	using std::runtime_error::runtime_error;
+};
+
+/**
+ * Thrown when an invalid key is used to access a table
+ */
+class KeyError : public LuaError
+{
+	using LuaError::LuaError;
 };
 
 /**
@@ -51,7 +57,6 @@ public:
  */
 class SyntaxError : public LuaError
 {
-public:
 	using LuaError::LuaError;
 };
 
@@ -60,7 +65,6 @@ public:
  */
 class UnexpectedReturnError : public LuaError
 {
-public:
 	using LuaError::LuaError;
 };
 
@@ -69,7 +73,6 @@ public:
  */
 class StateError : public std::runtime_error
 {
-public:
 	using std::runtime_error::runtime_error;
 };
 
@@ -78,7 +81,6 @@ public:
  */
 class StackError : public StateError
 {
-public:
 	using StateError::StateError;
 };
 
@@ -87,7 +89,6 @@ public:
  */
 class IndexError : public StackError
 {
-public:
 	using StackError::StackError;
 };
 
@@ -96,7 +97,6 @@ public:
  */
 class TypeError : public StackError
 {
-public:
 	using StackError::StackError;
 };
 
@@ -105,7 +105,6 @@ public:
  */
 class ReservedNameError : public StackError
 {
-public:
 	using StackError::StackError;
 };
 

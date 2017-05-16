@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE( atTest01 )
 
 BOOST_AUTO_TEST_CASE( loadGlobalTest00 )
 {	
-	BOOST_REQUIRE_NO_THROW( fStack.doFile( "src/test/stackTest.lua" ));
+	BOOST_REQUIRE_NO_THROW( fStack.doFile( "stackTest.lua" ));
 	Number tNumber00 = fStack.loadGlobal< Number >( "var" );
 	BOOST_CHECK_EQUAL( tNumber00, 234 );
 }
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE( loadGlobalTest01 )
 
 BOOST_AUTO_TEST_CASE( loadGlobalTest02 )
 {	
-	BOOST_REQUIRE_NO_THROW( fStack.doFile( "src/test/stackTest.lua" ));
+	BOOST_REQUIRE_NO_THROW( fStack.doFile( "stackTest.lua" ));
 	BOOST_CHECK_THROW( fStack.loadGlobal< String >( "var" ), Exception::TypeError );
 }
 

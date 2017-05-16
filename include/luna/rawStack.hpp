@@ -475,7 +475,7 @@ public:
 	 *
 	 * Desired value is the value on the top of the stack.
 	 * %Index/key of the field is the value one Index below the value.
-	 * Value and %index/key will be popped.
+	 * Value and key will be popped.
 	 *
 	 * @param table Index to the table.
 	 */
@@ -506,7 +506,7 @@ public:
 	 *
 	 * Desired value is the value on the top of the stack.
 	 * %Index/key of the field is the value one Index below the value.
-	 * Value and %index/key will be popped.
+	 * Value and key will be popped.
 	 *
 	 * @param table Index to the table.
 	 */
@@ -653,10 +653,10 @@ public:
 	/**
 	 * Iterates over a table.
 	 *
-	 * Pops the %index/key at the top of the stack to use when iterating.
-	 * If table isn't fully iterated, pushes the %index/key to the new
+	 * Pops the key at the top of the stack to use when iterating.
+	 * If table isn't fully iterated, pushes the key to the new
 	 * value and the value itself. If the table has been fully iterated,
-	 * it pushes no next %index/key or value. %Index/key of type nil
+	 * it pushes no next key or value. %Index/key of type nil
 	 * symbolizes beginning of the table.
 	 *
 	 * @param index Index to the table.

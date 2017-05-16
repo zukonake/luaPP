@@ -13,7 +13,7 @@ BOOST_FIXTURE_TEST_SUITE( rawStackTest, RawStackFixture );
 
 BOOST_AUTO_TEST_CASE( loadFileTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.loadFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.loadFile( "test.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.call());
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testString" ));
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "test" );
@@ -22,13 +22,13 @@ BOOST_AUTO_TEST_CASE( loadFileTest00 )
 
 BOOST_AUTO_TEST_CASE( loadFileTest01 )
 {
-	BOOST_CHECK_THROW( fRawStack.loadFile( "test/nofile.lua" ), Exception::FileError );
+	BOOST_CHECK_THROW( fRawStack.loadFile( "nofile.lua" ), Exception::FileError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
 BOOST_AUTO_TEST_CASE( loadFileTest02 )
 {
-	BOOST_CHECK_THROW( fRawStack.loadFile( "test/badTest.lua" ), Exception::SyntaxError );
+	BOOST_CHECK_THROW( fRawStack.loadFile( "badTest.lua" ), Exception::SyntaxError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE( loadStringTest01 )
 
 BOOST_AUTO_TEST_CASE( doFileTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testString" ));
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "test" );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
@@ -61,13 +61,13 @@ BOOST_AUTO_TEST_CASE( doFileTest00 )
 
 BOOST_AUTO_TEST_CASE( doFileTest01 )
 {
-	BOOST_CHECK_THROW( fRawStack.doFile( "test/nofile.lua" ), Exception::FileError );
+	BOOST_CHECK_THROW( fRawStack.doFile( "nofile.lua" ), Exception::FileError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
 BOOST_AUTO_TEST_CASE( doFileTest02 )
 {
-	BOOST_CHECK_THROW( fRawStack.doFile( "test/badTest.lua" ), Exception::SyntaxError );
+	BOOST_CHECK_THROW( fRawStack.doFile( "badTest.lua" ), Exception::SyntaxError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 0 );
 }
 
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE( doStringTest01 )
 
 BOOST_AUTO_TEST_CASE( callTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.loadFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.loadFile( "test.lua" ));
 	BOOST_CHECK_NO_THROW( fRawStack.call( -1 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 1 );
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE( callTest02 )
 
 BOOST_AUTO_TEST_CASE( callTest03 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test2.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE( callTest03 )
 
 BOOST_AUTO_TEST_CASE( callTest04 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test2.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE( callTest04 )
 
 BOOST_AUTO_TEST_CASE( callTest05 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test2.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
 	BOOST_CHECK_THROW( fRawStack.call( -1, 3, 0 ), Exception::UnexpectedReturnError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE( callTest05 )
 
 BOOST_AUTO_TEST_CASE( callTest06 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test2.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( callTest06 )
 
 BOOST_AUTO_TEST_CASE( callTest07 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test2.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test2.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE( callTest07 )
 //TODO check for args
 BOOST_AUTO_TEST_CASE( callMetaMethodTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testStuff" ));
 	BOOST_CHECK_NO_THROW( fRawStack.callMetaMethod( -1, "toString" ));
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "Is this of workingz?" );
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE( callMetaMethodTest01 )
 
 BOOST_AUTO_TEST_CASE( callMetaMethodTest02 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testStuff" ));
 	BOOST_CHECK_THROW( fRawStack.callMetaMethod( -1, "nope" ), Exception::StackError );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
@@ -734,14 +734,121 @@ BOOST_AUTO_TEST_CASE( getTypeTest02 )
 
 BOOST_AUTO_TEST_CASE( getTableFieldTest00 )
 {
-	
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 1, 2 )); 
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "10" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asda" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdas" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, 1 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asda" ));
+	BOOST_CHECK_NO_THROW( fRawStack.getTableField( -2 ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "10" );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
 }
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest01 )
+{
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1 ), Exception::IndexError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest02 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1 ), Exception::TypeError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest03 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 0, 0 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
+	BOOST_CHECK_THROW( fRawStack.getTableField( -2 ), Exception::TypeError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest04 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 0, 0 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 1 ));
+	BOOST_CHECK_THROW( fRawStack.getTableField( -2 ), Exception::KeyError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest05 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 1, 2 )); 
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "10" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asda" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdas" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, 1 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_CHECK_NO_THROW( fRawStack.getTableField( -1, 1 ));
+	BOOST_CHECK_EQUAL( fRawStack.toNumber(), 23 );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest06 )
+{
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1, 1 ), Exception::IndexError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest07 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1, 1 ), Exception::TypeError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest08 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 0, 0 ));
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1, 1 ), Exception::KeyError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest09 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 1, 2 )); 
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 23 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asd" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "10" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, "asda" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushString( "asdas" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.setRawTableField( -2, 1 ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.pop());
+	BOOST_CHECK_NO_THROW( fRawStack.getTableField( -1, "asda" ));
+	BOOST_CHECK_EQUAL( fRawStack.toString(), "10" );
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest10 )
+{
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1, "a" ), Exception::IndexError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest11 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1, "a" ), Exception::TypeError );
+}
+
+BOOST_AUTO_TEST_CASE( getTableFieldTest12 )
+{
+	BOOST_REQUIRE_NO_THROW( fRawStack.newTable( 0, 0 ));
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1, "a" ), Exception::KeyError );
+}
+//TODO check for meta methods
 
 
 
 BOOST_AUTO_TEST_CASE( getRawTableFieldTest00 )
 {
-
+	BOOST_CHECK_THROW( fRawStack.getTableField( -1 ), Exception::IndexError );
 }
 
 
@@ -1132,7 +1239,7 @@ BOOST_AUTO_TEST_CASE( swapTest03 )
 //TODO iterate is a subject to more tests
 BOOST_AUTO_TEST_CASE( iterateTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testTable" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
 	BOOST_CHECK_NO_THROW( fRawStack.iterate( -2 ));
@@ -1141,7 +1248,7 @@ BOOST_AUTO_TEST_CASE( iterateTest00 )
 
 BOOST_AUTO_TEST_CASE( iterateTest01 )
 {
-	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test/test.lua" ));
+	BOOST_REQUIRE_NO_THROW( fRawStack.doFile( "test.lua" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "simpleTable" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNil());
 	while( fRawStack.iterate( -2 ))

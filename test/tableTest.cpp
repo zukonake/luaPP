@@ -14,7 +14,7 @@ BOOST_FIXTURE_TEST_SUITE( tableTest, StackFixture );
 
 BOOST_AUTO_TEST_CASE( atTest00 )
 {
-	BOOST_REQUIRE_NO_THROW( fStack.doFile( "src/test/tableTest.lua" ));
+	BOOST_REQUIRE_NO_THROW( fStack.doFile( "tableTest.lua" ));
 	Table tTable01 = fStack.loadGlobal< Table >( "test" );
 	BOOST_CHECK_EQUAL( tTable01.get< Number >( "var" ), 12 );
 	BOOST_CHECK_EQUAL( tTable01.get< String >( "var1" ), "test" );
