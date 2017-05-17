@@ -83,7 +83,9 @@ Size RawStack::call( Index const &index, Size const &returnNumber, Size const &a
 	try
 	{
 		validate( index, FUNCTION );
-		copy(); //We copy because pcall pops the function later
+		validate( getSize() + arguments ); //If the last argument is valid, all of them are
+		copy( index ); //We copy because pcall pops the function later
+		insert( getSize() - arguments ); //The function needs to be before arguments
 		if( returnNumber != LuaMultiReturn )
 		{
 			allocate( returnNumber );
