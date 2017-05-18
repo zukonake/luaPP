@@ -97,7 +97,13 @@ Size RawStack::call( Index const &index, Size const &returnNumber, Size const &a
 	}
 	Size before = getSize();
 	checkForError( static_cast< ReturnCode >( lua_pcall( mLuaState, arguments, returnNumber, 0 )));
-	return getSize() - before;
+	Size returned = getSize() - before;
+	if( retured != returnNumber )
+	{
+		throw Exception::UnexpectedReturnError( "Luna::RawStack::call: returned " +
+			to_string( returned ) + " values instead of " + to_string( returnNumber ));
+	}
+	return returned;
 }
 
 void RawStack::callMetaMethod( Index const &index, std::string const &name )
@@ -112,7 +118,8 @@ void RawStack::callMetaMethod( Index const &index, std::string const &name )
 	}
 	if( !luaL_callmeta( mLuaState, index, name.c_str()))
 	{
-		throw Exception::StackError( "Luna::RawStack::callMetaMethod: table at index: " + std::to_string( index ) + " has no meta table or the meta table has no method: " + name );
+		throw Exception::StackError( "Luna::RawStack::callMetaMethod: table at index: " +
+			std::to_string( index ) + " has no meta table or the meta table has no method: " + name );
 	}
 }
 
@@ -296,7 +303,8 @@ void RawStack::newMetaTable( std::string const &name )
 	}
 	if( !luaL_newmetatable( mLuaState, name.c_str()))
 	{
-		throw Exception::StackError( "Luna::RawStack::newMetaTable: meta table: " + name + " already exists in the registry" );
+		throw Exception::StackError( "Luna::RawStack::newMetaTable: meta table: " +
+			name + " already exists in the registry" );
 	}
 }
 
@@ -554,7 +562,8 @@ Type RawStack::getTableField( Index const &table )
 	}
 	if( getType() != STRING && getType() != NUMBER )
 	{
-		throw Exception::TypeError( "Luna::RawStack::getTableField: type " + Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
+		throw Exception::TypeError( "Luna::RawStack::getTableField: type " +
+			Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
 	}
 	return static_cast< Type >( lua_gettable( mLuaState, table ));
 }
@@ -604,7 +613,8 @@ Type RawStack::getRawTableField( Index const &table )
 	}
 	if( getType() != STRING && getType() != NUMBER )
 	{
-		throw Exception::TypeError( "Luna::RawStack::getRawTableField: type " + Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
+		throw Exception::TypeError( "Luna::RawStack::getRawTableField: type " +
+			Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
 	}
 	return static_cast< Type >( lua_rawget( mLuaState, table ));
 }
@@ -716,7 +726,8 @@ void RawStack::setTableField( Index const &table )
 	}
 	if( getType( -2 ) != STRING && getType( -2 ) != NUMBER )
 	{
-		throw Exception::TypeError( "Luna::RawStack::setTableField: type " + Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
+		throw Exception::TypeError( "Luna::RawStack::setTableField: type " +
+			Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
 	}
 	lua_settable( mLuaState, table );
 }
@@ -764,7 +775,8 @@ void RawStack::setRawTableField( Index const &table )
 	}
 	if( getType( -2 ) != STRING && getType( -2 ) != NUMBER )
 	{
-		throw Exception::TypeError( "Luna::RawStack::setRawTableField: type " + Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
+		throw Exception::TypeError( "Luna::RawStack::setRawTableField: type " + 
+			Auxiliary::getTypeName( getType()) + " can't be used as a table index/key" );
 	}
 	lua_rawset( mLuaState, table );
 }
@@ -905,7 +917,8 @@ void RawStack::pop( Size const &space )
 {
 	if( getSize() < space )
 	{
-		throw Exception::StackError( "Luna::RawStack::pop: tried to pop " + std::to_string( space ) + " elements while the stack has only " + std::to_string( getSize()));
+		throw Exception::StackError( "Luna::RawStack::pop: tried to pop " + 
+			std::to_string( space ) + " elements while the stack has only " + std::to_string( getSize()));
 	}
 	lua_pop( mLuaState, space );
 }
@@ -996,7 +1009,10 @@ bool RawStack::iterate( Index const &index )
 
 bool RawStack::isValid( Index const & index ) const noexcept
 {
-	return ( index != 0 && index >= -(( Index )getSize()) && index <= ( Index )getSize()) || index == LuaRegistryIndex;
+	return ( index != 0 &&
+		index >= -(( Index )getSize()) &&
+		index <= ( Index )getSize())
+		|| index == LuaRegistryIndex;
 }
 
 
@@ -1043,7 +1059,8 @@ void RawStack::allocate( Size const &space )
 {
 	if( !lua_checkstack( mLuaState, space ))
 	{
-		throw Exception::AllocationError( "Luna::RawStack::allocate: couldn't allocate: " + std::to_string( space ) + " space" );
+		throw Exception::AllocationError( "Luna::RawStack::allocate: couldn't allocate: " +
+			std::to_string( space ) + " space" );
 	}
 }
 
@@ -1051,7 +1068,8 @@ void RawStack::validate( Index const &index ) const
 {
 	if( !isValid( index ))
 	{
-		throw Exception::IndexError( "Luna::RawStack::validate: couldn't validate index: " + std::to_string( index ));
+		throw Exception::IndexError( "Luna::RawStack::validate: couldn't validate index: " +
+			std::to_string( index ));
 	}
 }
 
@@ -1060,7 +1078,9 @@ void RawStack::validate( Index const &index, Type const &type ) const
 	Type check = getType( index );
 	if( check != type )
 	{
-		throw Exception::TypeError( "Luna::RawStack::validate: type " + Auxiliary::getTypeName( check ) + " instead of " + Auxiliary::getTypeName( type ) + " type" );
+		throw Exception::TypeError( "Luna::RawStack::validate: type " +
+			Auxiliary::getTypeName( check ) + " instead of " +
+			Auxiliary::getTypeName( type ) + " type" );
 	}
 }
 
