@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <string>
@@ -77,31 +78,29 @@ Size RawStack::doString( std::string const &value, Size const &returnNumber, Siz
 }
 
 
-
+//TODO change arg and return sequence
 Size RawStack::call( Index const &index, Size const &returnNumber, Size const &arguments )
 {
+	Size before = getSize() - arguments;
 	try
 	{
 		validate( index, FUNCTION );
-		validate( getSize() + arguments ); //If the last argument is valid, all of them are
+		validate( arguments + 1 ); //TODO
 		copy( index ); //We copy because pcall pops the function later
-		insert( getSize() - arguments ); //The function needs to be before arguments
-		if( returnNumber != LuaMultiReturn )
-		{
-			allocate( returnNumber );
-		}
+		insert(getSize() - arguments); //The function needs to be before arguments
 	}
 	catch( ... )
 	{
 		throw;
 	}
-	Size before = getSize();
-	checkForError( static_cast< ReturnCode >( lua_pcall( mLuaState, arguments, returnNumber, 0 )));
+	checkForError( static_cast< ReturnCode >( lua_pcall( mLuaState, arguments, LuaMultiReturn, 0 )));
 	Size returned = getSize() - before;
-	if( retured != returnNumber )
+	std::cout << returned << " " << getSize() << " " << before << "\n";
+	if( returned != returnNumber && ( Index )returnNumber != LuaMultiReturn )
 	{
 		throw Exception::UnexpectedReturnError( "Luna::RawStack::call: returned " +
-			to_string( returned ) + " values instead of " + to_string( returnNumber ));
+			std::to_string( returned ) + " values instead of " +
+			std::to_string( returnNumber ));
 	}
 	return returned;
 }

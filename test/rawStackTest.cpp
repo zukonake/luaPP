@@ -6,15 +6,19 @@
 #include <luna/typedef.hpp>
 #include "rawStackFixture.hpp"
 
+#include <luna/auxiliary.hpp> //TODO
+#include <iostream>
+
 namespace Luna::Test
 {
 
-BOOST_FIXTURE_TEST_SUITE( rawStackTest, RawStackFixture );
+BOOST_FIXTURE_TEST_SUITE( rawStackTest, RawStackFixture,
+	* boost::unit_test::depends_on( "auxiliaryTest" ));
 
 BOOST_AUTO_TEST_CASE( loadFileTest00 )
 {
 	BOOST_REQUIRE_NO_THROW( fRawStack.loadFile( "test.lua" ));
-	BOOST_REQUIRE_NO_THROW( fRawStack.call());
+	fRawStack.call();
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testString" ));
 	BOOST_CHECK_EQUAL( fRawStack.toString(), "test" );
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
@@ -125,8 +129,8 @@ BOOST_AUTO_TEST_CASE( callTest03 )
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
 	BOOST_CHECK_NO_THROW( fRawStack.call( -3, 2, 2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
-	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1 ), 53 );
-	BOOST_CHECK_EQUAL( fRawStack.toString( -2 ), "40" );
+	BOOST_CHECK_EQUAL( fRawStack.toString( -1 ), "40" );
+	BOOST_CHECK_EQUAL( fRawStack.toNumber( -2 ), 53 );
 }
 
 BOOST_AUTO_TEST_CASE( callTest04 )
@@ -153,12 +157,12 @@ BOOST_AUTO_TEST_CASE( callTest06 )
 	BOOST_REQUIRE_NO_THROW( fRawStack.getGlobal( "testFunction" ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 20 ));
 	BOOST_REQUIRE_NO_THROW( fRawStack.pushNumber( 5 ));
-	BOOST_CHECK_NO_THROW( fRawStack.call( -2, LuaMultiReturn, 2 ));
+	BOOST_CHECK_NO_THROW( fRawStack.call( -3, LuaMultiReturn, 2 ));
+	BOOST_CHECK_EQUAL( fRawStack.getSize(), 4 );
+	BOOST_CHECK_EQUAL( fRawStack.toString( -1 ), "40" );
+	BOOST_CHECK_EQUAL( fRawStack.toNumber( -2 ), 53 );
+	BOOST_CHECK_NO_THROW( fRawStack.call( -3, LuaMultiReturn, 2 ));
 	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
-	BOOST_CHECK_NO_THROW( fRawStack.call( -2, LuaMultiReturn, 2 ));
-	BOOST_CHECK_EQUAL( fRawStack.getSize(), 2 );
-	BOOST_CHECK_EQUAL( fRawStack.toNumber( -1 ), 53 );
-	BOOST_CHECK_EQUAL( fRawStack.toString( -2 ), "40" );
 }
 
 BOOST_AUTO_TEST_CASE( callTest07 )

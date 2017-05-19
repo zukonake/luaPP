@@ -9,7 +9,11 @@
 namespace Luna::Test
 {
 
-BOOST_FIXTURE_TEST_SUITE( stackTest, StackFixture );
+BOOST_FIXTURE_TEST_SUITE( stackTest, StackFixture,
+	* boost::unit_test::depends_on( "rawStackTest" )
+	* boost::unit_test::depends_on( "numberTest" )
+	* boost::unit_test::depends_on( "stringTest" )
+	* boost::unit_test::depends_on( "tableTest" ));
 
 BOOST_AUTO_TEST_CASE( atTest00 )
 {

@@ -165,6 +165,6 @@ constexpr Index LuaRegistryIndex = LUA_REGISTRYINDEX;
  *
  * @see RawStack::call 
  */
-constexpr Size LuaMultiReturn = LUA_MULTRET;
+constexpr Index LuaMultiReturn = LUA_MULTRET;
 
 }

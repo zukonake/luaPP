@@ -7,7 +7,9 @@
 namespace Luna::Test
 {
 
-BOOST_FIXTURE_TEST_SUITE( booleanTest, RawStackFixture );
+BOOST_FIXTURE_TEST_SUITE( booleanTest, RawStackFixture,
+	* boost::unit_test::depends_on( "rawStackTest" )
+	* boost::unit_test::depends_on( "elementTest" ));
 
 BOOST_AUTO_TEST_CASE( conversionTest00 )
 {
