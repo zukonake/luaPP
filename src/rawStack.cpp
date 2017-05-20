@@ -33,7 +33,7 @@ void RawStack::loadFile( std::string const &path )
 	}
 	try
 	{
-		checkForError( static_cast< ReturnCode >( luaL_loadfile( mLuaState, path.c_str())));
+		validateReturnCode( static_cast< ReturnCode >( luaL_loadfile( mLuaState, path.c_str())));
 	}
 	catch( ... )
 	{
@@ -54,7 +54,7 @@ void RawStack::loadString( std::string const &value )
 	}
 	try
 	{
-		checkForError( static_cast< ReturnCode >( luaL_loadstring( mLuaState, value.c_str())));
+		validateReturnCode( static_cast< ReturnCode >( luaL_loadstring( mLuaState, value.c_str())));
 	}
 	catch( ... )
 	{
@@ -85,7 +85,7 @@ Size RawStack::call( Index const &index, Size const &returnNumber, Size const &a
 	try
 	{
 		validate( index, FUNCTION );
-		validate( arguments + 1 ); //TODO
+		validateIndex( arguments + 1 ); //TODO
 		copy( index ); //We copy because pcall pops the function later
 		insert(getSize() - arguments); //The function needs to be before arguments
 	}
@@ -93,9 +93,8 @@ Size RawStack::call( Index const &index, Size const &returnNumber, Size const &a
 	{
 		throw;
 	}
-	checkForError( static_cast< ReturnCode >( lua_pcall( mLuaState, arguments, LuaMultiReturn, 0 )));
+	validateReturnCode( static_cast< ReturnCode >( lua_pcall( mLuaState, arguments, LuaMultiReturn, 0 )));
 	Size returned = getSize() - before;
-	std::cout << returned << " " << getSize() << " " << before << "\n";
 	if( returned != returnNumber && ( Index )returnNumber != LuaMultiReturn )
 	{
 		throw Exception::UnexpectedReturnError( "Luna::RawStack::call: returned " +
@@ -109,7 +108,7 @@ void RawStack::callMetaMethod( Index const &index, std::string const &name )
 {
 	try
 	{
-		validate( index );
+		validate( index, TABLE );
 	}
 	catch( ... )
 	{
@@ -233,11 +232,8 @@ void RawStack::pushClosure( FunctionValue const &closure, CaptureSize const &cap
 {
 	try
 	{
+		validateIndex( capture + 1 ); //TODO not sure
 		allocate();
-		for( CaptureSize iElement = 0; iElement < capture; iElement++ )
-		{
-			validate( getSize() - ( Size )( capture - iElement ));
-		}
 	}
 	catch( ... )
 	{
@@ -302,7 +298,8 @@ void RawStack::newMetaTable( std::string const &name )
 	}
 	if( !luaL_newmetatable( mLuaState, name.c_str()))
 	{
-		throw Exception::StackError( "Luna::RawStack::newMetaTable: meta table: " +
+		pop();
+		throw Exception::ReservedNameError( "Luna::RawStack::newMetaTable: meta table: " +
 			name + " already exists in the registry" );
 	}
 }
@@ -351,26 +348,29 @@ LuaReference RawStack::newReference( Index const &value, Index const &table )
 {
 	try
 	{
-		validate( value ); //TODO will crash if the value is set to LuaRegistryIndex
-		validate( table );
+		validateIndex( value ); //TODO will crash if the value is set to LuaRegistryIndex
+		validate( table, TABLE );
 	}
 	catch( ... )
 	{
 		throw;
 	}
-	if( getAbsoluteIndex( value ) != ( Index )getSize()) //The value needs to be at the top of the stack, so we ensure it
+	Index realTable = getAbsoluteIndex( table );
+	Index realValue = getAbsoluteIndex( value );
+	if( realValue != ( Index )getSize()) //The value needs to be at the top of the stack
 	{
 		copy( value );
-		remove( value );
+		remove( value ); // We remove the original value
 	}
-	return luaL_ref( mLuaState, table );
+	LuaReference returnValue = luaL_ref( mLuaState, realTable );
+	return returnValue;
 }
 
-void RawStack::dereference( LuaReference const &reference, Index const &table )
+void RawStack::freeReference( LuaReference const &reference, Index const &table )
 {
 	try
 	{
-		validate( table );
+		validate( table, TABLE );
 		allocate();
 	}
 	catch( ... )
@@ -382,6 +382,8 @@ void RawStack::dereference( LuaReference const &reference, Index const &table )
 		return;
 	}
 	//TODO check whether the reference exists
+	//TODO change element table from stack from registry to some custom one?
+	//TODO set/get table field should pop the value?
 	return luaL_unref( mLuaState, table, reference );
 }
 
@@ -520,12 +522,13 @@ Size RawStack::getLength( Index const &index ) const
 {
 	try
 	{
-		validate( index );
+		validateIndex( index );
 	}
 	catch( ... )
 	{
 		throw;
 	}
+	//TODO luaL_len can result in an error, see manual
 	return luaL_len( mLuaState, index );
 }
 
@@ -534,14 +537,6 @@ Type RawStack::getType( Index const &index ) const
 	if( index == LuaRegistryIndex )
 	{
 		return TABLE;
-	}
-	try
-	{
-		validate( index );
-	}
-	catch( ... )
-	{
-		throw;
 	}
 	return static_cast< Type >( lua_type( mLuaState, index ));
 }
@@ -553,6 +548,7 @@ Type RawStack::getTableField( Index const &table )
 	try
 	{
 		validate( table, TABLE );
+		validateIndex( -1 );
 		allocate();
 	}
 	catch( ... )
@@ -578,8 +574,6 @@ Type RawStack::getTableField( Index const &table, Index const &index )
 	{
 		throw;
 	}
-	pushNil();
-	return NIL;
 	return static_cast< Type >( lua_geti( mLuaState, table, index ));
 }
 
@@ -595,7 +589,7 @@ Type RawStack::getTableField( Index const &table, std::string const &key )
 		throw;
 	}
 	return static_cast< Type >( lua_getfield( mLuaState, table, key.c_str()));
-}
+} //TODO check getters and setters types (test)
 
 
 
@@ -604,6 +598,7 @@ Type RawStack::getRawTableField( Index const &table )
 	try
 	{
 		validate( table, TABLE );
+		validateIndex( -1 );
 		allocate();
 	}
 	catch( ... )
@@ -634,22 +629,19 @@ Type RawStack::getRawTableField( Index const &table, Index const &index )
 
 Type RawStack::getRawTableField( Index const &table, std::string const &key )
 {
-	Index realTable;
-	if( table != LuaRegistryIndex )
-	{
-		realTable = getAbsoluteIndex( table );
-	}
+	Index realTable = getAbsoluteIndex( table );
 	try
 	{
-		validate( table == LuaRegistryIndex ? table : realTable, TABLE );
-		pushString( key ); //Key at top of the stack used by lua_rawget, unfortunately strings can't be used directly
+		validate( table, TABLE );
+		pushString( key ); // Key at top of the stack used by lua_rawget
+						   // unfortunately strings can't be used directly
 		allocate();
 	}
 	catch( ... )
 	{
 		throw;
-	}
-	return static_cast< Type >( lua_rawget( mLuaState, realTable));
+	} //TODO try catch might not be needed everywhere
+	return static_cast< Type >( lua_rawget( mLuaState, realTable ));
 }
 
 
@@ -717,7 +709,8 @@ void RawStack::setTableField( Index const &table )
 	try
 	{
 		validate( table, TABLE );
-		validate( -1 );
+		validateIndex( -1 );
+		validateIndex( -2 );
 	}
 	catch( ... )
 	{
@@ -733,6 +726,7 @@ void RawStack::setTableField( Index const &table )
 
 void RawStack::setTableField( Index const &table, Index const &index, Index const &value )
 {
+	Index realTable = getAbsoluteIndex( table );
 	try
 	{
 		validate( table, TABLE );
@@ -742,11 +736,12 @@ void RawStack::setTableField( Index const &table, Index const &index, Index cons
 	{
 		throw;
 	}
-	lua_seti( mLuaState, table, index );
+	lua_seti( mLuaState, realTable, index );
 }
 
 void RawStack::setTableField( Index const &table, std::string const &key, Index const &value )
 {
+	Index realTable = getAbsoluteIndex( table );
 	try
 	{
 		validate( table, TABLE );
@@ -756,7 +751,7 @@ void RawStack::setTableField( Index const &table, std::string const &key, Index 
 	{
 		throw;
 	}
-	lua_setfield( mLuaState, table, key.c_str());
+	lua_setfield( mLuaState, realTable, key.c_str());
 }
 
 
@@ -766,7 +761,8 @@ void RawStack::setRawTableField( Index const &table )
 	try
 	{
 		validate( table, TABLE );
-		validate( -1 );
+		validateIndex( -1 );
+		validateIndex( -2 );
 	}
 	catch( ... )
 	{
@@ -782,6 +778,7 @@ void RawStack::setRawTableField( Index const &table )
 
 void RawStack::setRawTableField( Index const &table, Index const &index, Index const &value )
 {
+	Index realTable = getAbsoluteIndex( table );
 	try
 	{
 		validate( table, TABLE );
@@ -791,16 +788,17 @@ void RawStack::setRawTableField( Index const &table, Index const &index, Index c
 	{
 		throw;
 	}
-	lua_rawseti( mLuaState, table, index );
+	lua_rawseti( mLuaState, realTable, index );
 }
 
 void RawStack::setRawTableField( Index const &table, std::string const &key, Index const &value )
 {
-	Index realTable = table == LuaRegistryIndex ? table : getAbsoluteIndex( realTable );
+	Index realTable = getAbsoluteIndex( table );
 	Index realValue = getAbsoluteIndex( value );
 	try
 	{
-		validate( table );
+		validate( table, TABLE );
+		validateIndex( value );
 		pushString( key ); //Key at top of the stack used by lua_rawset, unfortunately strings can't be used directly
 		copy( realValue );
 	}
@@ -817,7 +815,6 @@ void RawStack::setMetaTable( Index const &target, std::string const &metaTable )
 {
 	try
 	{
-		validate( target );
 		copy( target ); //target needs to be at the top of the stack
 	}
 	catch( ... )
@@ -830,34 +827,35 @@ void RawStack::setMetaTable( Index const &target, std::string const &metaTable )
 
 void RawStack::setMetaTable( Index const &target, Index const &metaTable )
 {
+	Index realTarget = getAbsoluteIndex( target );
 	try
 	{
+		validate( target, TABLE );
 		validate( metaTable, TABLE ); 
-		validate( target );
 		copy( metaTable );
 	}
 	catch( ... )
 	{
 		throw;
 	}
-	lua_setmetatable( mLuaState, target );
+	lua_setmetatable( mLuaState, realTarget );
 }
 
 
 
 void RawStack::setUserValue( Index const &userData, Index const &value )
 {
+	Index realUserData = getAbsoluteIndex( userData );
 	try
 	{
-		validate( userData, USER_DATA ); 
-		validate( value );
+		validate( userData, USER_DATA );
 		copy( value );
 	}
 	catch( ... )
 	{
 		throw;
 	}
-	lua_setuservalue( mLuaState, userData );
+	lua_setuservalue( mLuaState, realUserData );
 }
 
 
@@ -866,9 +864,9 @@ void RawStack::copy( Index const &from )
 {
 	try
 	{
+		validateIndex( from );
 		allocate();
-		validate( from );
-	}	
+	}
 	catch( ... )
 	{
 		throw;
@@ -880,8 +878,8 @@ void RawStack::insert( Index const &index )
 {
 	try
 	{
+		validateIndex( index );
 		allocate();
-		validate( index );
 	}
 	catch( ... )
 	{
@@ -896,7 +894,7 @@ void RawStack::remove( Index const &index )
 {
 	try
 	{
-		validate( index );
+		validateIndex( index );
 	}
 	catch( ... )
 	{
@@ -907,6 +905,7 @@ void RawStack::remove( Index const &index )
 
 void RawStack::erase( Index const &index )
 {
+	validateIndex( index );
 	Index realIndex = getAbsoluteIndex( index );
 	pushNil();
 	move( -1, realIndex );
@@ -931,12 +930,12 @@ void RawStack::clear() noexcept
 
 void RawStack::replace( Index const &from, Index const &to )
 {
-	Index realTo;
-	Index realFrom;
+	Index realTo = getAbsoluteIndex( to );
+	Index realFrom = getAbsoluteIndex( from );
 	try
 	{
-		realTo = getAbsoluteIndex( to );
-		realFrom = getAbsoluteIndex( from );
+		validateIndex( to );
+		validateIndex( from );
 		if( realFrom == realTo )
 		{
 			return;
@@ -951,12 +950,12 @@ void RawStack::replace( Index const &from, Index const &to )
 
 void RawStack::move( Index const &from, Index const &to )
 {
-	Index realFrom;
-	Index realTo;
+	Index realTo = getAbsoluteIndex( to );
+	Index realFrom = getAbsoluteIndex( from );
 	try
 	{
-		realFrom = getAbsoluteIndex( from );
-		realTo = getAbsoluteIndex( to );
+		validateIndex( to );
+		validateIndex( from );
 		if( realFrom == realTo )
 		{
 			return;
@@ -979,6 +978,8 @@ void RawStack::move( Index const &from, Index const &to )
 
 void RawStack::swap( Index const &one, Index const &two )
 {
+	validateIndex( one );
+	validateIndex( two );
 	Index realOne = getAbsoluteIndex( one );
 	Index realTwo = getAbsoluteIndex( two );
 	if( realOne == realTwo )
@@ -1010,29 +1011,27 @@ bool RawStack::isValid( Index const & index ) const noexcept
 {
 	return ( index != 0 &&
 		index >= -(( Index )getSize()) &&
-		index <= ( Index )getSize())
-		|| index == LuaRegistryIndex;
+		index <= ( Index )getSize()) ||
+		index == LuaRegistryIndex;
 }
 
 
 
-Index RawStack::getRelativeIndex( Index const &index ) const
+Index RawStack::getRelativeIndex( Index const &index ) const noexcept
 {
 	if( index == LuaRegistryIndex )
 	{
 		return index;
 	}
-	validate( index );
 	return index - (( Index )getSize() + 1);
 }
 
-Index RawStack::getAbsoluteIndex( Index const &index ) const
+Index RawStack::getAbsoluteIndex( Index const &index ) const noexcept
 {
 	if( index == LuaRegistryIndex )
 	{
 		return index;
 	}
-	validate( index );
 	if( index > 0 )
 	{
 		return index;
@@ -1063,27 +1062,34 @@ void RawStack::allocate( Size const &space )
 	}
 }
 
-void RawStack::validate( Index const &index ) const
+//TODO this function might actually be an overkill
+void RawStack::validate( Index const &index, Type const &type ) const
+{
+	validateIndex( index );
+	validateType( index, type ); 
+}
+
+void RawStack::validateIndex( Index const &index ) const
 {
 	if( !isValid( index ))
 	{
-		throw Exception::IndexError( "Luna::RawStack::validate: couldn't validate index: " +
+		throw Exception::IndexError( "Luna::RawStack::validateIndex: couldn't validate index: " +
 			std::to_string( index ));
 	}
 }
 
-void RawStack::validate( Index const &index, Type const &type ) const
+void RawStack::validateType( Index const &index, Type const &type ) const
 {
 	Type check = getType( index );
 	if( check != type )
 	{
-		throw Exception::TypeError( "Luna::RawStack::validate: type " +
+		throw Exception::TypeError( "Luna::RawStack::validateType: type " +
 			Auxiliary::getTypeName( check ) + " instead of " +
 			Auxiliary::getTypeName( type ) + " type" );
 	}
 }
 
-void RawStack::checkForError( ReturnCode const &code )
+void RawStack::validateReturnCode( ReturnCode const &code )
 {
 	switch( code )
 	{
@@ -1092,23 +1098,23 @@ void RawStack::checkForError( ReturnCode const &code )
 			return;
 		
 		case RUNTIME_ERROR:
-			throw Exception::LuaError( "Luna::Auxiliary::checkForError: " + toString());
+			throw Exception::LuaError( "Luna::Auxiliary::validateReturnCode: " + toString());
 		
 		case SYNTAX_ERROR:
-			throw Exception::SyntaxError( "Luna::Auxiliary::checkForError: " + toString());
+			throw Exception::SyntaxError( "Luna::Auxiliary::validateReturnCode: " + toString());
 		
 		case MEMORY_ERROR:
-			throw Exception::AllocationError( "Luna::Auxiliary::checkForError: " + toString());
+			throw Exception::AllocationError( "Luna::Auxiliary::validateReturnCode: " + toString());
 		
 		case GARBAGE_COLLECTOR_ERROR:
-			throw Exception::LuaError( "Luna::Auxiliary::checkForError: " + toString());
+			throw Exception::LuaError( "Luna::Auxiliary::validateReturnCode: " + toString());
 		
 		case FILE_ERROR:
-			throw Exception::FileError( "Luna::Auxiliary::checkForError: " + toString());
+			throw Exception::FileError( "Luna::Auxiliary::validateReturnCode: " + toString());
 		
 		case UNKNOWN_ERROR:
 		default:
-			throw Exception::LuaError( "Luna::Auxiliary::checkForError: " + toString());
+			throw Exception::LuaError( "Luna::Auxiliary::validateReturnCode: " + toString());
 	}
 }
 

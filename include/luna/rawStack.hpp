@@ -233,14 +233,14 @@ public:
 	LuaReference newReference( Index const &value, Index const &table = LuaRegistryIndex );
 	
 	/**
-	 * Dereferences a reference.
+	 * Frees a reference.
 	 *
-	 * The target value is pushed to the stack.
+	 * The target value won't be accessible anymore.
 	 *
 	 * @param reference Target reference.
 	 * @param table Index of the table containing the reference. By default Lua registry.
 	 */
-	void dereference( LuaReference const &reference, Index const &table = LuaRegistryIndex );
+	void freeReference( LuaReference const &reference, Index const &table = LuaRegistryIndex );
 	
 	
 	
@@ -677,12 +677,12 @@ public:
 	/**
 	 * Converts an AbsoluteIndex into Index.
 	 */
-	Index getRelativeIndex( Index const &index ) const;
+	Index getRelativeIndex( Index const &index ) const noexcept;
 	
 	/**
 	 * Converts an Index into AbsoluteIndex.
 	 */
-	Index getAbsoluteIndex( Index const &index ) const;
+	Index getAbsoluteIndex( Index const &index ) const noexcept;
 	
 	
 	
@@ -697,9 +697,10 @@ public:
 	LuaState const &getLuaState() const noexcept;
 private:
 	void allocate( Size const &size = 1 );
-	void validate( Index const &index ) const;
 	void validate( Index const &index, Type const &type ) const;
-	void checkForError( ReturnCode const &code );
+	void validateIndex( Index const &index ) const;
+	void validateType( Index const &index, Type const &type ) const;
+	void validateReturnCode( ReturnCode const &code );
 	
 	LuaState const &mLuaState;
 };

@@ -38,7 +38,7 @@ Element::Element( Element &&that ) :
 
 Element::~Element()
 {
-	mRawStack.dereference( mReference );
+	mRawStack.freeReference( mReference );
 }
 
 Element &Element::operator=( Element const &that )

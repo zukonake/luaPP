@@ -45,14 +45,6 @@ class LuaError : public std::runtime_error
 };
 
 /**
- * Thrown when an invalid key is used to access a table
- */
-class KeyError : public LuaError
-{
-	using LuaError::LuaError;
-};
-
-/**
  * Thrown when there is a syntax error in a lua script.
  */
 class SyntaxError : public LuaError
