@@ -1,6 +1,7 @@
-/* luna.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+/**
+ * @file luna.hpp
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
@@ -14,10 +15,15 @@
 #include <luna/stack.hpp>
 #include <luna/state.hpp>
 
+//TODO update includes
+
+/**
+ * Used by Luna API everywhere.
+ */
 namespace Luna
 {
 
-constexpr uint8_t lunaVersionMajor = 1;
+constexpr uint8_t lunaVersionMajor = 2;
 constexpr uint8_t lunaVersionMinor = 0;
 constexpr uint8_t lunaVersionPatch = 0;
 

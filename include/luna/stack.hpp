@@ -1,6 +1,7 @@
-/* luna/stack.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+/**
+ * @file luna/stack.hpp
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
@@ -13,29 +14,50 @@
 
 namespace Luna
 {
-	
+
+/**
+ * Wraps the RawStack with Element handling.
+ */
 class Stack : public RawStack
 {
 public:
-	Stack() = default;
-	Stack( Stack &&that );
-
+	/**
+	 * Constructs a new Stack, from an existing LuaState.
+	 */
+	Stack( LuaState const &luaState );
+	
 	virtual ~Stack() = default;
-
-	Stack &operator=( Stack &&that );
-
-	/* load global into stack
-	 * and return bound element
+	
+	/**
+	 * Accesses a value on RawStack and wraps it in Element object.
+	 *
+	 * @param index Index of the value.
+	 * @return Value of the Element.
 	 */
 	template< typename T >
-	T loadGlobal( const std::string &name );
+	T at( Index const &index = -1 );
+	
+	/**
+	 * Accesses a global value and wraps it in Element object.
+	 *
+	 * @param name Name of the global.
+	 * @return Value of the Element.
+	 */
+	template< typename T >
+	T loadGlobal( std::string const &name );
 };
 
 template< typename T >
-T Stack::loadGlobal( const std::string &name )
+T Stack::at( Index const &index )
 {
-	RawStack::loadGlobal( name );
-	return T( *this );
+	return T( *this, index );
+}
+
+template< typename T >
+T Stack::loadGlobal( std::string const &name )
+{
+	RawStack::getGlobal( name );
+	return at< T >();
 }
 
 }

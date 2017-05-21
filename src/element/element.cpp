@@ -7,35 +7,78 @@
 namespace Luna
 {
 
-Element::Element( const RawStack &rawStack, const Index &index ) :
+Element::Element( RawStack &rawStack ) :
 	mRawStack( rawStack ),
-	mIndex( rawStack.getAbsoluteIndex( index ))
+	mReference( rawStack.newReference( -1, LuaRegistryIndex ))
 {
 	
 }
 
-Element::Element( Element &&that ) :
-	mRawStack( that.mRawStack )
+Element::Element( RawStack &rawStack, LuaReference const &reference ) :
+	mRawStack( rawStack ),
+	mReference( reference )
 {
-	mIndex = that.mIndex;
-	that.mIndex = 0;
+	
+}
+
+Element::Element( Element const &that ) :
+	mRawStack( that.mRawStack ),
+	mReference( noReference )
+{
+	that.getValue();
+	mReference = mRawStack.newReference( -1, LuaRegistryIndex );
+}
+
+Element::Element( Element &&that ) :
+	mRawStack( that.mRawStack ),
+	mReference( that.mReference )
+{
+	that.mReference = noReference;
+}
+
+Element::~Element()
+{
+	mRawStack.freeReference( mReference );
+}
+
+Element &Element::operator=( Element const &that )
+{
+	if( &mRawStack != &that.mRawStack )
+	{
+		throw std::logic_error( "Luna::Element::operator=: tried to copy element within a different stack" );
+		return *this;
+	}
+	that.getValue();
+	setValue();
+	mRawStack.pop();
+	return *this;
 }
 
 Element &Element::operator=( Element &&that )
 {
 	if( &mRawStack != &that.mRawStack )
 	{
-		throw std::logic_error( "Luna::Element::operator=: tried to move element within different stack" );
+		throw std::logic_error( "Luna::Element::operator=: tried to move element within a different stack" );
 		return *this;
 	}
-	mIndex = that.mIndex;
-	that.mIndex = 0;
+	mReference = that.mReference;
+	that.mReference = noReference;
 	return *this;
 }
 
-const Index &Element::getIndex() const noexcept
+void Element::getValue() const
 {
-	return mIndex;
+	mRawStack.getRawTableField( LuaRegistryIndex, mReference );
+}
+
+void Element::setValue() //TODO index maybe?
+{
+	mRawStack.setRawTableField( LuaRegistryIndex, mReference, -1 );
+}
+
+LuaReference const &Element::getReference() const noexcept
+{
+	return mReference;
 }
 
 }

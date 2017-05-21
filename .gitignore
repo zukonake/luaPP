@@ -1,14 +1,18 @@
-*.so
-*.swp
-*.dll
-*.a
-*.exe
-*.out
-*~
-
-build
+# Ignore generated folders
 bin
 depend
+doc
+
+# Ignore generated files
 callgrind*
 vgcore*
-debug*
+*~
+*.swp
+
+# Ignore binary files
+*.so
+*.dll
+*.a
+*.o
+*.exe
+*.out

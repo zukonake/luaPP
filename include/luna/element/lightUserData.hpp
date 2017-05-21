@@ -1,4 +1,4 @@
-/* @file luna/element/boolean.hpp
+/* @file luna/element/lightUserData.hpp
  * @copyright Copyleft zukonake
  * @license Distributed under GNU General Public License Version 3
  */
@@ -10,29 +10,29 @@
 
 namespace Luna
 {
-
+	
 /**
- * Represents a boolean value on the stack.
+ * Represents a light user data value on the stack.
  */
-class Boolean : public Element
+class LightUserData : public Element
 {
 public:
+	LightUserData( LightUserData const &that );
 	using Element::Element;
-	Boolean( Boolean const &that );
 
-	~Boolean() = default;
+	~LightUserData() = default;
 
-	Boolean &operator=( Boolean const &that );
+	LightUserData &operator=( LightUserData const &that );
 
 	/**
 	 * Changes the value of the element on the stack.
 	 *
 	 * @param value Desired value.
 	 */
-	Boolean &operator=( BooleanValue const &value );
+	LightUserData &operator=( LightUserDataValue const &value );
 	using Element::operator=;
 
-	operator BooleanValue() const noexcept;
+	operator LightUserDataValue() const noexcept;
 };
 
 }

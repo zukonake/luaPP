@@ -1,35 +1,69 @@
-/* luna/state.hpp
- * Copyleft zukonake
- * Distributed under GNU General Public License Version 3
+/**
+ * @file luna/state.hpp
+ * @copyright Copyleft zukonake
+ * @license Distributed under GNU General Public License Version 3
  */
 
 #pragma once
 
-#include <memory>
-//
 #include <luna/typedef.hpp>
+#include <luna/stack.hpp>
 
 namespace Luna
 {
 
-struct LuaStateDeleter
-{
-	void operator()( LuaState *ptr ) const;
-};
-
-class State
+/** 
+ * Main class wrapping the LuaState and Stack.
+ */
+class State : public Stack
 {
 public:
+
+	/**
+	 * Constructs a new State, with a new LuaState.
+	 *
+	 * A new LuaState is created, its allocate and panic functions set and
+	 * its libs loaded.
+	 */
 	State();
+
+	/**
+	 * Constructs a new State, from an existing LuaState.
+	 *
+	 * The LuaState is unchanged.
+	 */
+	State( LuaState const &luaState );
+
+	/**
+	 * Moves the LuaState to new State.
+	 *
+	 * @param that Its LuaState will be set to nullptr.
+	 */
 	State( State &&that );
 
-	virtual ~State() = default;
+	/**
+	 * Closes the LuaState.
+	 */
+	virtual ~State();
 
+	/**
+	 * Moves the LuaState to an existing State.
+	 *
+	 * @param that Its LuaState will be set to nullptr.
+	 */
 	State &operator=( State &&that ) noexcept;
 
-	operator LuaState *() const noexcept;
+	/**
+	 * Returns an underlying LuaState.
+	 */
+	operator LuaState () const noexcept;
+
+	/**
+	 * Returns its Lua Version;
+	 */
+	NumberValue getLuaVersion();
 private:
-	std::unique_ptr< LuaState, LuaStateDeleter > mL;
+	LuaState mLuaState;
 };
 
 

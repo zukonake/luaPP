@@ -6,30 +6,32 @@
 namespace Luna
 {
 
-Number::Number( const RawStack &rawStack, const Index &index ) :
-	Element( rawStack, index ),
-	mValue( rawStack.toNumber( index ))
+Number::Number( Number const &that ) :
+	Element( static_cast< Element const & >( that))
 {
 	
 }
 
-Number::Number( Number &&that ) :
-	Element( dynamic_cast< Element && >( that )),
-	mValue( that.mValue )
+Number &Number::operator=( Number const &that )
 {
-
-}
-
-Number &Number::operator=( Number &&that )
-{
-	static_cast< Element & >( *this ) = static_cast< Element && >( that );
-	mValue = that.mValue;
+	static_cast< Element & >( *this ) = static_cast< Element const & >( that );
 	return *this;
 }
 
-Number::operator const NumberValue &() const noexcept
+Number &Number::operator=( NumberValue const &value )
 {
-	return mValue;
+	Element::mRawStack.pushNumber( value );
+	Element::setValue();
+	return *this;
+}
+
+Number::operator NumberValue() const
+{
+	NumberValue returnValue;
+	Element::getValue();
+	returnValue = Element::mRawStack.toNumber();
+	Element::mRawStack.pop();
+	return returnValue;
 }
 
 }
