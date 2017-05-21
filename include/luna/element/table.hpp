@@ -8,9 +8,9 @@
 #include <cstddef>
 #include <string>
 //
-#include<luna/typedef.hpp>
-#include<luna/rawStack.hpp>
-#include<luna/element/element.hpp>
+#include <luna/typedef.hpp>
+#include <luna/rawStack.hpp>
+#include <luna/element/element.hpp>
 
 namespace Luna
 {
@@ -23,11 +23,11 @@ class Table : public Element
 public:
 	Table( Table const &that );
 	using Element::Element;
-
+	
 	~Table() = default;
-
+	
 	Table &operator=( Table const &that );
-
+	
 	/* TODO
 	 * Changes the value of the element on the stack.
 	 *
@@ -35,10 +35,10 @@ public:
 	 *
 	Table &operator=( TableValue const &that );*/
 	using Element::operator=;
-
-	//operator TableValue() const noexcept;
-
-
+	
+	//operator TableValue() const noexcept; TODO
+	
+	
 	/**
 	 * Sets the given field.
 	 *
@@ -47,7 +47,7 @@ public:
 	 */
 	template< typename T >
 	void set( std::size_t const &index, T const &value );
-
+	
 	/**
 	 * Sets the given field.
 	 *
@@ -56,9 +56,9 @@ public:
 	 */
 	template< typename T >
 	void set( std::string const &key, T const &value );
-
-
-
+	
+	
+	
 	/**
 	 * Gets the given field.
 	 *
@@ -66,7 +66,7 @@ public:
 	 */
 	template< typename T >
 	T get( std::size_t const &index );
-
+	
 	/**
 	 * Gets the given field.
 	 *
@@ -81,7 +81,7 @@ void Table::set( std::size_t const &index, T const &value )
 {
 	value.getValue();
 	Element::getValue();
-	Element::mRawStack.setTableField( -1, index, -2 );
+	Element::mRawStack.setRawTableField( -1, index, -2 );
 	Element::mRawStack.remove( -2 );
 	Element::setValue();
 }
@@ -91,7 +91,7 @@ void Table::set( std::string const &key, T const &value )
 {
 	value.getValue();
 	Element::getValue();
-	Element::mRawStack.setTableField( -1, key, -2 );
+	Element::mRawStack.setRawTableField( -1, key, -2 );
 	Element::mRawStack.remove( -2 );
 	Element::setValue();
 }
@@ -100,7 +100,7 @@ template< typename T >
 T Table::get( std::size_t const &index )
 {
 	Element::getValue();
-	Element::mRawStack.getTableField( -1, index );
+	Element::mRawStack.getRawTableField( -1, index );
 	Element::mRawStack.remove( -2 );
 	return T( Element::mRawStack );
 }
@@ -108,8 +108,9 @@ T Table::get( std::size_t const &index )
 template< typename T >
 T Table::get( std::string const &key )
 {
+	//TODO check if T is element interface
 	Element::getValue();
-	Element::mRawStack.getTableField( -1, key );
+	Element::mRawStack.getRawTableField( -1, key );
 	Element::mRawStack.remove( -2 );
 	return T( Element::mRawStack );
 }

@@ -1,4 +1,5 @@
-/* @file luna/element/number.hpp
+/**
+ * @file luna/element/number.hpp
  * @copyright Copyleft zukonake
  * @license Distributed under GNU General Public License Version 3
  */
@@ -32,7 +33,7 @@ public:
 	Number &operator=( NumberValue const &value );
 	using Element::operator=;
 
-	operator NumberValue() const noexcept;
+	operator NumberValue() const;
 };
 
 }

@@ -758,6 +758,7 @@ void RawStack::setTableField( Index const &table, std::string const &key, Index 
 
 void RawStack::setRawTableField( Index const &table )
 {
+	//TODO get indices from the arguments?
 	try
 	{
 		validate( table, TABLE );

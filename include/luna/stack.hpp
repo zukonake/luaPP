@@ -43,7 +43,7 @@ public:
 	 *
 	 * @param name Name of the global.
 	 * @return Value of the Element.
-	 */	
+	 */
 	template< typename T >
 	T loadGlobal( std::string const &name );
 };

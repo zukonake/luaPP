@@ -25,7 +25,7 @@ Number &Number::operator=( NumberValue const &value )
 	return *this;
 }
 
-Number::operator NumberValue() const noexcept
+Number::operator NumberValue() const
 {
 	NumberValue returnValue;
 	Element::getValue();

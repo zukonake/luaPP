@@ -7,9 +7,9 @@
 namespace Luna
 {
 
-Element::Element( RawStack &rawStack  ) :
+Element::Element( RawStack &rawStack ) :
 	mRawStack( rawStack ),
-	mReference( rawStack.newReference( -1 ))
+	mReference( rawStack.newReference( -1, LuaRegistryIndex ))
 {
 	
 }
@@ -26,7 +26,7 @@ Element::Element( Element const &that ) :
 	mReference( noReference )
 {
 	that.getValue();
-	mReference = mRawStack.newReference( -1 );
+	mReference = mRawStack.newReference( -1, LuaRegistryIndex );
 }
 
 Element::Element( Element &&that ) :
@@ -45,11 +45,12 @@ Element &Element::operator=( Element const &that )
 {
 	if( &mRawStack != &that.mRawStack )
 	{
-		throw std::logic_error( "Luna::Element::operator=: tried to copy element within different stack" );
+		throw std::logic_error( "Luna::Element::operator=: tried to copy element within a different stack" );
 		return *this;
 	}
 	that.getValue();
 	setValue();
+	mRawStack.pop();
 	return *this;
 }
 
@@ -57,7 +58,7 @@ Element &Element::operator=( Element &&that )
 {
 	if( &mRawStack != &that.mRawStack )
 	{
-		throw std::logic_error( "Luna::Element::operator=: tried to move element within different stack" );
+		throw std::logic_error( "Luna::Element::operator=: tried to move element within a different stack" );
 		return *this;
 	}
 	mReference = that.mReference;
@@ -67,12 +68,12 @@ Element &Element::operator=( Element &&that )
 
 void Element::getValue() const
 {
-	mRawStack.getTableField( LuaRegistryIndex, mReference );
+	mRawStack.getRawTableField( LuaRegistryIndex, mReference );
 }
 
-void Element::setValue()
+void Element::setValue() //TODO index maybe?
 {
-	mRawStack.setTableField( LuaRegistryIndex, mReference, -1 );
+	mRawStack.setRawTableField( LuaRegistryIndex, mReference, -1 );
 }
 
 LuaReference const &Element::getReference() const noexcept
