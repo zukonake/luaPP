@@ -43,7 +43,6 @@ $(OBJ_DIR)/%.o : $$(shell find $(SOURCE_DIR) -type f -name %.cpp)
 	@mkdir -p $(DEPEND_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	$(CXX) $(CXXFLAGS) -MM $< > $(DEPEND_DIR)/$*.d
-	@sed -i '1s/^/$(OBJ_DIR)\//' $(DEPEND_DIR)/$*.d
 
 install: $(TARGET)
 	install -m 755 $(TARGET) $(PREFIX)/$(TARGET)

@@ -21,14 +21,13 @@ namespace Luna
 class Stack : public RawStack
 {
 public:
-
 	/**
 	 * Constructs a new Stack, from an existing LuaState.
 	 */
 	Stack( LuaState const &luaState );
-
+	
 	virtual ~Stack() = default;
-
+	
 	/**
 	 * Accesses a value on RawStack and wraps it in Element object.
 	 *
@@ -37,7 +36,7 @@ public:
 	 */
 	template< typename T >
 	T at( Index const &index = -1 );
-
+	
 	/**
 	 * Accesses a global value and wraps it in Element object.
 	 *
